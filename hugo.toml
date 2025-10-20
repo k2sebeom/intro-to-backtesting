@@ -1,4 +1,33 @@
 baseURL = 'https://example.org/'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = 'My Documentation Site'
 theme = 'hugo-book'
+
+# Enable Git info for last modified dates
+enableGitInfo = true
+
+# Disable taxonomy pages since this is a documentation theme
+disableKinds = ['taxonomy']
+
+# Enable unsafe HTML in markdown for shortcodes
+[markup.goldmark.renderer]
+  unsafe = true
+
+[params]
+  # Color theme: light, dark or auto
+  BookTheme = 'light'
+  
+  # Show table of contents on right side
+  BookToC = true
+  
+  # Section to render as menu (default: docs)
+  BookSection = 'docs'
+  
+  # Enable search functionality
+  BookSearch = true
+  
+  # Enable comments (requires Disqus setup)
+  BookComments = false
+  
+  # Date format for git info and blog posts
+  BookDateFormat = 'January 2, 2006'

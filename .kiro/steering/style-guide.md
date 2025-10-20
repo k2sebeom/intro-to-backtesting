@@ -53,6 +53,8 @@ Run the codes yourself and attach the outputs in chapters to explain. If image i
 
 In codes, do NOT use window popups like cv2.imshow or plt.show. Just save the image and read.
 
+When writing output, use relative path from __file__, so that they are stored in correct place.
+
 ## Images
 
 To add in images into the chapters, use static/images directory. For images used in chapter, gather images in static/images/chapter00/. Generate images next to scripts, but "mv" the images to detaination to use them.

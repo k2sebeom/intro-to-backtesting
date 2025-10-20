@@ -20,14 +20,14 @@
   - Validate Hugo build and Korean content formatting
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9_
 
-- [ ] 4. Generate Chapter 3 code and outputs
+- [x] 4. Generate Chapter 3 code and outputs
   - Create `codes/chapter03/` directory with Simple Moving Average (SMA) strategy implementation
   - Implement SMA crossover strategy using CSV data with multiple period combinations
   - Generate backtesting results and performance visualizations
   - Execute all scripts and capture strategy performance outputs
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8_
 
-- [ ] 5. Write Chapter 3 content
+- [x] 5. Write Chapter 3 content
   - Create `content/docs/chapter03.md` with SMA theory, mathematical formulas, and crossover concepts
   - Include implementation guide with code walkthrough and execution instructions
   - Embed backtesting results and move strategy visualization images to `static/images/chapter03/`

@@ -37,7 +37,7 @@ For codes, create a folder for each chapter under ./codes, and write the codes s
 uv run chapter01/some-file.py
 ```
 
-Advise readers to do so in the guide and cite some code snippets themselves as well.
+Advise readers to do so in the guide and cite some code snippets themselves as well. Run the codes yourself and attach the outputs in chapters to explain. If image is the output, read the image using read_local_image tool.
 
 ## Assets
 

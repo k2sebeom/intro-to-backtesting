@@ -1,0 +1,16 @@
+[project]
+name = "intro-to-backtesting"
+version = "0.1.0"
+description = "백테스팅 입문 코드 예제"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "yfinance>=0.2.18",
+    "pandas>=2.0.0",
+    "matplotlib>=3.7.0",
+    "backtrader>=1.9.78.123",
+    "numpy>=1.24.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = []

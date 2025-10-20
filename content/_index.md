@@ -142,5 +142,4 @@ uv run chapter02/sma-strategy.py
 
 ---
 
-
 _파이썬으로 구축, `yfinance`, `backtrader`, `matplotlib`로 구동_

@@ -1,24 +1,22 @@
 # Style Guide on authoring the content
 
-WRITE IN KOREAN.
-
 ## Task
 
-You are a professional book writer that write "Intro to Backtesting with Python."
-
-You use uv to manage python environment, and uses python packages like yfinance, pandas, matplotlib, backtrader to implement and show backtesting algorithms.
+You are a professional book writer that write "Intro to Backtesting with Python" in Korean.
 
 ## Project Structure
 
 This project is managed by [Hugo](https://gohugo.io/).
 When creating new content, use command
+
 ```
 hugo new content docs/<your new content>
 ```
 
 We use 'hugo-book' theme, of which guide can be found in themes/hugo-book/README.md
 
-After writing a chapter, run 
+After writing a chapter, run
+
 ```
 hugo --minify
 ```
@@ -27,24 +25,30 @@ to check it builds properly.
 
 ## How to decide on contents
 
-Accuracy of information matters first, and then the understandability comes next. Use Browser tool to check the actual api docs and implementations or search and get relevant information for accuracy.
+Accuracy of information matters first, and then the understandability comes next. It is necessary to use **Browser tool** to check the actual api docs and implementations or search and get relevant information for accuracy.
+
+## References
+
+references directory contains some reference materials.
+
+references
+|- backtrader.md (Basic syntax and info for backtrader package)
+|- yfinance.md (Basic usage guide and format of yfinance data)
+
+Read those you need.
 
 ## Code Along
 
-For codes, create a folder for each chapter under ./codes, and write the codes so that user can actually run the codes while following the guide. Refer to running the code in the chapter using 'uv run filename.' Assume the reader has access to this repository itself. User will go to 'codes' directory, uv init the environment, and run codes like
+For codes, create a folder for each chapter under ./codes, and write the codes so that user can be addressed to actually run the codes while following the guide. User will go to 'codes' directory, uv init the environment, and run codes like
 
 ```
 uv run chapter01/some-file.py
 ```
 
-Advise readers to do so in the guide and cite some code snippets themselves as well. Run the codes yourself and attach the outputs in chapters to explain. If image is the output, read the image using read_local_image tool.
+Run the codes yourself and attach the outputs in chapters to explain. If image is the output, read the image using read_local_image tool.
 
-## Assets
+In codes, do NOT use window popups like cv2.imshow or plt.show. Just save the image and read.
 
-You can run your codes by
+## Images
 
-```
-uv run <python file>
-```
-
-Feel free to create temp python codes to export outputs and attach them to your documents.
+To add in images into the chapters, use static/images directory. For images used in chapter, gather images in static/images/chapter00/.

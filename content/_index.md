@@ -1,44 +1,146 @@
 ---
-title: "Home"
+title: "파이썬으로 배우는 백테스팅 입문"
 type: docs
 ---
 
-# Welcome to My Documentation Site
+# 백테스팅의 세계에 오신 것을 환영합니다 📈
 
-This site provides comprehensive documentation and guides built with Hugo and the hugo-book theme.
+파이썬을 활용한 체계적인 백테스팅으로 알고리즘 트레이딩 전략 검증의 예술과 과학을 마스터하세요.
 
-## Quick Navigation
+## 이 책은 무엇에 관한 책인가요?
+
+이 책은 트레이딩 전략을 위한 백테스팅 기법을 이해하고, 구현하고, 마스터하기 위한 완전한 가이드입니다. 과거 데이터를 사용하여 트레이딩 아이디어를 검증하고, 20개 이상의 검증된 트레이딩 알고리즘을 구현하며, 파이썬의 강력한 생태계를 사용하여 견고한 백테스팅 시스템을 구축하는 방법을 배우게 됩니다.
+
+단순한 이동평균부터 복잡한 멀티 타임프레임 전략까지, 각 챕터는 다음을 제공합니다:
+
+- 알고리즘과 시장 적용에 대한 **명확한 설명**
+- matplotlib 플롯팅과 차트 해석을 통한 **시각적 분석**
+- 실제 백테스팅 코드와 결과를 포함한 **완전한 구현**
+- 무엇이 작동하고 왜 작동하는지 이해하기 위한 **성과 분석**
+
+## 이 책은 누구를 위한 책인가요?
+
+이 책은 다음과 같은 분들을 위해 설계되었습니다:
+
+- 트레이딩 아이디어를 체계적으로 검증하고 싶은 **예비 퀀트 트레이더**
+- 금융 시장에 자신의 기술을 적용하는 데 관심이 있는 **파이썬 개발자**
+- 툴킷에 정량적 분석을 추가하려는 **금융 전문가**
+- 시계열 분석과 금융 모델링을 탐구하는 **데이터 사이언티스트**
+- 알고리즘 트레이딩 전략이 실제로 어떻게 작동하는지 **궁금한 모든 분**
+
+## 무엇을 배우고 구축하게 될까요?
+
+이 책을 마치면 다음을 갖게 됩니다:
 
 {{< columns >}}
 
-- ### 📚 Documentation
-  Explore our main documentation sections covering getting started guides, advanced topics, and configuration options.
+### 🛠️ 기술적 스킬
 
-  [Browse Documentation →]({{< relref "/docs" >}})
+- `uv`를 사용한 전문적인 파이썬 트레이딩 환경 설정
+- `yfinance`, `pandas`, `matplotlib`, `backtrader` 마스터
+- 20개 이상의 트레이딩 전략을 처음부터 구현
+- 견고한 백테스팅 프레임워크 생성
+- 트레이딩 성과 분석 및 시각화
 
-- ### 📝 Blog Posts
-  Read our latest updates, tutorials, and insights in the blog section.
+### 📊 트레이딩 지식
 
-  [View Blog Posts →]({{< relref "/posts" >}})
+- 기술적 지표와 그 적용 이해
+- 리스크 관리와 포지션 사이징 학습
+- 추세 추종과 평균 회귀 전략 마스터
+- 모멘텀, 브레이크아웃, 오실레이터 기반 시스템 탐구
+- 여러 타임프레임과 지표를 효과적으로 결합
 
 {{< /columns >}}
 
-## Features
+### 💼 실용적 포트폴리오
 
-This documentation site includes:
+- 백테스트된 트레이딩 전략의 완전한 라이브러리
+- 전략 개발을 위한 재사용 가능한 파이썬 모듈
+- 성과 분석 템플릿과 시각화 도구
+- 실제 시장 데이터를 사용한 실전 예제
 
-- **Clean Design** - Simple and focused on content
-- **Search** - Find what you need quickly
-- **Mobile Friendly** - Works great on all devices
-- **Dark Mode** - Switch between light and dark themes
-- **Table of Contents** - Easy navigation within pages
+## 사전 요구사항과 기대사항
 
-## Getting Started
+**알아야 할 것:**
 
-1. Browse the [Documentation]({{< relref "/docs" >}}) section for detailed guides
-2. Check out the [Getting Started]({{< relref "/docs/getting-started" >}}) page
-3. Explore [Advanced Topics]({{< relref "/docs/advanced" >}}) for more complex configurations
+- 기본적인 파이썬 프로그래밍 (변수, 함수, 반복문)
+- 금융 시장에 대한 기초적 이해 (주식, 가격 등이 무엇인지)
+- 명령줄 기본 사용법
+
+**필요하지 않은 것:**
+
+- 고급 수학이나 통계학 지식
+- 이전 트레이딩이나 금융 경험
+- 비싼 트레이딩 소프트웨어나 데이터 구독
+
+**시간 투자:** 각 챕터는 코딩 연습을 포함하여 1-2시간이 소요됩니다.
+
+## 이 책을 효과적으로 사용하는 방법
+
+### 📚 학습 경로
+
+1. **챕터 1부터 시작** - 필수 설정과 기초
+2. **순차적으로 따라가기** - 각 챕터는 이전 개념을 기반으로 구성
+3. **코드와 함께하기** - `codes/` 디렉토리의 모든 예제 실행
+4. **실험하기** - 매개변수를 수정하고 자신만의 아이디어 테스트
+5. **진행 상황 추적** - 완료 체크리스트 사용
+
+### 💻 실습 중심 접근법
+
+이 책은 능동적 학습을 위해 설계되었습니다:
+
+```bash
+# codes 디렉토리로 이동
+cd codes
+
+# 파이썬 환경 초기화
+uv init
+
+# 챕터 예제 실행
+uv run chapter01/first-backtest.py
+uv run chapter02/sma-strategy.py
+```
+
+각 챕터에는 실행하고 수정할 수 있는 완전한 실행 가능한 코드가 포함되어 있습니다.
+
+## 책 구조와 학습 경로
+
+기초부터 고급 전략까지 모든 것을 다루는 **21개의 포괄적인 챕터**:
+
+### 기초 (챕터 0-1)
+
+- 환영 및 설정 ✅
+- 파이썬 환경과 첫 번째 백테스트 ✅
+
+### 핵심 지표 (챕터 2-8)
+
+- 이동평균 (SMA, EMA)
+- 볼린저 밴드와 RSI
+- MACD와 스토캐스틱 오실레이터
+- 윌리엄스 %R
+
+### 고급 전략 (챕터 9-16)
+
+- 브레이크아웃 시스템과 변동성
+- 지지/저항과 피보나치
+- 페어 트레이딩과 모멘텀
+- 평균 회귀 기법
+
+### 전문 접근법 (챕터 17-20)
+
+- 그리드 트레이딩과 달러 코스트 애버리징
+- 멀티 타임프레임 분석
+- 포트폴리오 최적화
+
+**현재 진행 상황:** 21개 챕터 중 1개 완료 - 함께 멋진 것을 만들어봅시다!
+
+## 도움말과 커뮤니티 리소스
+
+- **코드 저장소:** `codes/` 디렉토리에서 모든 예제 사용 가능
+- **이슈 및 질문:** 각 챕터에 문제 해결 섹션 포함
+- **모범 사례:** 깔끔하고 전문적인 코드를 위한 스타일 가이드 준수
 
 ---
 
-*Built with [Hugo](https://gohugo.io) and the [hugo-book](https://github.com/alex-shpak/hugo-book) theme.*
+
+_파이썬으로 구축, `yfinance`, `backtrader`, `matplotlib`로 구동_

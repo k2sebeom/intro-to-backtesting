@@ -1,6 +1,6 @@
 baseURL = 'https://example.org/'
 languageCode = 'en-us'
-title = 'My Documentation Site'
+title = '파이썬으로 배우는 백테스팅 입문'
 theme = 'hugo-book'
 
 # Enable Git info for last modified dates

@@ -27,6 +27,10 @@ to check it builds properly.
 
 Accuracy of information matters first, and then the understandability comes next. It is necessary to use **Browser tool** to check the actual api docs and implementations or search and get relevant information for accuracy.
 
+## Chapter Content
+
+Chapter content should start with algorithm details including mathematical details. After algorithm follows implementation. For code-along part, give user a step-by-step guide. Explain the code with a bit of code snippets, show how to run this code, (like cd codes, uv run stuff) and explain the output with attached outputs of the code (image, console output, etc.)
+
 ## References
 
 references directory contains some reference materials.
@@ -51,4 +55,4 @@ In codes, do NOT use window popups like cv2.imshow or plt.show. Just save the im
 
 ## Images
 
-To add in images into the chapters, use static/images directory. For images used in chapter, gather images in static/images/chapter00/.
+To add in images into the chapters, use static/images directory. For images used in chapter, gather images in static/images/chapter00/. Generate images next to scripts, but "mv" the images to detaination to use them.

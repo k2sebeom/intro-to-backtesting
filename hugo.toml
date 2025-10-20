@@ -13,6 +13,15 @@ disableKinds = ['taxonomy']
 [markup.goldmark.renderer]
   unsafe = true
 
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.extensions]
+      [markup.goldmark.extensions.passthrough]
+        enable = true
+        [markup.goldmark.extensions.passthrough.delimiters]
+          block = [['\[', '\]'], ['$$', '$$']]
+          inline = [['\(', '\)'], ['$', '$']]
+
 [params]
   # Color theme: light, dark or auto
   BookTheme = 'light'
@@ -31,3 +40,5 @@ disableKinds = ['taxonomy']
   
   # Date format for git info and blog posts
   BookDateFormat = 'January 2, 2006'
+
+  math = true

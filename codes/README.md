@@ -23,18 +23,18 @@ uv sync
 
 ## 챕터별 실행 방법
 
-### 챕터 1: 설정과 기초
+### Chapter 1: 백테스팅 시작하기
 
 ```bash
-# 1. 기본 데이터 다운로드 및 분석
-uv run chapter01/01_basic_data_download.py
-
-# 2. matplotlib 기초 플롯팅
-uv run chapter01/02_matplotlib_basics.py
-
-# 3. 첫 번째 백테스트
-uv run chapter01/03_first_backtest.py
+# 환경 검증 및 첫 번째 스크립트 실행
+uv run chapter01/01_hello_trading.py
 ```
+
+이 스크립트는 다음을 수행합니다:
+- 모든 필수 라이브러리 설치 확인
+- 간단한 수익률 계산 예제
+- 기본 통계 분석
+- 시각화 차트 생성 (저장 위치: `chapter01/images/hello_trading.png`)
 
 ## 생성되는 파일들
 

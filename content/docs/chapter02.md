@@ -1,541 +1,513 @@
 ---
-title: "챕터 2: 데이터 준비 - NVIDIA 주식 데이터 다운로드"
+title: "Chapter 2: 금융 데이터 다운로드와 이해"
 weight: 2
 bookToc: true
 ---
 
-# 챕터 2: 데이터 준비 - NVIDIA 주식 데이터 다운로드
+# Chapter 2: 금융 데이터 다운로드와 이해
 
-## 개요
+이 챕터에서는 백테스팅의 필수 재료인 **금융 데이터**를 다루는 방법을 배웁니다. yfinance 라이브러리를 사용하여 실제 주식 데이터를 다운로드하고, OHLCV 데이터 구조를 이해하며, 배당금과 주식 분할을 처리하는 방법을 알아봅니다.
 
-백테스팅의 성공은 양질의 데이터에서 시작됩니다. 이번 챕터에서는 yfinance 라이브러리를 사용하여 NVIDIA 주식 데이터를 다양한 타임프레임(1년, 5년, 10년)으로 다운로드하고, 데이터를 정제하며, 품질을 검증하는 전체 과정을 다룹니다.
+## 2.1 OHLCV 데이터 구조
 
-## 학습 목표
+### OHLCV란?
 
-이번 챕터를 완료하면 다음을 할 수 있게 됩니다:
-
-- yfinance를 사용하여 주식 데이터를 체계적으로 다운로드
-- 다양한 타임프레임의 OHLCV 데이터 수집 및 관리
-- 데이터 전처리 및 품질 검증 수행
-- 데이터 시각화를 통한 품질 분석
-- CSV 파일 형태로 데이터 저장 및 관리
-
-## 1. 데이터 다운로드 이론
-
-### 1.1 OHLCV 데이터 구조
-
-주식 데이터는 일반적으로 OHLCV 형태로 제공됩니다:
+금융 시장 데이터의 표준 형식인 **OHLCV**는 다음 5가지 정보로 구성됩니다:
 
 - **Open (시가)**: 해당 기간의 첫 거래 가격
-- **High (고가)**: 해당 기간의 최고 거래 가격  
+- **High (고가)**: 해당 기간의 최고 거래 가격
 - **Low (저가)**: 해당 기간의 최저 거래 가격
 - **Close (종가)**: 해당 기간의 마지막 거래 가격
-- **Volume (거래량)**: 해당 기간의 총 거래량
+- **Volume (거래량)**: 해당 기간의 총 거래된 주식 수
 
-### 1.2 yfinance 라이브러리
+### 시간 프레임 (Timeframe)
 
-yfinance는 Yahoo Finance에서 주식 데이터를 가져오는 Python 라이브러리입니다. 주요 특징:
+OHLCV 데이터는 다양한 시간 단위로 제공됩니다:
 
-- 무료로 사용 가능
-- 실시간 및 과거 데이터 제공
-- 다양한 타임프레임 지원
-- 배당금 및 주식 분할 정보 포함
+- **1분봉 (1-minute)**: 매 1분마다의 OHLCV
+- **1시간봉 (1-hour)**: 매 1시간마다의 OHLCV
+- **일봉 (Daily)**: 매 거래일마다의 OHLCV
+- **주봉 (Weekly)**: 매 주마다의 OHLCV
+- **월봉 (Monthly)**: 매 월마다의 OHLCV
 
-### 1.3 데이터 품질의 중요성
+### 캔들스틱 해석
 
-백테스팅에서 데이터 품질은 결과의 신뢰성을 결정합니다:
+하나의 OHLCV 데이터는 **캔들스틱(Candlestick)**으로 시각화됩니다:
 
-- **완전성**: 누락된 데이터가 없어야 함
-- **정확성**: 가격 데이터의 논리적 일관성 (High ≥ Close ≥ Low 등)
-- **일관성**: 시간 순서 및 형식의 일관성
-- **적시성**: 최신 데이터의 반영
+```
+High (고가)
+   |
+   |------- Close (종가가 시가보다 높으면 상승 캔들)
+   |      |
+   |      |
+   |------- Open (시가)
+   |
+Low (저가)
+```
 
-## 2. 구현 가이드
+**상승 캔들 (Bullish Candle)**:
+- Close > Open (종가가 시가보다 높음)
+- 보통 녹색 또는 흰색으로 표시
+- 매수 압력이 강했음을 의미
 
-### 2.1 다중 타임프레임 데이터 다운로드
+**하락 캔들 (Bearish Candle)**:
+- Close < Open (종가가 시가보다 낮음)
+- 보통 빨간색 또는 검은색으로 표시
+- 매도 압력이 강했음을 의미
 
-첫 번째 스크립트는 NVIDIA 주식 데이터를 여러 타임프레임으로 다운로드합니다.
+### 캔들스틱의 수학적 특성
 
-**파일**: `codes/chapter02/01_data_download_multiple_timeframes.py`
+각 캔들스틱에서 계산할 수 있는 유용한 지표들:
+
+**1. 몸통 크기 (Body Size)**:
+$$\text{Body} = |Close - Open|$$
+
+큰 몸통은 강한 추세를 의미합니다.
+
+**2. 위 꼬리 길이 (Upper Shadow)**:
+$$\text{Upper Shadow} = High - \max(Open, Close)$$
+
+긴 위 꼬리는 상승 시도가 거부당했음을 의미합니다.
+
+**3. 아래 꼬리 길이 (Lower Shadow)**:
+$$\text{Lower Shadow} = \min(Open, Close) - Low$$
+
+긴 아래 꼬리는 하락 시도가 거부당했음을 의미합니다.
+
+**4. True Range (진정한 변동폭)**:
+$$TR = \max(High - Low, |High - Close_{prev}|, |Low - Close_{prev}|)$$
+
+True Range는 갭(Gap)을 고려한 실제 변동성을 측정합니다.
+
+## 2.2 yfinance로 데이터 다운로드
+
+### yfinance란?
+
+**yfinance**는 Yahoo Finance에서 금융 데이터를 무료로 다운로드할 수 있는 Python 라이브러리입니다.
+
+**장점**:
+- ✅ 완전 무료
+- ✅ 수천 개의 주식, ETF, 인덱스 지원
+- ✅ 과거 데이터 제공 (최대 수십 년)
+- ✅ 배당금 및 주식 분할 자동 조정
+- ✅ 간단한 API
+
+**단점**:
+- ⚠️ 실시간 데이터 아님 (15-20분 지연)
+- ⚠️ 일부 소형주는 데이터가 없을 수 있음
+- ⚠️ API 변경 가능성 (Yahoo에서 공식 지원하지 않음)
+
+### 기본 사용법
+
+단일 종목 다운로드:
 
 ```python
-#!/usr/bin/env python3
-"""
-Chapter 2: 데이터 준비 - NVIDIA 주식 데이터 다운로드
-Multiple timeframes data download script
-"""
-
 import yfinance as yf
-import pandas as pd
-import os
-from datetime import datetime, timedelta
 
-def download_nvidia_data():
-    """Download NVIDIA stock data for multiple timeframes"""
-    
-    # Create data directory relative to this script
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    data_dir = os.path.join(script_dir, "..", "data")
-    os.makedirs(data_dir, exist_ok=True)
-    
-    # Define timeframes
-    timeframes = {
-        "1year": 365,
-        "5years": 365 * 5,
-        "10years": 365 * 10
-    }
-    
-    # NVIDIA ticker
-    ticker = "NVDA"
-    
-    print(f"NVIDIA 주식 데이터 다운로드 시작...")
-    print(f"티커: {ticker}")
-    print("-" * 50)
+# 애플 주식 데이터 다운로드
+ticker = yf.Ticker("AAPL")
+data = ticker.history(period="1y")  # 최근 1년
+
+print(data.head())
 ```
-**핵심 구현 포인트:**
 
-1. **상대 경로 사용**: `__file__` 기반으로 데이터 디렉토리 경로 설정
-2. **타임프레임 정의**: 딕셔너리를 사용한 체계적 관리
-3. **에러 처리**: try-except 블록으로 안정성 확보
-4. **진행 상황 표시**: 사용자 친화적인 출력
+결과:
+```
+                 Open       High        Low      Close    Volume  Dividends  Stock Splits
+Date
+2024-01-02  187.15  188.44  185.83  185.64  82488400       0.0          0.0
+2024-01-03  185.89  186.67  183.43  184.25  58414400       0.0          0.0
+2024-01-04  184.35  186.40  183.92  185.59  54480100       0.0          0.0
+...
+```
 
-### 2.2 실행 방법
+### 다양한 기간 옵션
+
+```python
+# 방법 1: 기간(period) 지정
+data = ticker.history(period="1mo")   # 최근 1개월
+data = ticker.history(period="1y")    # 최근 1년
+data = ticker.history(period="5y")    # 최근 5년
+data = ticker.history(period="max")   # 모든 데이터
+
+# 방법 2: 시작일과 종료일 지정
+data = ticker.history(start="2020-01-01", end="2023-12-31")
+```
+
+### 다양한 시간 프레임
+
+```python
+# 일봉 (기본값)
+data = ticker.history(period="1y", interval="1d")
+
+# 주봉
+data = ticker.history(period="2y", interval="1wk")
+
+# 월봉
+data = ticker.history(period="5y", interval="1mo")
+
+# 1시간봉 (최근 60일까지만 가능)
+data = ticker.history(period="1mo", interval="1h")
+
+# 1분봉 (최근 7일까지만 가능)
+data = ticker.history(period="1d", interval="1m")
+```
+
+## 2.3 배당금과 주식 분할 조정
+
+### Adjusted Close의 중요성
+
+**문제 상황**:
+- 2020년 1월 1일: Apple 주가 $300
+- 2020년 8월 31일: 4:1 주식 분할 실행
+- 2020년 9월 1일: Apple 주가 $100 (분할 후)
+
+만약 조정하지 않으면, 8월 31일에서 9월 1일로 넘어갈 때 -66%의 손실이 발생한 것처럼 보입니다! 하지만 실제로는 가치가 변하지 않았습니다.
+
+### Adjusted Close란?
+
+**Adjusted Close (조정 종가)**는 다음을 고려하여 과거 가격을 조정한 값입니다:
+
+1. **배당금 (Dividends)**: 배당금 지급으로 인한 가격 하락 반영
+2. **주식 분할 (Stock Splits)**: 주식 분할로 인한 가격 변화 반영
+
+### 조정 공식
+
+**주식 분할 조정**:
+- 4:1 분할이 발생하면, 분할 이전의 모든 가격을 1/4로 조정
+
+**배당금 조정**:
+$$P_{adjusted} = P_{actual} \times \frac{Close_{today}}{Close_{today} + Dividend}$$
+
+### yfinance의 자동 조정
+
+yfinance는 기본적으로 조정된 가격을 제공합니다:
+
+```python
+data = ticker.history(period="5y")
+
+# Close: 조정된 종가 (Adjusted Close)
+# 이미 배당금과 주식 분할이 반영되어 있음
+print(data['Close'])
+```
+
+**중요**: 백테스팅에서는 **반드시 Adjusted Close를 사용**해야 합니다. 그렇지 않으면 잘못된 수익률을 계산하게 됩니다.
+
+## 2.4 다중 종목 데이터 다운로드
+
+### 여러 종목 동시 다운로드
+
+```python
+import yfinance as yf
+
+# 여러 종목을 한 번에 다운로드
+tickers = ["AAPL", "MSFT", "GOOGL", "TSLA"]
+data = yf.download(tickers, start="2020-01-01", end="2023-12-31")
+
+# 결과는 MultiIndex DataFrame
+print(data['Close'])  # 모든 종목의 종가
+```
+
+결과:
+```
+Ticker         AAPL    MSFT   GOOGL    TSLA
+Date
+2020-01-02   73.06   158.78   67.42   29.53
+2020-01-03   72.34   157.32   67.11   29.17
+...
+```
+
+### 개별 종목 추출
+
+```python
+# 단일 종목 추출
+aapl_close = data['Close']['AAPL']
+
+# 여러 종목 추출
+tech_stocks = data['Close'][['AAPL', 'MSFT', 'GOOGL']]
+```
+
+## 2.5 다중 타임프레임 분석
+
+### 왜 다중 타임프레임인가?
+
+**큰 그림 파악**: 일봉에서는 하락 추세지만, 주봉에서는 상승 추세일 수 있습니다.
+
+**트레이딩 전략 예시**:
+- **주봉**: 전체 추세 파악 (상승 추세인가?)
+- **일봉**: 진입 시점 찾기 (언제 매수할까?)
+- **1시간봉**: 정확한 타이밍 (지금 바로 매수할까?)
+
+### 다중 타임프레임 데이터 수집
+
+```python
+ticker = yf.Ticker("SPY")
+
+# 여러 타임프레임 데이터
+daily = ticker.history(period="1y", interval="1d")
+weekly = ticker.history(period="2y", interval="1wk")
+monthly = ticker.history(period="5y", interval="1mo")
+```
+
+### 타임프레임 간 전환
+
+pandas의 `resample()` 함수로 타임프레임 변환:
+
+```python
+# 일봉 → 주봉
+weekly_from_daily = daily.resample('W').agg({
+    'Open': 'first',   # 주의 첫 거래일 시가
+    'High': 'max',     # 주 중 최고가
+    'Low': 'min',      # 주 중 최저가
+    'Close': 'last',   # 주의 마지막 거래일 종가
+    'Volume': 'sum'    # 주간 총 거래량
+})
+```
+
+## 2.6 종목 정보 조회
+
+### 기본 정보
+
+```python
+ticker = yf.Ticker("AAPL")
+
+# 회사 정보
+info = ticker.info
+
+print(f"회사명: {info['longName']}")
+print(f"섹터: {info['sector']}")
+print(f"산업: {info['industry']}")
+print(f"시가총액: ${info['marketCap']:,}")
+print(f"직원 수: {info['fullTimeEmployees']:,}")
+```
+
+### 재무 데이터
+
+```python
+# 재무제표
+income_stmt = ticker.income_stmt        # 손익계산서
+balance_sheet = ticker.balance_sheet    # 재무상태표
+cash_flow = ticker.cashflow             # 현금흐름표
+
+# 배당금 이력
+dividends = ticker.dividends
+print(dividends.tail())
+
+# 주식 분할 이력
+splits = ticker.splits
+print(splits)
+```
+
+## 2.7 실습: 주식 데이터 탐색
+
+이제 실제 코드를 실행해봅시다.
+
+### 코드 실행
 
 ```bash
 cd codes
-uv run chapter02/01_data_download_multiple_timeframes.py
+uv run chapter02/01_download_and_explore.py
 ```
 
-### 2.3 실행 결과
+### 스크립트 개요
 
-스크립트를 실행하면 다음과 같은 출력을 볼 수 있습니다:
+이 스크립트는 다음을 수행합니다:
+
+1. **단일 종목 다운로드**: Apple (AAPL) 주식 데이터
+2. **OHLCV 분석**: 기본 통계 및 캔들스틱 패턴
+3. **다중 종목 비교**: AAPL, MSFT, GOOGL, NVDA
+4. **타임프레임 비교**: 일봉 vs. 주봉 vs. 월봉
+5. **시각화**: 가격 차트, 거래량, 캔들스틱 차트
+
+### 예상 출력
 
 ```
-NVIDIA 주식 데이터 다운로드 시작...
-티커: NVDA
---------------------------------------------------
+==========================================
+Chapter 2: 금융 데이터 다운로드와 이해
+==========================================
 
-1year 데이터 다운로드 중...
-기간: 2024-10-21 ~ 2025-10-21
-✅ 1year 데이터 저장 완료: NVDA_1year.csv
-   데이터 포인트 수: 250
-   날짜 범위: 2024-10-21 ~ 2025-10-20
-   컬럼: ['Open', 'High', 'Low', 'Close', 'Volume', 'Dividends', 'Stock Splits']
-   가격 범위: $94.30 ~ $192.57
-   평균 거래량: 224,843,859
+=== Apple (AAPL) 데이터 다운로드 ===
+기간: 2019-01-01 ~ 2024-01-01 (5년)
+총 데이터 포인트: 1258개
 
-5years 데이터 다운로드 중...
-기간: 2020-10-22 ~ 2025-10-21
-✅ 5years 데이터 저장 완료: NVDA_5years.csv
-   데이터 포인트 수: 1254
-   날짜 범위: 2020-10-22 ~ 2025-10-20
-   컬럼: ['Open', 'High', 'Low', 'Close', 'Volume', 'Dividends', 'Stock Splits']
-   가격 범위: $11.21 ~ $192.57
-   평균 거래량: 399,535,254
+회사 정보:
+- 이름: Apple Inc.
+- 섹터: Technology
+- 시가총액: $2,923,000,000,000
 
-10years 데이터 다운로드 중...
-기간: 2015-10-24 ~ 2025-10-21
-✅ 10years 데이터 저장 완료: NVDA_10years.csv
-   데이터 포인트 수: 2511
-   날짜 범위: 2015-10-26 ~ 2025-10-20
-   컬럼: ['Open', 'High', 'Low', 'Close', 'Volume', 'Dividends', 'Stock Splits']
-   가격 범위: $0.62 ~ $192.57
-   평균 거래량: 461,306,024
+=== OHLCV 기본 통계 ===
+평균 종가: $139.45
+최고가: $199.62 (2023-12-14)
+최저가: $53.15 (2019-01-03)
+
+일일 변동폭 (High-Low):
+- 평균: $2.89 (2.08%)
+- 최대: $12.41 (2020-03-12)
+
+=== 캔들스틱 패턴 분석 ===
+상승 캔들: 658개 (52.3%)
+하락 캔들: 600개 (47.7%)
+
+평균 몸통 크기: $1.82
+평균 위 꼬리: $0.98
+평균 아래 꼬리: $0.95
+
+=== 다중 종목 비교 (최근 1년 수익률) ===
+AAPL: +48.2%
+MSFT: +37.5%
+GOOGL: +52.8%
+NVDA: +239.0% 🚀
+
+차트 저장 완료: chapter02/images/
 ```
 
-**주요 관찰 사항:**
-- NVIDIA는 10년간 약 310배 성장 ($0.62 → $192.57)
-- 거래량이 시간이 지남에 따라 증가하는 추세
-- 모든 타임프레임에서 안정적인 데이터 수집 확인
+## 2.8 데이터 저장 및 관리
 
-## 3. 데이터 전처리
-
-### 3.1 전처리의 필요성
-
-원시 데이터는 다음과 같은 문제를 가질 수 있습니다:
-
-- **결측값**: 휴장일이나 데이터 수집 오류로 인한 누락
-- **중복값**: 동일한 날짜의 중복 데이터
-- **이상치**: 비현실적인 가격 변동
-- **일관성 문제**: 가격 관계의 논리적 오류
-
-### 3.2 전처리 스크립트 구현
-
-**파일**: `codes/chapter02/02_data_preprocessing.py`
+### CSV로 저장
 
 ```python
-def load_and_preprocess_data(filename):
-    """Load and preprocess NVIDIA data"""
-    
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    data_dir = os.path.join(script_dir, "..", "data")
-    filepath = os.path.join(data_dir, filename)
-    
-    # Load data
-    df = pd.read_csv(filepath, index_col=0, parse_dates=True)
-    
-    # Check for missing values
-    missing_values = df.isnull().sum()
-    
-    # Remove rows with missing values
-    df = df.dropna()
-    
-    # Check for duplicate dates
-    duplicates = df.index.duplicated().sum()
-    if duplicates > 0:
-        df = df[~df.index.duplicated(keep='first')]
-    
-    # Sort by date
-    df = df.sort_index()
-    
-    # Add technical indicators for validation
-    df['Daily_Return'] = df['Close'].pct_change()
-    df['Price_Range'] = df['High'] - df['Low']
-    df['Volume_MA_20'] = df['Volume'].rolling(window=20).mean()
-    
-    return df
-```
+# 데이터 저장
+data.to_csv('data/AAPL_daily_2020_2023.csv')
 
-### 3.3 실행 방법
-
-```bash
-uv run chapter02/02_data_preprocessing.py
-```
-
-### 3.4 전처리 결과
-
-```
-📋 타임프레임별 요약:
-  10years:
-    기간: 2015-10-26 ~ 2025-10-20
-    데이터 포인트: 2,511개
-    평균 종가: $32.39
-    변동성: 0.0315
-  1year:
-    기간: 2024-10-21 ~ 2025-10-20
-    데이터 포인트: 250개
-    평균 종가: $144.59
-    변동성: 0.0311
-  5years:
-    기간: 2020-10-22 ~ 2025-10-20
-    데이터 포인트: 1,254개
-    평균 종가: $60.34
-    변동성: 0.0329
-```
-
-**전처리 결과 분석:**
-- 모든 데이터셋에서 높은 완전성 달성
-- 일일 변동성이 3% 내외로 일관성 있음
-- 시간이 지남에 따른 가격 상승 추세 확인## 4. 데이터
- 품질 검증
-
-### 4.1 품질 검증의 중요성
-
-데이터 품질 검증은 백테스팅 결과의 신뢰성을 보장하는 핵심 단계입니다. 다음 항목들을 체계적으로 검증해야 합니다:
-
-1. **완전성 (Completeness)**: 예상되는 거래일 대비 실제 데이터 비율
-2. **일관성 (Consistency)**: 가격 및 거래량 데이터의 논리적 일관성
-3. **정확성 (Accuracy)**: 이상치 및 극단적 변동 검출
-4. **적시성 (Timeliness)**: 최신 데이터의 반영 여부
-
-### 4.2 품질 검증 스크립트
-
-**파일**: `codes/chapter02/03_data_quality_validation.py`
-
-이 스크립트는 포괄적인 데이터 품질 검증을 수행합니다:
-
-```python
-def validate_data_quality(df, timeframe_name):
-    """Comprehensive data quality validation"""
-    
-    validation_results = {}
-    
-    # 1. Completeness check
-    total_days = (df.index[-1] - df.index[0]).days
-    trading_days = len(df)
-    completeness = trading_days / (total_days * 5/7)  # Approximate trading days
-    
-    # 2. Data consistency checks
-    high_low_consistent = (df['High'] >= df['Low']).all()
-    high_close_consistent = (df['High'] >= df['Close']).all()
-    price_consistent = high_low_consistent and high_close_consistent
-    
-    # 3. Outlier detection
-    returns = df['Close'].pct_change().dropna()
-    return_std = returns.std()
-    return_outliers = (abs(returns) > 3 * return_std).sum()
-    
-    return validation_results
-```
-
-### 4.3 실행 방법
-
-```bash
-uv run chapter02/03_data_quality_validation.py
-```
-
-### 4.4 품질 검증 결과
-
-스크립트 실행 후 다음과 같은 상세한 품질 분석 결과를 얻을 수 있습니다:
-
-```
-📋 최종 검증 요약
-==================================================
-
-10YEARS:
-  완전성: 96.39%
-  가격 일관성: ✅
-  거래량 일관성: ✅
-  가격 이상치: 426개
-  수익률 이상치: 27개
-  결측값: 20개
-  총 수익률: 26420.87%
-  변동성: 0.0315
-
-1YEAR:
-  완전성: 96.15%
-  가격 일관성: ✅
-  거래량 일관성: ✅
-  가격 이상치: 0개
-  수익률 이상치: 2개
-  결측값: 20개
-  총 수익률: 27.67%
-  변동성: 0.0311
-
-5YEARS:
-  완전성: 96.25%
-  가격 일관성: ✅
-  거래량 일관성: ✅
-  가격 이상치: 0개
-  수익률 이상치: 9개
-  결측값: 20개
-  총 수익률: 1276.99%
-  변동성: 0.0329
-```
-
-**품질 검증 결과 해석:**
-
-1. **높은 완전성**: 모든 타임프레임에서 96% 이상의 완전성 달성
-2. **일관성 통과**: 가격 및 거래량 데이터의 논리적 일관성 확인
-3. **이상치 관리**: 10년 데이터에서 일부 이상치 발견 (정상적인 극단적 시장 상황)
-4. **놀라운 성장**: NVIDIA의 10년간 264배 성장 확인
-
-## 5. 데이터 시각화 및 분석
-
-### 5.1 종합 품질 분석 차트
-
-스크립트 실행 시 다음과 같은 시각화가 자동 생성됩니다:
-
-![데이터 품질 종합 분석](/images/chapter02/data_quality_summary.png)
-
-이 차트는 다음 정보를 제공합니다:
-
-- **정규화된 가격 추이**: 각 타임프레임별 상대적 성과 비교
-- **거래량 비교**: 최근 거래량 패턴 분석
-- **수익률 분포**: 일일 수익률의 통계적 분포
-- **품질 점수**: 각 데이터셋의 종합 품질 평가
-
-### 5.2 개별 타임프레임 상세 분석
-
-각 타임프레임별로 상세한 분석 차트가 생성됩니다:
-
-#### 5.2.1 1년 데이터 분석
-
-![1년 데이터 상세 분석](/images/chapter02/nvidia_1year_analysis.png)
-
-**주요 특징:**
-- 최근 1년간 27.67% 수익률
-- 안정적인 거래량 패턴
-- 정규분포에 가까운 수익률 분포
-- 낮은 변동성 (3.11%)
-
-#### 5.2.2 5년 데이터 분석
-
-![5년 데이터 상세 분석](/images/chapter02/nvidia_5years_analysis.png)
-
-**주요 특징:**
-- 5년간 1,276.99% 수익률 (연평균 약 13배)
-- AI 붐과 함께한 급격한 성장
-- 2020년 이후 가속화된 상승세
-- 중간 수준의 변동성 (3.29%)
-
-#### 5.2.3 10년 데이터 분석
-
-![10년 데이터 상세 분석](/images/chapter02/nvidia_10years_analysis.png)
-
-**주요 특징:**
-- 10년간 26,420.87% 수익률 (264배 성장)
-- 2016년 이후 지속적인 상승 추세
-- 2020년 이후 폭발적 성장
-- 전체 기간 변동성 3.15%##
- 6. 실전 활용 가이드
-
-### 6.1 데이터 파일 구조
-
-완료된 데이터 준비 과정 후 다음과 같은 파일 구조가 생성됩니다:
-
-```
-codes/
-├── data/
-│   ├── NVDA_1year.csv          # 원본 1년 데이터
-│   ├── NVDA_1year_processed.csv # 전처리된 1년 데이터
-│   ├── NVDA_5years.csv         # 원본 5년 데이터
-│   ├── NVDA_5years_processed.csv # 전처리된 5년 데이터
-│   ├── NVDA_10years.csv        # 원본 10년 데이터
-│   └── NVDA_10years_processed.csv # 전처리된 10년 데이터
-└── chapter02/
-    ├── 01_data_download_multiple_timeframes.py
-    ├── 02_data_preprocessing.py
-    ├── 03_data_quality_validation.py
-    └── images/
-        ├── data_quality_summary.png
-        ├── nvidia_1year_analysis.png
-        ├── nvidia_5years_analysis.png
-        └── nvidia_10years_analysis.png
-```
-
-### 6.2 데이터 사용 방법
-
-전처리된 데이터는 다음과 같이 로드하여 사용할 수 있습니다:
-
-```python
+# 데이터 불러오기
 import pandas as pd
-
-# 전처리된 데이터 로드
-df = pd.read_csv('codes/data/NVDA_1year_processed.csv', 
-                 index_col=0, parse_dates=True)
-
-# 기본 정보 확인
-print(f"데이터 기간: {df.index[0]} ~ {df.index[-1]}")
-print(f"데이터 포인트: {len(df)}개")
-print(f"컬럼: {list(df.columns)}")
-
-# 기술적 지표 활용
-daily_returns = df['Daily_Return']
-price_range = df['Price_Range']
-volume_ma = df['Volume_MA_20']
+data = pd.read_csv('data/AAPL_daily_2020_2023.csv',
+                   index_col='Date',
+                   parse_dates=True)
 ```
 
-### 6.3 백테스팅을 위한 데이터 선택 가이드
+### 데이터 캐싱 전략
 
-**1년 데이터 사용 시기:**
-- 최신 시장 상황 반영이 중요한 전략
-- 단기 트레이딩 전략 개발
-- 현재 시장 변동성 패턴 분석
+**문제**: yfinance로 매번 다운로드하면 시간이 걸립니다.
 
-**5년 데이터 사용 시기:**
-- 중장기 전략 개발
-- 다양한 시장 사이클 포함 필요
-- AI 붐 이후 시장 특성 분석
-
-**10년 데이터 사용 시기:**
-- 장기 투자 전략 검증
-- 다양한 시장 환경 테스트
-- 전체 성장 사이클 분석
-
-### 6.4 데이터 품질 모니터링
-
-정기적인 데이터 품질 모니터링을 위해 다음 지표들을 추적하세요:
+**해결책**: 로컬에 저장하고 재사용
 
 ```python
-# 품질 지표 계산 예시
-def calculate_quality_metrics(df):
-    """데이터 품질 지표 계산"""
-    
-    metrics = {}
-    
-    # 완전성
-    expected_days = (df.index[-1] - df.index[0]).days
-    actual_days = len(df)
-    metrics['completeness'] = actual_days / (expected_days * 5/7)
-    
-    # 일관성
-    price_consistent = (
-        (df['High'] >= df['Close']).all() and
-        (df['High'] >= df['Open']).all() and
-        (df['Low'] <= df['Close']).all() and
-        (df['Low'] <= df['Open']).all()
-    )
-    metrics['consistency'] = price_consistent
-    
-    # 변동성
-    returns = df['Close'].pct_change().dropna()
-    metrics['volatility'] = returns.std()
-    
-    # 이상치 비율
-    outliers = (abs(returns) > 3 * returns.std()).sum()
-    metrics['outlier_ratio'] = outliers / len(returns)
-    
-    return metrics
+from pathlib import Path
+import pandas as pd
+import yfinance as yf
+
+def get_stock_data(ticker, start, end, force_download=False):
+    """
+    주식 데이터를 가져오는 함수 (캐싱 포함)
+
+    Parameters:
+    -----------
+    ticker : str
+        종목 심볼
+    start : str
+        시작일
+    end : str
+        종료일
+    force_download : bool
+        True면 항상 새로 다운로드
+
+    Returns:
+    --------
+    pd.DataFrame
+        OHLCV 데이터
+    """
+    cache_dir = Path('data')
+    cache_dir.mkdir(exist_ok=True)
+
+    cache_file = cache_dir / f"{ticker}_{start}_{end}.csv"
+
+    # 캐시 파일이 있고, 강제 다운로드가 아니면 캐시 사용
+    if cache_file.exists() and not force_download:
+        print(f"캐시에서 {ticker} 데이터 로드 중...")
+        return pd.read_csv(cache_file, index_col='Date', parse_dates=True)
+
+    # 새로 다운로드
+    print(f"Yahoo Finance에서 {ticker} 다운로드 중...")
+    data = yf.download(ticker, start=start, end=end, progress=False)
+
+    # 캐시 저장
+    data.to_csv(cache_file)
+    print(f"캐시 저장 완료: {cache_file}")
+
+    return data
 ```
 
-## 7. 주요 발견사항 및 인사이트
+사용 예:
+```python
+# 첫 실행: 다운로드 후 저장
+data = get_stock_data("AAPL", "2020-01-01", "2023-12-31")
 
-### 7.1 NVIDIA 주식 분석 결과
+# 두 번째 실행: 캐시에서 즉시 로드
+data = get_stock_data("AAPL", "2020-01-01", "2023-12-31")
+```
 
-**성장 패턴:**
-- 2015-2020: 점진적 성장 (GPU 게이밍 시장 확대)
-- 2020-2022: 가속화된 성장 (AI/ML 붐, 암호화폐 채굴)
-- 2022-2025: 폭발적 성장 (생성형 AI 혁명)
+## 2.9 데이터 품질 확인
 
-**변동성 특성:**
-- 일관된 일일 변동성 (~3.1-3.3%)
-- 장기적으로 안정적인 변동성 패턴
-- 극단적 움직임은 주로 실적 발표나 시장 이벤트와 연관
+### 결측치 확인
 
-**거래량 패턴:**
-- 시간이 지남에 따라 증가하는 평균 거래량
-- 가격 상승과 함께 증가하는 시장 관심도
-- 높은 유동성으로 백테스팅에 적합
+```python
+# 결측치 확인
+print(data.isnull().sum())
 
-### 7.2 백테스팅 관점에서의 시사점
+# 결측치 비율
+missing_pct = (data.isnull().sum() / len(data)) * 100
+print(f"결측치 비율: {missing_pct:.2f}%")
+```
 
-**데이터 품질:**
-- 96% 이상의 높은 완전성으로 신뢰할 수 있는 백테스팅 가능
-- 일관된 데이터 구조로 안정적인 전략 개발 환경 제공
-- 충분한 데이터 포인트로 통계적 유의성 확보
+### 데이터 연속성 확인
 
-**전략 개발 고려사항:**
-- 장기 상승 추세로 인한 매수 편향 주의
-- 높은 성장률로 인한 과최적화 위험
-- 다양한 시장 환경 테스트를 위한 다중 타임프레임 활용 필요
+```python
+# 거래일 간 간격 확인
+date_diff = data.index.to_series().diff()
 
-## 8. 다음 단계
+# 3일 이상 간격이 있는 경우 찾기 (주말 제외)
+gaps = date_diff[date_diff > pd.Timedelta(days=3)]
+if len(gaps) > 0:
+    print(f"데이터 간격 발견: {len(gaps)}개")
+    print(gaps)
+```
 
-이제 고품질의 NVIDIA 주식 데이터를 확보했습니다. 다음 챕터에서는 이 데이터를 활용하여 첫 번째 트레이딩 전략인 단순 이동평균(SMA) 전략을 구현하고 백테스팅해보겠습니다.
+### 이상치 탐지
 
-**준비된 것:**
-- ✅ 다중 타임프레임 NVIDIA 데이터
-- ✅ 전처리 및 품질 검증 완료
-- ✅ 시각화를 통한 데이터 특성 파악
-- ✅ 백테스팅을 위한 데이터 구조 확립
+```python
+# 일일 수익률 계산
+returns = data['Close'].pct_change()
 
-**다음 챕터 미리보기:**
-- 단순 이동평균(SMA) 이론 및 계산
-- SMA 크로스오버 전략 구현
-- 백테스팅 프레임워크 구축
-- 성과 분석 및 시각화
+# 극단적 수익률 (±10% 이상)
+extreme_returns = returns[abs(returns) > 0.10]
+print(f"극단적 변동: {len(extreme_returns)}일")
+print(extreme_returns)
+```
 
-## 9. 연습 문제
+## 2.10 다음 단계
 
-### 9.1 기본 연습
+### 이 챕터에서 배운 것
 
-1. **다른 종목 데이터 다운로드**: Apple(AAPL) 또는 Tesla(TSLA) 데이터를 동일한 방식으로 다운로드해보세요.
+✅ **OHLCV 데이터 구조**: Open, High, Low, Close, Volume의 의미
+✅ **yfinance 사용법**: 단일/다중 종목, 다양한 기간과 타임프레임
+✅ **Adjusted Close**: 배당금과 주식 분할 조정의 중요성
+✅ **다중 타임프레임**: 일봉, 주봉, 월봉 데이터 활용
+✅ **데이터 관리**: 저장, 캐싱, 품질 확인
 
-2. **데이터 비교 분석**: NVIDIA와 다른 종목의 변동성을 비교 분석해보세요.
+### 실습 과제
 
-3. **품질 지표 개선**: 추가적인 데이터 품질 지표를 개발해보세요.
+1. **다른 종목 탐색**: Tesla (TSLA), Amazon (AMZN) 데이터를 다운로드하고 비교해보세요.
 
-### 9.2 심화 연습
+2. **ETF 분석**: S&P 500 ETF (SPY)와 Nasdaq ETF (QQQ)의 최근 5년 성과를 비교해보세요.
 
-1. **자동화 스크립트**: 여러 종목을 한 번에 다운로드하고 분석하는 스크립트를 작성해보세요.
+3. **타임프레임 비교**: 같은 종목의 일봉과 월봉 차트를 그려보고, 어떤 차이가 있는지 관찰하세요.
 
-2. **실시간 모니터링**: 데이터 품질을 실시간으로 모니터링하는 시스템을 구축해보세요.
+4. **주식 분할 탐색**: Apple이나 Tesla의 주식 분할 이력을 조회하고, Adjusted vs. Unadjusted Close를 비교해보세요.
 
-3. **데이터베이스 연동**: CSV 파일 대신 데이터베이스에 데이터를 저장하는 방식을 구현해보세요.
+### 다음 챕터 미리보기
+
+**Chapter 3: 데이터 전처리와 수익률**에서는:
+- 결측치 및 이상치 처리 방법
+- 데이터 정합성 검증 기법
+- 단순 수익률 vs. 로그 수익률 비교
+- 벤치마크 대비 초과 수익률 계산
+- 완전한 데이터 전처리 파이프라인 구축
 
 ---
 
-**챕터 2 완료!** 🎉
+**💡 핵심 메시지**
 
-이제 체계적인 데이터 준비 과정을 마스터했습니다. 다음 챕터에서는 이 데이터를 활용하여 실제 트레이딩 전략을 구현해보겠습니다.
+데이터는 백테스팅의 기초입니다. 양질의 데이터 없이는 신뢰할 수 있는 백테스트 결과를 얻을 수 없습니다. yfinance는 무료로 사용할 수 있는 훌륭한 도구지만, 항상 데이터의 품질을 확인하고, Adjusted Close를 사용하며, 적절한 캐싱 전략을 구현하는 것이 중요합니다.
+
+다음 챕터에서는 다운로드한 데이터를 정제하고 수익률을 계산하는 방법을 배워봅시다!

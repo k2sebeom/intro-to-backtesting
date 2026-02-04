@@ -36,6 +36,21 @@ uv run chapter01/01_hello_trading.py
 - 기본 통계 분석
 - 시각화 차트 생성 (저장 위치: `chapter01/images/hello_trading.png`)
 
+### Chapter 2: 금융 데이터 다운로드와 이해
+
+```bash
+# 실제 주식 데이터 다운로드 및 탐색
+uv run chapter02/01_download_and_explore.py
+```
+
+이 스크립트는 다음을 수행합니다:
+- Apple (AAPL) 주식 5년 데이터 다운로드
+- OHLCV 기본 통계 및 캔들스틱 패턴 분석
+- 다중 종목 비교 (AAPL, MSFT, GOOGL, NVDA)
+- 다중 타임프레임 분석 (일봉, 주봉, 월봉)
+- 종합 시각화 차트 생성 (저장 위치: `chapter02/images/data_exploration.png`)
+- 데이터 캐싱 (`data/AAPL_5y.csv`)
+
 ## 생성되는 파일들
 
 - `data/`: 다운로드된 주식 데이터 (CSV 형식)

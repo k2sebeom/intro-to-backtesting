@@ -190,11 +190,133 @@ uv run chapter11/01_portfolio_diversification.py
 - `data/`: 다운로드된 주식 데이터 (CSV 형식)
 - `chapter*/images/`: 각 챕터에서 생성된 차트 이미지들
 
+### Chapter 12: 성과 지표와 리스크 측정
+
+```bash
+# 종합 성과 분석 대시보드
+uv run chapter12/01_performance_metrics.py
+```
+
+이 스크립트는 다음을 수행합니다:
+- 수익률 지표: Total Return, Annualized Return, CAGR
+- 리스크 지표: Volatility, Maximum Drawdown
+- 리스크 조정 수익률: Sharpe, Sortino, Calmar Ratio
+- 거래 통계: Win Rate, Profit Factor, Expectancy
+- 종합 성과 대시보드 생성
+- 차트 저장 (저장 위치: `chapter12/images/performance_dashboard.png`)
+
+### Chapter 13: 백테스트 결과 분석과 시각화
+
+```bash
+# Equity Curve와 Drawdown 분석
+uv run chapter13/01_equity_drawdown_charts.py
+
+# 수익률 분포와 월별 히트맵
+uv run chapter13/02_returns_analysis.py
+
+# 개별 거래 분석
+uv run chapter13/03_trade_analysis.py
+```
+
+이 스크립트들은 다음을 수행합니다:
+- Equity Curve와 Drawdown 시각화
+- 수익률 분포, Q-Q Plot, 정규성 검정
+- 월별/연별 수익률 히트맵
+- 거래 지속 기간 및 승패 분석
+- 연속 승패 통계
+- 차트 저장 (저장 위치: `chapter13/images/`)
+
+### Chapter 14: 과최적화 방지와 검증
+
+```bash
+# Walk-Forward 분석
+uv run chapter14/01_walk_forward_analysis.py
+
+# Monte Carlo 시뮬레이션
+uv run chapter14/02_monte_carlo_simulation.py
+```
+
+이 스크립트들은 다음을 수행합니다:
+- 롤링 및 앵커드 Walk-Forward 분석
+- Walk-Forward Efficiency (WFE) 계산
+- Monte Carlo 거래 재샘플링
+- 통계적 신뢰구간 계산
+- 과최적화 여부 판단
+- 차트 저장 (저장 위치: `chapter14/images/`)
+
+### Chapter 15: 머신러닝 기반 전략 (Part 1)
+
+```bash
+# 특성 엔지니어링
+uv run chapter15/01_feature_engineering.py
+
+# ML 전략 구현
+uv run chapter15/02_ml_strategy.py
+```
+
+이 스크립트들은 다음을 수행합니다:
+- 기술적 지표를 ML 특성으로 변환
+- Logistic Regression, Random Forest 모델 학습
+- Time Series Split으로 교차 검증
+- 모델 평가 (Accuracy, Precision, Recall, F1, AUC)
+- Feature correlation 분석
+- 차트 저장 (저장 위치: `chapter15/images/`)
+
+### Chapter 16: 머신러닝 기반 전략 (Part 2)
+
+```bash
+# ML과 Backtrader 통합
+uv run chapter16/01_ml_backtrader_integration.py
+```
+
+이 스크립트는 다음을 수행합니다:
+- ML 모델을 Backtrader에 통합
+- 확률 임계값 기반 거래
+- 다양한 임계값으로 성과 비교
+- 최적 확률 임계값 찾기
+- 실전 ML 전략 구현
+
+### Chapter 17: 실전 트레이딩 고려사항
+
+```bash
+# 거래 비용 영향 분석
+uv run chapter17/01_realistic_trading_costs.py
+```
+
+이 스크립트는 다음을 수행합니다:
+- 다양한 수수료 시나리오 테스트 (0%, 0.1%, 0.3%)
+- 슬리피지 영향 분석 (0%, 0.05%, 0.1%)
+- 현실적 비용 조합 테스트
+- 거래 비용이 성과에 미치는 영향 정량화
+- 비용별 성과 비교 차트
+- 차트 저장 (저장 위치: `chapter17/images/`)
+
+### Chapter 18: 완전한 전략 개발 프로세스
+
+```bash
+# 종합 전략 프레임워크
+uv run chapter18/01_complete_strategy_framework.py
+```
+
+이 스크립트는 다음을 수행합니다:
+- 전체 전략 개발 프로세스 시연
+- In-Sample / Out-of-Sample 분할
+- Walk-Forward Efficiency 계산
+- 전략 배포 준비도 체크리스트
+- 종합 성과 리포트 생성
+- 실전 배포 가이드라인
+
+## 생성되는 파일들
+
+- `data/`: 다운로드된 주식 데이터 (CSV 형식)
+- `chapter*/images/`: 각 챕터에서 생성된 차트 이미지들
+
 ## 주의사항
 
 - 인터넷 연결이 필요합니다 (yfinance를 통한 데이터 다운로드)
 - 생성된 이미지는 GUI 없이 파일로 저장됩니다
 - 한글 폰트 관련 경고는 무시해도 됩니다 (차트는 정상적으로 생성됨)
+- 일부 ML 모델 학습은 시간이 걸릴 수 있습니다
 
 ## 패키지 정보
 
@@ -202,6 +324,21 @@ uv run chapter11/01_portfolio_diversification.py
 - `yfinance`: Yahoo Finance 데이터 다운로드
 - `pandas`: 데이터 조작 및 분석
 - `matplotlib`: 데이터 시각화
+- `seaborn`: 통계 시각화
 - `backtrader`: 백테스팅 프레임워크
 - `numpy`: 수치 계산
-- `seaborn`: 고급 시각화
+- `scikit-learn`: 머신러닝 모델
+- `scipy`: 과학 계산 및 최적화
+
+## 추천 학습 순서
+
+1. **빠른 시작**: Chapters 1-2 → 4-5 → 9 → 12
+2. **기술적 분석 중심**: Chapters 1-8 → 9 → 12-13
+3. **머신러닝 중심**: Chapters 1-4 → 6 → 9 → 12-13 → 15-16
+4. **포트폴리오 관리**: Chapters 1-4 → 9-13 → 17-18
+5. **완전 학습**: Chapters 1-18 순서대로
+
+---
+
+**축하합니다! 모든 18개 챕터의 코드 예제가 준비되었습니다.**
+**성공적인 백테스팅과 트레이딩을 기원합니다! 🚀📈**

@@ -138,6 +138,53 @@ uv run chapter08/01_multi_indicator_strategy.py
 - 모든 지표를 한 화면에 시각화
 - 차트 저장 (저장 위치: `chapter08/images/multi_indicator_strategy.png`)
 
+### Chapter 9: 포지션 크기 결정
+
+```bash
+# 다양한 포지션 크기 결정 방법
+uv run chapter09/01_position_sizing.py
+```
+
+이 스크립트는 다음을 수행합니다:
+- 고정 비율 (95%, 50%) 포지션 크기
+- 고정 위험 (1%) 포지션 크기
+- 켈리 기준 (Half-Kelly) 포지션 크기
+- 각 방법의 성과 비교 (수익률, Sharpe Ratio, MDD)
+- 포트폴리오 가치 성장 곡선 시각화
+- 차트 저장 (저장 위치: `chapter09/images/position_sizing.png`)
+
+### Chapter 10: 리스크 관리와 손절매
+
+```bash
+# 손절매 및 익절매 전략
+uv run chapter10/01_risk_management.py
+```
+
+이 스크립트는 다음을 수행합니다:
+- 손절매 없는 전략 (기준선)
+- 고정 비율 손절매/익절매 (2%/4%)
+- ATR 기반 동적 손절매 (2×ATR)
+- 추적 손절매 (5%)
+- 손익비 및 승률 분석
+- 위험-수익 프로파일 비교
+- 차트 저장 (저장 위치: `chapter10/images/risk_management.png`)
+
+### Chapter 11: 포트폴리오 구성과 분산투자
+
+```bash
+# 다중 자산 포트폴리오 전략
+uv run chapter11/01_portfolio_diversification.py
+```
+
+이 스크립트는 다음을 수행합니다:
+- 단일 자산 (AAPL) 전략
+- 균등 비중 포트폴리오 (AAPL, MSFT, GOOGL, AMZN)
+- 역변동성 포트폴리오
+- 분기별 리밸런싱 구현
+- 자산 간 상관관계 분석 및 히트맵
+- 위험-수익 산점도
+- 차트 저장 (저장 위치: `chapter11/images/portfolio_diversification.png`)
+
 ## 생성되는 파일들
 
 - `data/`: 다운로드된 주식 데이터 (CSV 형식)

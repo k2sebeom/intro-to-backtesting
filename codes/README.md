@@ -51,6 +51,35 @@ uv run chapter02/01_download_and_explore.py
 - 종합 시각화 차트 생성 (저장 위치: `chapter02/images/data_exploration.png`)
 - 데이터 캐싱 (`data/AAPL_5y.csv`)
 
+### Chapter 3: 데이터 전처리와 수익률
+
+```bash
+# 데이터 품질 분석 및 전처리
+uv run chapter03/01_data_preprocessing.py
+```
+
+이 스크립트는 다음을 수행합니다:
+- 원시 데이터 품질 분석 (결측치, 중복, 이상치)
+- 가격 논리 검증 (High >= Low, Volume >= 0 등)
+- Z-Score를 사용한 이상치 탐지
+- 단순 수익률 vs. 로그 수익률 계산 및 비교
+- 벤치마크 (SPY) 대비 성과 분석
+- 종합 시각화 (저장 위치: `chapter03/images/data_preprocessing.png`)
+
+### Chapter 4: Backtrader 프레임워크 기초
+
+```bash
+# Buy & Hold 전략 백테스트
+uv run chapter04/01_buy_and_hold.py
+```
+
+이 스크립트는 다음을 수행합니다:
+- Backtrader로 Buy & Hold 전략 구현
+- 초기 자금 $10,000, 수수료 0.1% 설정
+- Analyzers를 사용한 성과 분석 (Sharpe Ratio, Drawdown, Returns)
+- 벤치마크 (SPY) 비교
+- 포트폴리오 가치 시각화 (저장 위치: `chapter04/images/buy_and_hold.png`)
+
 ## 생성되는 파일들
 
 - `data/`: 다운로드된 주식 데이터 (CSV 형식)

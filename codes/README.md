@@ -80,6 +80,64 @@ uv run chapter04/01_buy_and_hold.py
 - 벤치마크 (SPY) 비교
 - 포트폴리오 가치 시각화 (저장 위치: `chapter04/images/buy_and_hold.png`)
 
+### Chapter 5: 이동평균 전략
+
+```bash
+# 이동평균 크로스오버 전략
+uv run chapter05/01_moving_average_strategy.py
+```
+
+이 스크립트는 다음을 수행합니다:
+- SMA(50/200) 및 EMA(50/200) 크로스오버 전략 구현
+- 골든 크로스/데드 크로스 신호 생성
+- Buy & Hold 대비 성과 비교
+- 추세 추종 전략의 장단점 분석
+- 차트 저장 (저장 위치: `chapter05/images/moving_average_strategy.png`)
+
+### Chapter 6: RSI 및 과매수/과매도 전략
+
+```bash
+# RSI 과매수/과매도 전략
+uv run chapter06/01_rsi_strategy.py
+```
+
+이 스크립트는 다음을 수행합니다:
+- RSI(14) 지표를 사용한 과매수/과매도 전략
+- 기본 RSI(30/70), 보수적 RSI(20/80), 추세 필터 RSI 전략 비교
+- 역추세(mean reversion) 전략 구현
+- RSI와 가격 차트 시각화
+- 차트 저장 (저장 위치: `chapter06/images/rsi_strategy.png`)
+
+### Chapter 7: Bollinger Bands 전략
+
+```bash
+# Bollinger Bands 변동성 기반 전략
+uv run chapter07/01_bollinger_bands_strategy.py
+```
+
+이 스크립트는 다음을 수행합니다:
+- Bollinger Bands(20, 2) 계산 및 시각화
+- 밴드 반등(Mean Reversion) 전략 구현
+- 밴드 돌파(Breakout) 전략 구현
+- %B 지표 기반 전략
+- Bandwidth를 통한 변동성 분석
+- 차트 저장 (저장 위치: `chapter07/images/bollinger_bands_strategy.png`)
+
+### Chapter 8: 다중 지표 결합 전략
+
+```bash
+# 여러 지표를 결합한 전략
+uv run chapter08/01_multi_indicator_strategy.py
+```
+
+이 스크립트는 다음을 수행합니다:
+- 추세 확인 + 과매도 진입 전략 (SMA + RSI + BB)
+- 골든 크로스 + 모멘텀 확인 전략 (SMA + RSI)
+- 종합 신호 점수 전략 (다중 지표 가중 합산)
+- 단일 지표 vs. 다중 지표 성과 비교
+- 모든 지표를 한 화면에 시각화
+- 차트 저장 (저장 위치: `chapter08/images/multi_indicator_strategy.png`)
+
 ## 생성되는 파일들
 
 - `data/`: 다운로드된 주식 데이터 (CSV 형식)

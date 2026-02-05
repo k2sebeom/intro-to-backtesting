@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Chapter 10: 리스크 관리와 손절매# 성공적인 트레이딩의 핵심은 수익을 극대화하는 것이 아니라 손실을 최소화하는 것입니다. 이번 챕터에서는 손절매(Stop Loss)와 익절매(Take Profit)를 활용한 체계적인 리스크 관리 기법을 배웁니다.
+10.1 리스크 관리의 중요성# 10.1.1 왜 리스크 관리가 중요한가?# 손실의 비대칭성:
+10% 손실 → 11.1% 수익 필요 (회복) 20% 손실 → 25% 수익 필요 50% 손실 → 100% 수익 필요!복리 효과의 역:
+작은 손실도 누적되면 계좌 파괴 일관된 소액 손실 제어가 핵심 감정적 의사결정 방지:
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="https://example.org/docs/chapter10/">
+  <meta property="og:site_name" content="파이썬으로 배우는 백테스팅 입문">
+  <meta property="og:title" content="Chapter 10: 리스크 관리와 손절매">
+  <meta property="og:description" content="Chapter 10: 리스크 관리와 손절매# 성공적인 트레이딩의 핵심은 수익을 극대화하는 것이 아니라 손실을 최소화하는 것입니다. 이번 챕터에서는 손절매(Stop Loss)와 익절매(Take Profit)를 활용한 체계적인 리스크 관리 기법을 배웁니다.
+10.1 리스크 관리의 중요성# 10.1.1 왜 리스크 관리가 중요한가?# 손실의 비대칭성:
+10% 손실 → 11.1% 수익 필요 (회복) 20% 손실 → 25% 수익 필요 50% 손실 → 100% 수익 필요!복리 효과의 역:
+작은 손실도 누적되면 계좌 파괴 일관된 소액 손실 제어가 핵심 감정적 의사결정 방지:">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="docs">
+    <meta property="article:modified_time" content="2026-02-05T03:00:21+00:00">
+
+
+  <meta itemprop="name" content="Chapter 10: 리스크 관리와 손절매">
+  <meta itemprop="description" content="Chapter 10: 리스크 관리와 손절매# 성공적인 트레이딩의 핵심은 수익을 극대화하는 것이 아니라 손실을 최소화하는 것입니다. 이번 챕터에서는 손절매(Stop Loss)와 익절매(Take Profit)를 활용한 체계적인 리스크 관리 기법을 배웁니다.
+10.1 리스크 관리의 중요성# 10.1.1 왜 리스크 관리가 중요한가?# 손실의 비대칭성:
+10% 손실 → 11.1% 수익 필요 (회복) 20% 손실 → 25% 수익 필요 50% 손실 → 100% 수익 필요!복리 효과의 역:
+작은 손실도 누적되면 계좌 파괴 일관된 소액 손실 제어가 핵심 감정적 의사결정 방지:">
+  <meta itemprop="dateModified" content="2026-02-05T03:00:21+00:00">
+  <meta itemprop="wordCount" content="1632">
+
+<title>Chapter 10: 리스크 관리와 손절매 | 파이썬으로 배우는 백테스팅 입문</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://example.org/docs/chapter10/">
+<link rel="stylesheet" href="/book.min.cc2c524ed250aac81b23d1f4af87344917b325208841feca0968fe450f570575.css" integrity="sha256-zCxSTtJQqsgbI9H0r4c0SRezJSCIQf7KCWj&#43;RQ9XBXU=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.33e45e16663af737c61320d3bc3615c83d0ec3f6021a7683da2de0173401e157.js" integrity="sha256-M&#43;ReFmY69zfGEyDTvDYVyD0Ow/YCGnaD2i3gFzQB4Vc=" crossorigin="anonymous"></script>
+
+
+
+  
+  
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['\\(', '\\)'], ['$', '$']]                  
+    },
+    loader:{
+      load: ['ui/safe']
+    },
+  };
+</script>
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-docs">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>파이썬으로 배우는 백테스팅 입문</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter01/" class="">
+      Chapter 1: 백테스팅 시작하기</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter02/" class="">
+      Chapter 2: 금융 데이터 다운로드와 이해</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter03/" class="">
+      Chapter 3: 데이터 전처리와 수익률</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter04/" class="">
+      Chapter 4: Backtrader 프레임워크 기초</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter05/" class="">
+      Chapter 5: 이동평균 전략</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter06/" class="">
+      Chapter 6: RSI 및 과매수/과매도 전략</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter07/" class="">
+      Chapter 7: Bollinger Bands 전략</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter08/" class="">
+      Chapter 8: 다중 지표 결합 전략</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter09/" class="">
+      Chapter 9: 포지션 크기 결정</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter10/" class="active">
+      Chapter 10: 리스크 관리와 손절매</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter11/" class="">
+      Chapter 11: 포트폴리오 구성과 분산투자</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter12/" class="">
+      Chapter 12: 성과 지표와 리스크 측정</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter13/" class="">
+      Chapter 13: 백테스트 결과 분석과 시각화</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter14/" class="">
+      Chapter 14: 과최적화 방지와 검증</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter15/" class="">
+      Chapter 15: 머신러닝 기반 전략 (1)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter16/" class="">
+      Chapter 16: 머신러닝 기반 전략 (2)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter17/" class="">
+      Chapter 17: 실전 트레이딩 고려사항</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter18/" class="">
+      Chapter 18: 완전한 전략 개발 프로세스</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>Chapter 10: 리스크 관리와 손절매</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#101-리스크-관리의-중요성">10.1 리스크 관리의 중요성</a>
+      <ul>
+        <li><a href="#1011-왜-리스크-관리가-중요한가">10.1.1 왜 리스크 관리가 중요한가?</a></li>
+        <li><a href="#1012-리스크-관리의-기본-원칙">10.1.2 리스크 관리의 기본 원칙</a></li>
+      </ul>
+    </li>
+    <li><a href="#102-손절매-stop-loss-유형">10.2 손절매 (Stop Loss) 유형</a>
+      <ul>
+        <li><a href="#1021-고정-비율-손절매-percentage-stop">10.2.1 고정 비율 손절매 (Percentage Stop)</a></li>
+        <li><a href="#1022-atr-기반-손절매-atr-stop">10.2.2 ATR 기반 손절매 (ATR Stop)</a></li>
+        <li><a href="#1023-지지선저항선-기반-손절매">10.2.3 지지선/저항선 기반 손절매</a></li>
+        <li><a href="#1024-추적-손절매-trailing-stop">10.2.4 추적 손절매 (Trailing Stop)</a></li>
+        <li><a href="#1025-시간-기반-손절매-time-stop">10.2.5 시간 기반 손절매 (Time Stop)</a></li>
+      </ul>
+    </li>
+    <li><a href="#103-익절매-take-profit-전략">10.3 익절매 (Take Profit) 전략</a>
+      <ul>
+        <li><a href="#1031-고정-목표-익절매">10.3.1 고정 목표 익절매</a></li>
+        <li><a href="#1032-부분-익절-partial-profit-taking">10.3.2 부분 익절 (Partial Profit Taking)</a></li>
+        <li><a href="#1033-추적-익절-trailing-take-profit">10.3.3 추적 익절 (Trailing Take Profit)</a></li>
+      </ul>
+    </li>
+    <li><a href="#104-손익비와-승률의-관계">10.4 손익비와 승률의 관계</a>
+      <ul>
+        <li><a href="#1041-손익비-risk-reward-ratio">10.4.1 손익비 (Risk-Reward Ratio)</a></li>
+        <li><a href="#1042-기대값-expected-value">10.4.2 기대값 (Expected Value)</a></li>
+        <li><a href="#1043-손익비-승률-조합">10.4.3 손익비-승률 조합</a></li>
+      </ul>
+    </li>
+    <li><a href="#105-backtrader에서-손절매익절매-구현">10.5 Backtrader에서 손절매/익절매 구현</a>
+      <ul>
+        <li><a href="#1051-고정-손절매익절매">10.5.1 고정 손절매/익절매</a></li>
+        <li><a href="#1052-atr-기반-손절매">10.5.2 ATR 기반 손절매</a></li>
+        <li><a href="#1053-추적-손절매">10.5.3 추적 손절매</a></li>
+      </ul>
+    </li>
+    <li><a href="#106-실전-구현">10.6 실전 구현</a></li>
+    <li><a href="#107-기대-결과">10.7 기대 결과</a></li>
+    <li><a href="#108-리스크-관리-체크리스트">10.8 리스크 관리 체크리스트</a>
+      <ul>
+        <li><a href="#1081-거래-전">10.8.1 거래 전</a></li>
+        <li><a href="#1082-거래-중">10.8.2 거래 중</a></li>
+        <li><a href="#1083-거래-후">10.8.3 거래 후</a></li>
+      </ul>
+    </li>
+    <li><a href="#109-흔한-실수와-대응">10.9 흔한 실수와 대응</a>
+      <ul>
+        <li><a href="#1091-손절매-이동하기">10.9.1 손절매 이동하기</a></li>
+        <li><a href="#1092-너무-가까운-손절매">10.9.2 너무 가까운 손절매</a></li>
+        <li><a href="#1093-손절매-없이-거래">10.9.3 손절매 없이 거래</a></li>
+      </ul>
+    </li>
+    <li><a href="#1010-개선-방향">10.10 개선 방향</a></li>
+    <li><a href="#다음-단계">다음 단계</a></li>
+    <li><a href="#1011-실행-결과">10.11 실행 결과</a>
+      <ul>
+        <li><a href="#차트-해석">차트 해석</a></li>
+        <li><a href="#핵심-인사이트">핵심 인사이트</a></li>
+        <li><a href="#실전-적용-가이드">실전 적용 가이드</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="chapter-10-리스크-관리와-손절매">Chapter 10: 리스크 관리와 손절매<a class="anchor" href="#chapter-10-%eb%a6%ac%ec%8a%a4%ed%81%ac-%ea%b4%80%eb%a6%ac%ec%99%80-%ec%86%90%ec%a0%88%eb%a7%a4">#</a></h1>
+<p>성공적인 트레이딩의 핵심은 수익을 극대화하는 것이 아니라 손실을 최소화하는 것입니다. 이번 챕터에서는 손절매(Stop Loss)와 익절매(Take Profit)를 활용한 체계적인 리스크 관리 기법을 배웁니다.</p>
+<h2 id="101-리스크-관리의-중요성">10.1 리스크 관리의 중요성<a class="anchor" href="#101-%eb%a6%ac%ec%8a%a4%ed%81%ac-%ea%b4%80%eb%a6%ac%ec%9d%98-%ec%a4%91%ec%9a%94%ec%84%b1">#</a></h2>
+<h3 id="1011-왜-리스크-관리가-중요한가">10.1.1 왜 리스크 관리가 중요한가?<a class="anchor" href="#1011-%ec%99%9c-%eb%a6%ac%ec%8a%a4%ed%81%ac-%ea%b4%80%eb%a6%ac%ea%b0%80-%ec%a4%91%ec%9a%94%ed%95%9c%ea%b0%80">#</a></h3>
+<p><strong>손실의 비대칭성</strong>:</p>
+<pre tabindex="0"><code>10% 손실 → 11.1% 수익 필요 (회복)
+20% 손실 → 25% 수익 필요
+50% 손실 → 100% 수익 필요!</code></pre><p><strong>복리 효과의 역</strong>:</p>
+<ul>
+<li>작은 손실도 누적되면 계좌 파괴</li>
+<li>일관된 소액 손실 제어가 핵심</li>
+</ul>
+<p><strong>감정적 의사결정 방지</strong>:</p>
+<ul>
+<li>큰 손실 → 패닉 매도 또는 복수 매매</li>
+<li>명확한 규칙으로 감정 제어</li>
+</ul>
+<h3 id="1012-리스크-관리의-기본-원칙">10.1.2 리스크 관리의 기본 원칙<a class="anchor" href="#1012-%eb%a6%ac%ec%8a%a4%ed%81%ac-%ea%b4%80%eb%a6%ac%ec%9d%98-%ea%b8%b0%eb%b3%b8-%ec%9b%90%ec%b9%99">#</a></h3>
+<p><strong>원칙 1: 거래 전에 손절매 지점 결정</strong></p>
+<pre tabindex="0"><code>진입 전 → 손절매 가격 설정
+진입 후 → 절대 변경하지 않음</code></pre><p><strong>원칙 2: 손익비(Risk-Reward Ratio) 최소 1:2</strong></p>
+<pre tabindex="0"><code>손실 위험: $100
+목표 수익: $200 이상
+
+손익비 = 목표 수익 / 위험 손실 = 2:1</code></pre><p><strong>원칙 3: 연속 손실 대비 계획</strong></p>
+<pre tabindex="0"><code>3회 연속 손실 시 → 휴식 또는 포지션 축소
+시스템 재검토 필요</code></pre><h2 id="102-손절매-stop-loss-유형">10.2 손절매 (Stop Loss) 유형<a class="anchor" href="#102-%ec%86%90%ec%a0%88%eb%a7%a4-stop-loss-%ec%9c%a0%ed%98%95">#</a></h2>
+<h3 id="1021-고정-비율-손절매-percentage-stop">10.2.1 고정 비율 손절매 (Percentage Stop)<a class="anchor" href="#1021-%ea%b3%a0%ec%a0%95-%eb%b9%84%ec%9c%a8-%ec%86%90%ec%a0%88%eb%a7%a4-percentage-stop">#</a></h3>
+<p><strong>방법</strong>: 진입가에서 고정 비율만큼 떨어지면 청산</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>entry_price <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>stop_loss_percent <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.02</span>  <span style="color:#75715e"># 2%</span>
+</span></span><span style="display:flex;"><span>stop_loss_price <span style="color:#f92672">=</span> entry_price <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> stop_loss_percent)  <span style="color:#75715e"># $98</span></span></span></code></pre></div><p><strong>장점</strong>:</p>
+<ul>
+<li>단순하고 명확</li>
+<li>계산 쉬움</li>
+<li>일관된 위험 관리</li>
+</ul>
+<p><strong>단점</strong>:</p>
+<ul>
+<li>변동성 무시</li>
+<li>시장 구조 무시</li>
+<li>거짓 손절 가능</li>
+</ul>
+<p><strong>적용 사례</strong>: 초보자, 단기 매매</p>
+<h3 id="1022-atr-기반-손절매-atr-stop">10.2.2 ATR 기반 손절매 (ATR Stop)<a class="anchor" href="#1022-atr-%ea%b8%b0%eb%b0%98-%ec%86%90%ec%a0%88%eb%a7%a4-atr-stop">#</a></h3>
+<p><strong>방법</strong>: ATR(Average True Range) 배수로 손절매 설정</p>
+$$
+\text{Stop Loss} = \text{Entry Price} - (n \times \text{ATR})
+$$<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>entry_price <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>atr <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>multiplier <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>stop_loss_price <span style="color:#f92672">=</span> entry_price <span style="color:#f92672">-</span> (atr <span style="color:#f92672">*</span> multiplier)  <span style="color:#75715e"># $90</span></span></span></code></pre></div><p><strong>장점</strong>:</p>
+<ul>
+<li>변동성 자동 반영</li>
+<li>시장 적응적</li>
+<li>거짓 손절 감소</li>
+</ul>
+<p><strong>단점</strong>:</p>
+<ul>
+<li>ATR 계산 필요</li>
+<li>시장별 최적 배수 다름</li>
+</ul>
+<p><strong>적용 사례</strong>: 경험자, 변동성 큰 시장</p>
+<p><strong>ATR 배수 가이드</strong>:</p>
+<ul>
+<li>단기 (Scalping): 1-1.5 × ATR</li>
+<li>중기 (Swing): 2-3 × ATR</li>
+<li>장기 (Position): 3-5 × ATR</li>
+</ul>
+<h3 id="1023-지지선저항선-기반-손절매">10.2.3 지지선/저항선 기반 손절매<a class="anchor" href="#1023-%ec%a7%80%ec%a7%80%ec%84%a0%ec%a0%80%ed%95%ad%ec%84%a0-%ea%b8%b0%eb%b0%98-%ec%86%90%ec%a0%88%eb%a7%a4">#</a></h3>
+<p><strong>방법</strong>: 주요 가격 수준 아래/위에 손절매 설정</p>
+<pre tabindex="0"><code>매수 시: 최근 저점 아래
+매도 시: 최근 고점 위</code></pre><p><strong>장점</strong>:</p>
+<ul>
+<li>시장 구조 반영</li>
+<li>논리적 위치</li>
+<li>심리적 안정</li>
+</ul>
+<p><strong>단점</strong>:</p>
+<ul>
+<li>주관적 판단 필요</li>
+<li>명확한 지지/저항 없을 수 있음</li>
+</ul>
+<p><strong>적용 사례</strong>: 기술적 분석 중심 트레이더</p>
+<h3 id="1024-추적-손절매-trailing-stop">10.2.4 추적 손절매 (Trailing Stop)<a class="anchor" href="#1024-%ec%b6%94%ec%a0%81-%ec%86%90%ec%a0%88%eb%a7%a4-trailing-stop">#</a></h3>
+<p><strong>방법</strong>: 가격이 유리하게 움직이면 손절매도 함께 이동</p>
+$$
+\text{Trailing Stop} = \max(\text{Current Stop}, \text{Highest Price} - \text{Trail Amount})
+$$<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 초기 손절매</span>
+</span></span><span style="display:flex;"><span>stop_loss <span style="color:#f92672">=</span> entry_price <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.98</span>  <span style="color:#75715e"># 2% 아래</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 가격 상승 시</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> current_price <span style="color:#f92672">&gt;</span> entry_price:
+</span></span><span style="display:flex;"><span>    new_stop <span style="color:#f92672">=</span> current_price <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.98</span>
+</span></span><span style="display:flex;"><span>    stop_loss <span style="color:#f92672">=</span> max(stop_loss, new_stop)  <span style="color:#75715e"># 위로만 이동</span></span></span></code></pre></div><p><strong>장점</strong>:</p>
+<ul>
+<li>수익 보호</li>
+<li>큰 추세 포착</li>
+<li>감정 제어</li>
+</ul>
+<p><strong>단점</strong>:</p>
+<ul>
+<li>조기 청산 가능</li>
+<li>횡보장에서 불리</li>
+</ul>
+<p><strong>적용 사례</strong>: 추세 추종 전략, 큰 수익 추구</p>
+<h3 id="1025-시간-기반-손절매-time-stop">10.2.5 시간 기반 손절매 (Time Stop)<a class="anchor" href="#1025-%ec%8b%9c%ea%b0%84-%ea%b8%b0%eb%b0%98-%ec%86%90%ec%a0%88%eb%a7%a4-time-stop">#</a></h3>
+<p><strong>방법</strong>: 일정 기간 후 무조건 청산</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>entry_date <span style="color:#f92672">=</span> datetime(<span style="color:#ae81ff">2024</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>max_holding_days <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> current_date <span style="color:#f92672">-</span> entry_date <span style="color:#f92672">&gt;=</span> timedelta(days<span style="color:#f92672">=</span>max_holding_days):
+</span></span><span style="display:flex;"><span>    close_position()</span></span></code></pre></div><p><strong>장점</strong>:</p>
+<ul>
+<li>자본 효율</li>
+<li>기회비용 감소</li>
+<li>시스템 단순화</li>
+</ul>
+<p><strong>단점</strong>:</p>
+<ul>
+<li>가격 무시</li>
+<li>추세 놓칠 수 있음</li>
+</ul>
+<p><strong>적용 사례</strong>: 단기 매매, 옵션 거래</p>
+<h2 id="103-익절매-take-profit-전략">10.3 익절매 (Take Profit) 전략<a class="anchor" href="#103-%ec%9d%b5%ec%a0%88%eb%a7%a4-take-profit-%ec%a0%84%eb%9e%b5">#</a></h2>
+<h3 id="1031-고정-목표-익절매">10.3.1 고정 목표 익절매<a class="anchor" href="#1031-%ea%b3%a0%ec%a0%95-%eb%aa%a9%ed%91%9c-%ec%9d%b5%ec%a0%88%eb%a7%a4">#</a></h3>
+<p><strong>방법</strong>: 손익비에 따른 목표가 도달 시 청산</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>entry_price <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>stop_loss <span style="color:#f92672">=</span> <span style="color:#ae81ff">95</span>
+</span></span><span style="display:flex;"><span>risk <span style="color:#f92672">=</span> entry_price <span style="color:#f92672">-</span> stop_loss  <span style="color:#75715e"># $5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>reward_risk_ratio <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>take_profit <span style="color:#f92672">=</span> entry_price <span style="color:#f92672">+</span> (risk <span style="color:#f92672">*</span> reward_risk_ratio)  <span style="color:#75715e"># $110</span></span></span></code></pre></div><p><strong>장점</strong>:</p>
+<ul>
+<li>명확한 목표</li>
+<li>손익비 준수</li>
+<li>감정 제거</li>
+</ul>
+<p><strong>단점</strong>:</p>
+<ul>
+<li>큰 추세 놓칠 수 있음</li>
+<li>목표가 임의적일 수 있음</li>
+</ul>
+<h3 id="1032-부분-익절-partial-profit-taking">10.3.2 부분 익절 (Partial Profit Taking)<a class="anchor" href="#1032-%eb%b6%80%eb%b6%84-%ec%9d%b5%ec%a0%88-partial-profit-taking">#</a></h3>
+<p><strong>방법</strong>: 여러 단계로 나눠 익절</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>entry_price <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>position_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 첫 번째 목표 (+5%)</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> price <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">105</span>:
+</span></span><span style="display:flex;"><span>    close_shares(<span style="color:#ae81ff">50</span>)  <span style="color:#75715e"># 50% 청산</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 두 번째 목표 (+10%)</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> price <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">110</span>:
+</span></span><span style="display:flex;"><span>    close_shares(<span style="color:#ae81ff">30</span>)  <span style="color:#75715e"># 추가 30% 청산</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 나머지는 추적 손절매</span></span></span></code></pre></div><p><strong>장점</strong>:</p>
+<ul>
+<li>위험 감소</li>
+<li>큰 추세도 포착</li>
+<li>심리적 안정</li>
+</ul>
+<p><strong>단점</strong>:</p>
+<ul>
+<li>복잡성 증가</li>
+<li>수수료 증가</li>
+</ul>
+<h3 id="1033-추적-익절-trailing-take-profit">10.3.3 추적 익절 (Trailing Take Profit)<a class="anchor" href="#1033-%ec%b6%94%ec%a0%81-%ec%9d%b5%ec%a0%88-trailing-take-profit">#</a></h3>
+<p><strong>방법</strong>: 가격이 유리하게 움직일 때만 추적</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 일정 수익 이상 달성 후 추적 시작</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> profit <span style="color:#f92672">&gt;=</span> initial_target:
+</span></span><span style="display:flex;"><span>    trailing_stop_active <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> trailing_stop_active:
+</span></span><span style="display:flex;"><span>    trail_stop <span style="color:#f92672">=</span> highest_price <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.95</span>  <span style="color:#75715e"># 5% 아래 추적</span></span></span></code></pre></div><h2 id="104-손익비와-승률의-관계">10.4 손익비와 승률의 관계<a class="anchor" href="#104-%ec%86%90%ec%9d%b5%eb%b9%84%ec%99%80-%ec%8a%b9%eb%a5%a0%ec%9d%98-%ea%b4%80%ea%b3%84">#</a></h2>
+<h3 id="1041-손익비-risk-reward-ratio">10.4.1 손익비 (Risk-Reward Ratio)<a class="anchor" href="#1041-%ec%86%90%ec%9d%b5%eb%b9%84-risk-reward-ratio">#</a></h3>
+$$
+\text{Risk-Reward Ratio} = \frac{\text{Average Win}}{\text{Average Loss}}
+$$<h3 id="1042-기대값-expected-value">10.4.2 기대값 (Expected Value)<a class="anchor" href="#1042-%ea%b8%b0%eb%8c%80%ea%b0%92-expected-value">#</a></h3>
+$$
+\text{EV} = (W \times \text{AvgWin}) - ((1 - W) \times \text{AvgLoss})
+$$<p>여기서 $W$는 승률 (Win Rate)</p>
+<p><strong>예시</strong>:</p>
+<pre tabindex="0"><code>승률 40%, 평균 수익 $300, 평균 손실 $100
+
+EV = (0.4 × 300) - (0.6 × 100)
+   = 120 - 60
+   = $60 (양수 → 수익성 있음!)</code></pre><h3 id="1043-손익비-승률-조합">10.4.3 손익비-승률 조합<a class="anchor" href="#1043-%ec%86%90%ec%9d%b5%eb%b9%84-%ec%8a%b9%eb%a5%a0-%ec%a1%b0%ed%95%a9">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>승률</th>
+          <th>필요한 최소 손익비</th>
+          <th>비고</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>30%</td>
+          <td>2.33:1</td>
+          <td>낮은 승률, 높은 손익비</td>
+      </tr>
+      <tr>
+          <td>40%</td>
+          <td>1.50:1</td>
+          <td>균형 잡힌 조합</td>
+      </tr>
+      <tr>
+          <td>50%</td>
+          <td>1.00:1</td>
+          <td>가장 쉬움</td>
+      </tr>
+      <tr>
+          <td>60%</td>
+          <td>0.67:1</td>
+          <td>높은 승률, 낮은 손익비 가능</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>교훈</strong>: 낮은 승률도 높은 손익비로 수익 가능!</p>
+<h2 id="105-backtrader에서-손절매익절매-구현">10.5 Backtrader에서 손절매/익절매 구현<a class="anchor" href="#105-backtrader%ec%97%90%ec%84%9c-%ec%86%90%ec%a0%88%eb%a7%a4%ec%9d%b5%ec%a0%88%eb%a7%a4-%ea%b5%ac%ed%98%84">#</a></h2>
+<h3 id="1051-고정-손절매익절매">10.5.1 고정 손절매/익절매<a class="anchor" href="#1051-%ea%b3%a0%ec%a0%95-%ec%86%90%ec%a0%88%eb%a7%a4%ec%9d%b5%ec%a0%88%eb%a7%a4">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">StopLossStrategy</span>(bt<span style="color:#f92672">.</span>Strategy):
+</span></span><span style="display:flex;"><span>    params <span style="color:#f92672">=</span> (
+</span></span><span style="display:flex;"><span>        (<span style="color:#e6db74">&#39;stop_loss_percent&#39;</span>, <span style="color:#ae81ff">0.02</span>),  <span style="color:#75715e"># 2% 손절</span>
+</span></span><span style="display:flex;"><span>        (<span style="color:#e6db74">&#39;take_profit_percent&#39;</span>, <span style="color:#ae81ff">0.04</span>),  <span style="color:#75715e"># 4% 익절</span>
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">notify_order</span>(self, order):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> order<span style="color:#f92672">.</span>status <span style="color:#f92672">==</span> order<span style="color:#f92672">.</span>Completed:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> order<span style="color:#f92672">.</span>isbuy():
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># 손절매/익절매 주문 생성</span>
+</span></span><span style="display:flex;"><span>                stop_price <span style="color:#f92672">=</span> order<span style="color:#f92672">.</span>executed<span style="color:#f92672">.</span>price <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>params<span style="color:#f92672">.</span>stop_loss_percent)
+</span></span><span style="display:flex;"><span>                limit_price <span style="color:#f92672">=</span> order<span style="color:#f92672">.</span>executed<span style="color:#f92672">.</span>price <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> self<span style="color:#f92672">.</span>params<span style="color:#f92672">.</span>take_profit_percent)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>sell(exectype<span style="color:#f92672">=</span>bt<span style="color:#f92672">.</span>Order<span style="color:#f92672">.</span>Stop, price<span style="color:#f92672">=</span>stop_price)
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>sell(exectype<span style="color:#f92672">=</span>bt<span style="color:#f92672">.</span>Order<span style="color:#f92672">.</span>Limit, price<span style="color:#f92672">=</span>limit_price)</span></span></code></pre></div><h3 id="1052-atr-기반-손절매">10.5.2 ATR 기반 손절매<a class="anchor" href="#1052-atr-%ea%b8%b0%eb%b0%98-%ec%86%90%ec%a0%88%eb%a7%a4">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">next</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>position:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> buy_signal:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>buy()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># ATR 손절매</span>
+</span></span><span style="display:flex;"><span>        atr <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>atr[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>        stop_price <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>position<span style="color:#f92672">.</span>price <span style="color:#f92672">-</span> (atr <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>close[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">&lt;</span> stop_price:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>close()</span></span></code></pre></div><h3 id="1053-추적-손절매">10.5.3 추적 손절매<a class="anchor" href="#1053-%ec%b6%94%ec%a0%81-%ec%86%90%ec%a0%88%eb%a7%a4">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TrailingStopStrategy</span>(bt<span style="color:#f92672">.</span>Strategy):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>highest_price <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>trail_percent <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.05</span>  <span style="color:#75715e"># 5%</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">next</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>position:
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 최고가 업데이트</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>close[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">&gt;</span> self<span style="color:#f92672">.</span>highest_price:
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>highest_price <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>close[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 추적 손절매 확인</span>
+</span></span><span style="display:flex;"><span>            trail_stop <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>highest_price <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>trail_percent)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>close[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">&lt;</span> trail_stop:
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>close()</span></span></code></pre></div><h2 id="106-실전-구현">10.6 실전 구현<a class="anchor" href="#106-%ec%8b%a4%ec%a0%84-%ea%b5%ac%ed%98%84">#</a></h2>
+<p>이번 챕터의 코드에서는 다음을 구현합니다:</p>
+<ol>
+<li><strong>고정 비율 손절매/익절매</strong>: 2% 손절, 4% 익절</li>
+<li><strong>ATR 기반 손절매</strong>: 2×ATR 손절매</li>
+<li><strong>추적 손절매</strong>: 고점에서 5% 아래 추적</li>
+<li><strong>손절매 없는 전략과 비교</strong></li>
+<li><strong>성과 분석</strong>: 승률, 손익비, 최대 낙폭</li>
+</ol>
+<h2 id="107-기대-결과">10.7 기대 결과<a class="anchor" href="#107-%ea%b8%b0%eb%8c%80-%ea%b2%b0%ea%b3%bc">#</a></h2>
+<p>코드를 실행하면 다음을 확인할 수 있습니다:</p>
+<ol>
+<li><strong>손절매 효과</strong>: 최대 낙폭 감소 확인</li>
+<li><strong>승률과 손익비</strong>: 각 방법의 승률과 평균 손익</li>
+<li><strong>거래 빈도</strong>: 손절매 사용 시 거래 증가</li>
+<li><strong>위험 조정 수익</strong>: Sharpe Ratio 개선 여부</li>
+<li><strong>손절매 히트맵</strong>: 어느 구간에서 손절이 많이 발생하는가?</li>
+</ol>
+<h2 id="108-리스크-관리-체크리스트">10.8 리스크 관리 체크리스트<a class="anchor" href="#108-%eb%a6%ac%ec%8a%a4%ed%81%ac-%ea%b4%80%eb%a6%ac-%ec%b2%b4%ed%81%ac%eb%a6%ac%ec%8a%a4%ed%8a%b8">#</a></h2>
+<h3 id="1081-거래-전">10.8.1 거래 전<a class="anchor" href="#1081-%ea%b1%b0%eb%9e%98-%ec%a0%84">#</a></h3>
+<ul>
+<li><input disabled="" type="checkbox"> 손절매 가격 결정</li>
+<li><input disabled="" type="checkbox"> 익절매 목표 설정</li>
+<li><input disabled="" type="checkbox"> 손익비 확인 (최소 1:2)</li>
+<li><input disabled="" type="checkbox"> 포지션 크기 계산</li>
+<li><input disabled="" type="checkbox"> 최대 손실 금액 확인</li>
+</ul>
+<h3 id="1082-거래-중">10.8.2 거래 중<a class="anchor" href="#1082-%ea%b1%b0%eb%9e%98-%ec%a4%91">#</a></h3>
+<ul>
+<li><input disabled="" type="checkbox"> 손절매 주문 즉시 설정</li>
+<li><input disabled="" type="checkbox"> 감정적 판단 배제</li>
+<li><input disabled="" type="checkbox"> 손절매 임의 변경 금지</li>
+<li><input disabled="" type="checkbox"> 추적 손절매 업데이트 (해당 시)</li>
+</ul>
+<h3 id="1083-거래-후">10.8.3 거래 후<a class="anchor" href="#1083-%ea%b1%b0%eb%9e%98-%ed%9b%84">#</a></h3>
+<ul>
+<li><input disabled="" type="checkbox"> 거래 기록 및 분석</li>
+<li><input disabled="" type="checkbox"> 손절매 적절성 평가</li>
+<li><input disabled="" type="checkbox"> 손익비 달성 여부 확인</li>
+<li><input disabled="" type="checkbox"> 개선점 도출</li>
+</ul>
+<h2 id="109-흔한-실수와-대응">10.9 흔한 실수와 대응<a class="anchor" href="#109-%ed%9d%94%ed%95%9c-%ec%8b%a4%ec%88%98%ec%99%80-%eb%8c%80%ec%9d%91">#</a></h2>
+<h3 id="1091-손절매-이동하기">10.9.1 손절매 이동하기<a class="anchor" href="#1091-%ec%86%90%ec%a0%88%eb%a7%a4-%ec%9d%b4%eb%8f%99%ed%95%98%ea%b8%b0">#</a></h3>
+<p><strong>문제</strong>: &ldquo;조금만 더 기다리면&hellip;&rdquo; → 큰 손실</p>
+<p><strong>해결책</strong>:</p>
+<ul>
+<li>자동 주문 시스템 사용</li>
+<li>원칙 준수 강조</li>
+<li>거래 일지 작성</li>
+</ul>
+<h3 id="1092-너무-가까운-손절매">10.9.2 너무 가까운 손절매<a class="anchor" href="#1092-%eb%84%88%eb%ac%b4-%ea%b0%80%ea%b9%8c%ec%9a%b4-%ec%86%90%ec%a0%88%eb%a7%a4">#</a></h3>
+<p><strong>문제</strong>: 정상 변동으로 손절 → 거짓 손절</p>
+<p><strong>해결책</strong>:</p>
+<ul>
+<li>ATR 기반 거리 사용</li>
+<li>변동성 고려</li>
+<li>백테스팅으로 최적화</li>
+</ul>
+<h3 id="1093-손절매-없이-거래">10.9.3 손절매 없이 거래<a class="anchor" href="#1093-%ec%86%90%ec%a0%88%eb%a7%a4-%ec%97%86%ec%9d%b4-%ea%b1%b0%eb%9e%98">#</a></h3>
+<p><strong>문제</strong>: &ldquo;이번엔 괜찮아&rdquo; → 계좌 파산</p>
+<p><strong>해결책</strong>:</p>
+<ul>
+<li>손절매 필수 규칙화</li>
+<li>최악의 시나리오 시뮬레이션</li>
+<li>작은 계좌로 연습</li>
+</ul>
+<h2 id="1010-개선-방향">10.10 개선 방향<a class="anchor" href="#1010-%ea%b0%9c%ec%84%a0-%eb%b0%a9%ed%96%a5">#</a></h2>
+<p>리스크 관리를 더욱 개선하는 방법:</p>
+<ol>
+<li><strong>동적 손절매</strong>: 변동성에 따라 손절매 거리 조정</li>
+<li><strong>상관관계 고려</strong>: 여러 포지션의 합산 위험 관리</li>
+<li><strong>최대 일일 손실</strong>: 하루 최대 손실 도달 시 거래 중단</li>
+<li><strong>월간 손실 제한</strong>: 월 손실 한도 설정</li>
+<li><strong>심리적 준비</strong>: 손실 시뮬레이션 및 대응 훈련</li>
+</ol>
+<h2 id="다음-단계">다음 단계<a class="anchor" href="#%eb%8b%a4%ec%9d%8c-%eb%8b%a8%ea%b3%84">#</a></h2>
+<p>다음 챕터에서는 여러 자산에 분산투자하는 포트폴리오 구성 방법을 배웁니다. 단일 자산 리스크를 넘어 포트폴리오 전체의 위험을 관리하는 방법을 다룹니다.</p>
+<hr>
+<h2 id="1011-실행-결과">10.11 실행 결과<a class="anchor" href="#1011-%ec%8b%a4%ed%96%89-%ea%b2%b0%ea%b3%bc">#</a></h2>
+<p>실제로 스크립트를 실행한 결과입니다:</p>
+<pre tabindex="0"><code>==========================================
+Chapter 10: 리스크 관리와 손절매
+==========================================
+테스트 기간: 2019-01-01 ~ 2024-01-01 (AAPL)
+
+==========================================
+전략별 백테스트 결과
+==========================================
+
+1. 손절매 없음 (기준선)
+   - 최종 자산: $11,106.50
+   - 총 수익률: +11.07%
+   - Sharpe Ratio: 0.27
+   - 최대 낙폭: -14.41%
+   - 총 거래 수: 2
+
+2. 고정 비율 손절매 (2% 손절, 4% 익절)
+   - 최종 자산: $9,674.49
+   - 총 수익률: -3.26%
+   - Sharpe Ratio: -0.15
+   - 최대 낙폭: -8.15%
+   - 총 거래 수: 4
+
+3. ATR 기반 손절매 (2x ATR)
+   - 최종 자산: $11,171.57
+   - 총 수익률: +11.72%
+   - Sharpe Ratio: 0.28
+   - 최대 낙폭: -14.41%
+   - 총 거래 수: 2
+
+4. 추적 손절매 (5% 추적)
+   - 최종 자산: $10,552.52
+   - 총 수익률: +5.53%
+   - Sharpe Ratio: 0.19
+   - 최대 낙폭: -8.15%
+   - 총 거래 수: 3
+
+==========================================
+결과 저장 완료
+==========================================
+차트: codes/chapter10/images/risk_management.png</code></pre><p><img src="/images/chapter10/risk_management.png" alt="리스크 관리 비교" /></p>
+<h3 id="차트-해석">차트 해석<a class="anchor" href="#%ec%b0%a8%ed%8a%b8-%ed%95%b4%ec%84%9d">#</a></h3>
+<p><strong>상단 패널 - 자산 곡선 비교</strong>:</p>
+<ul>
+<li><strong>손절매 없음 (파란선)</strong>: 가장 높은 최종 수익률(+11.07%)을 기록했지만, 변동성이 크고 2020년 초 급락 구간에서 큰 낙폭(-14.41%)을 경험했습니다</li>
+<li><strong>고정 비율 손절매 (주황선)</strong>: 유일하게 손실(-3.26%)을 기록했습니다. 2% 손절매가 너무 타이트하여 정상적인 가격 변동에도 손절이 발동되어 거짓 손절(false stop-out)이 빈번했습니다</li>
+<li><strong>ATR 기반 손절매 (녹색선)</strong>: 가장 높은 수익률(+11.72%)과 Sharpe Ratio(0.28)를 기록했습니다. 변동성을 고려한 동적 손절매가 효과적이었습니다</li>
+<li><strong>추적 손절매 (빨간선)</strong>: 중간 수익률(+5.53%)과 낮은 최대 낙폭(-8.15%)을 보였습니다. 수익 보호에는 효과적이지만 조기 청산으로 큰 추세를 놓쳤습니다</li>
+</ul>
+<p><strong>하단 패널 - 최대 낙폭 비교</strong>:</p>
+<ul>
+<li><strong>손절매 없음 &amp; ATR 손절매</strong>: -14.41%로 동일한 최대 낙폭을 보였습니다. 이는 이 기간 동안 큰 하락 구간에서 ATR 손절매가 발동되지 않았음을 의미합니다</li>
+<li><strong>고정 비율 &amp; 추적 손절매</strong>: -8.15%로 낙폭을 절반 가까이 줄였습니다. 리스크 통제에는 성공했지만 수익률도 함께 감소했습니다</li>
+</ul>
+<h3 id="핵심-인사이트">핵심 인사이트<a class="anchor" href="#%ed%95%b5%ec%8b%ac-%ec%9d%b8%ec%82%ac%ec%9d%b4%ed%8a%b8">#</a></h3>
+<p><strong>1. 손절매는 항상 좋은가? → 아니다</strong></p>
+<ul>
+<li>이 테스트에서 손절매 없는 전략이 두 번째로 좋은 성과를 보였습니다</li>
+<li><strong>상승 추세가 강한 시장</strong>에서는 손절매가 오히려 방해가 될 수 있습니다</li>
+<li>AAPL은 2019-2024년 동안 강한 상승 추세를 보여 &ldquo;Buy and Hold&rdquo; 성향이 유리했습니다</li>
+</ul>
+<p><strong>2. 고정 비율 손절매의 위험성</strong></p>
+<ul>
+<li>2% 손절매는 <strong>너무 타이트</strong>하여 정상 변동성에도 손절이 발생했습니다</li>
+<li>AAPL의 일평균 변동성(ATR)을 고려하지 않아 거짓 손절이 빈번했습니다</li>
+<li><strong>교훈</strong>: 변동성이 큰 종목은 고정 비율보다 ATR 기반 손절매가 적합합니다</li>
+</ul>
+<p><strong>3. ATR 손절매의 우수성</strong></p>
+<ul>
+<li>변동성을 자동으로 반영하여 <strong>적응적(adaptive) 리스크 관리</strong>를 제공합니다</li>
+<li>정상 변동성에는 손절하지 않고, 진짜 추세 반전에만 반응합니다</li>
+<li>가장 높은 Sharpe Ratio(0.28)로 리스크 대비 수익이 가장 좋았습니다</li>
+</ul>
+<p><strong>4. 추적 손절매의 트레이드오프</strong></p>
+<ul>
+<li>최대 낙폭을 효과적으로 줄였지만(-8.15%), <strong>조기 청산</strong>으로 큰 수익을 놓쳤습니다</li>
+<li>5% 추적 간격이 이 전략에는 너무 타이트했을 수 있습니다</li>
+<li><strong>적합한 사용처</strong>: 단기 스윙 트레이딩, 변동성 장세</li>
+</ul>
+<p><strong>5. 시장 환경의 중요성</strong></p>
+<ul>
+<li>이 결과는 **상승 추세 시장(bull market)**에서의 결과입니다</li>
+<li>하락장이나 횡보장에서는 손절매의 효과가 더 클 것입니다</li>
+<li><strong>교훈</strong>: 전략은 시장 환경에 따라 다르게 작동합니다</li>
+</ul>
+<p><strong>6. 거래 빈도와 수익의 관계</strong></p>
+<ul>
+<li>손절매 없음: 2회 거래 → +11.07%</li>
+<li>고정 비율: 4회 거래 → -3.26%</li>
+<li><strong>빈번한 거래가 항상 좋은 것은 아닙니다</strong></li>
+<li>수수료와 슬리피지를 고려하면 격차는 더 벌어질 것입니다</li>
+</ul>
+<h3 id="실전-적용-가이드">실전 적용 가이드<a class="anchor" href="#%ec%8b%a4%ec%a0%84-%ec%a0%81%ec%9a%a9-%ea%b0%80%ec%9d%b4%eb%93%9c">#</a></h3>
+<p><strong>종목 특성에 따른 손절매 선택</strong>:</p>
+<table>
+  <thead>
+      <tr>
+          <th>종목 특성</th>
+          <th>추천 손절매</th>
+          <th>이유</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>고변동성 (테슬라, 비트코인)</td>
+          <td>ATR 2-3배</td>
+          <td>정상 변동성 흡수</td>
+      </tr>
+      <tr>
+          <td>저변동성 (배당주, 유틸리티)</td>
+          <td>고정 2-3%</td>
+          <td>일관된 리스크 통제</td>
+      </tr>
+      <tr>
+          <td>강한 추세 (성장주)</td>
+          <td>추적 7-10%</td>
+          <td>큰 추세 포착</td>
+      </tr>
+      <tr>
+          <td>횡보장 (레인지)</td>
+          <td>고정 2-4%</td>
+          <td>빠른 손절 필요</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>손절매 설정 체크리스트</strong>:</p>
+<ul>
+<li><input disabled="" type="checkbox"> 종목의 평균 ATR 확인 (최근 20일)</li>
+<li><input disabled="" type="checkbox"> 손절매 거리 &gt; 2 × ATR (거짓 손절 방지)</li>
+<li><input disabled="" type="checkbox"> 백테스트에서 손절 빈도 확인 (월 2회 이상이면 너무 타이트)</li>
+<li><input disabled="" type="checkbox"> 손익비 확인 (익절 거리 ≥ 2 × 손절 거리)</li>
+<li><input disabled="" type="checkbox"> 시장 환경 고려 (추세장 vs. 횡보장)</li>
+</ul>
+<hr>
+<p><strong>코드 실행:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd codes
+</span></span><span style="display:flex;"><span>uv run chapter10/01_risk_management.py</span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/docs/chapter09/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>Chapter 9: 포지션 크기 결정</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/docs/chapter11/" class="flex align-center">
+        <span>Chapter 11: 포트폴리오 구성과 분산투자</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#101-리스크-관리의-중요성">10.1 리스크 관리의 중요성</a>
+      <ul>
+        <li><a href="#1011-왜-리스크-관리가-중요한가">10.1.1 왜 리스크 관리가 중요한가?</a></li>
+        <li><a href="#1012-리스크-관리의-기본-원칙">10.1.2 리스크 관리의 기본 원칙</a></li>
+      </ul>
+    </li>
+    <li><a href="#102-손절매-stop-loss-유형">10.2 손절매 (Stop Loss) 유형</a>
+      <ul>
+        <li><a href="#1021-고정-비율-손절매-percentage-stop">10.2.1 고정 비율 손절매 (Percentage Stop)</a></li>
+        <li><a href="#1022-atr-기반-손절매-atr-stop">10.2.2 ATR 기반 손절매 (ATR Stop)</a></li>
+        <li><a href="#1023-지지선저항선-기반-손절매">10.2.3 지지선/저항선 기반 손절매</a></li>
+        <li><a href="#1024-추적-손절매-trailing-stop">10.2.4 추적 손절매 (Trailing Stop)</a></li>
+        <li><a href="#1025-시간-기반-손절매-time-stop">10.2.5 시간 기반 손절매 (Time Stop)</a></li>
+      </ul>
+    </li>
+    <li><a href="#103-익절매-take-profit-전략">10.3 익절매 (Take Profit) 전략</a>
+      <ul>
+        <li><a href="#1031-고정-목표-익절매">10.3.1 고정 목표 익절매</a></li>
+        <li><a href="#1032-부분-익절-partial-profit-taking">10.3.2 부분 익절 (Partial Profit Taking)</a></li>
+        <li><a href="#1033-추적-익절-trailing-take-profit">10.3.3 추적 익절 (Trailing Take Profit)</a></li>
+      </ul>
+    </li>
+    <li><a href="#104-손익비와-승률의-관계">10.4 손익비와 승률의 관계</a>
+      <ul>
+        <li><a href="#1041-손익비-risk-reward-ratio">10.4.1 손익비 (Risk-Reward Ratio)</a></li>
+        <li><a href="#1042-기대값-expected-value">10.4.2 기대값 (Expected Value)</a></li>
+        <li><a href="#1043-손익비-승률-조합">10.4.3 손익비-승률 조합</a></li>
+      </ul>
+    </li>
+    <li><a href="#105-backtrader에서-손절매익절매-구현">10.5 Backtrader에서 손절매/익절매 구현</a>
+      <ul>
+        <li><a href="#1051-고정-손절매익절매">10.5.1 고정 손절매/익절매</a></li>
+        <li><a href="#1052-atr-기반-손절매">10.5.2 ATR 기반 손절매</a></li>
+        <li><a href="#1053-추적-손절매">10.5.3 추적 손절매</a></li>
+      </ul>
+    </li>
+    <li><a href="#106-실전-구현">10.6 실전 구현</a></li>
+    <li><a href="#107-기대-결과">10.7 기대 결과</a></li>
+    <li><a href="#108-리스크-관리-체크리스트">10.8 리스크 관리 체크리스트</a>
+      <ul>
+        <li><a href="#1081-거래-전">10.8.1 거래 전</a></li>
+        <li><a href="#1082-거래-중">10.8.2 거래 중</a></li>
+        <li><a href="#1083-거래-후">10.8.3 거래 후</a></li>
+      </ul>
+    </li>
+    <li><a href="#109-흔한-실수와-대응">10.9 흔한 실수와 대응</a>
+      <ul>
+        <li><a href="#1091-손절매-이동하기">10.9.1 손절매 이동하기</a></li>
+        <li><a href="#1092-너무-가까운-손절매">10.9.2 너무 가까운 손절매</a></li>
+        <li><a href="#1093-손절매-없이-거래">10.9.3 손절매 없이 거래</a></li>
+      </ul>
+    </li>
+    <li><a href="#1010-개선-방향">10.10 개선 방향</a></li>
+    <li><a href="#다음-단계">다음 단계</a></li>
+    <li><a href="#1011-실행-결과">10.11 실행 결과</a>
+      <ul>
+        <li><a href="#차트-해석">차트 해석</a></li>
+        <li><a href="#핵심-인사이트">핵심 인사이트</a></li>
+        <li><a href="#실전-적용-가이드">실전 적용 가이드</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

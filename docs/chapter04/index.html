@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Chapter 4: Backtrader 프레임워크 기초# 이 챕터에서는 Python의 대표적인 백테스팅 프레임워크인 Backtrader를 본격적으로 사용합니다. Backtrader의 아키텍처를 이해하고, 첫 번째 실전 전략인 Buy &amp; Hold를 구현하며, 기본적인 성과 분석 방법을 배웁니다.
+4.1 Backtrader란?# Backtrader 소개# Backtrader는 Python으로 작성된 오픈소스 백테스팅 프레임워크입니다.
+주요 특징:
+✅ 완전한 기능: Strategy, Indicators, Analyzers, Observers 등 ✅ 유연성: 다양한 전략과 지표를 쉽게 구현 ✅ 성능: 효율적인 데이터 처리 ✅ 시각화: 내장 플로팅 기능 ✅ 활발한 커뮤니티: 풍부한 문서와 예제 공식 사이트: https://www.backtrader.com/
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="https://example.org/docs/chapter04/">
+  <meta property="og:site_name" content="파이썬으로 배우는 백테스팅 입문">
+  <meta property="og:title" content="Chapter 4: Backtrader 프레임워크 기초">
+  <meta property="og:description" content="Chapter 4: Backtrader 프레임워크 기초# 이 챕터에서는 Python의 대표적인 백테스팅 프레임워크인 Backtrader를 본격적으로 사용합니다. Backtrader의 아키텍처를 이해하고, 첫 번째 실전 전략인 Buy &amp; Hold를 구현하며, 기본적인 성과 분석 방법을 배웁니다.
+4.1 Backtrader란?# Backtrader 소개# Backtrader는 Python으로 작성된 오픈소스 백테스팅 프레임워크입니다.
+주요 특징:
+✅ 완전한 기능: Strategy, Indicators, Analyzers, Observers 등 ✅ 유연성: 다양한 전략과 지표를 쉽게 구현 ✅ 성능: 효율적인 데이터 처리 ✅ 시각화: 내장 플로팅 기능 ✅ 활발한 커뮤니티: 풍부한 문서와 예제 공식 사이트: https://www.backtrader.com/">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="docs">
+    <meta property="article:modified_time" content="2026-02-05T10:41:30+09:00">
+
+
+  <meta itemprop="name" content="Chapter 4: Backtrader 프레임워크 기초">
+  <meta itemprop="description" content="Chapter 4: Backtrader 프레임워크 기초# 이 챕터에서는 Python의 대표적인 백테스팅 프레임워크인 Backtrader를 본격적으로 사용합니다. Backtrader의 아키텍처를 이해하고, 첫 번째 실전 전략인 Buy &amp; Hold를 구현하며, 기본적인 성과 분석 방법을 배웁니다.
+4.1 Backtrader란?# Backtrader 소개# Backtrader는 Python으로 작성된 오픈소스 백테스팅 프레임워크입니다.
+주요 특징:
+✅ 완전한 기능: Strategy, Indicators, Analyzers, Observers 등 ✅ 유연성: 다양한 전략과 지표를 쉽게 구현 ✅ 성능: 효율적인 데이터 처리 ✅ 시각화: 내장 플로팅 기능 ✅ 활발한 커뮤니티: 풍부한 문서와 예제 공식 사이트: https://www.backtrader.com/">
+  <meta itemprop="dateModified" content="2026-02-05T10:41:30+09:00">
+  <meta itemprop="wordCount" content="1700">
+
+<title>Chapter 4: Backtrader 프레임워크 기초 | 파이썬으로 배우는 백테스팅 입문</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://example.org/docs/chapter04/">
+<link rel="stylesheet" href="/book.min.cc2c524ed250aac81b23d1f4af87344917b325208841feca0968fe450f570575.css" integrity="sha256-zCxSTtJQqsgbI9H0r4c0SRezJSCIQf7KCWj&#43;RQ9XBXU=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.33e45e16663af737c61320d3bc3615c83d0ec3f6021a7683da2de0173401e157.js" integrity="sha256-M&#43;ReFmY69zfGEyDTvDYVyD0Ow/YCGnaD2i3gFzQB4Vc=" crossorigin="anonymous"></script>
+
+
+
+  
+  
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['\\(', '\\)'], ['$', '$']]                  
+    },
+    loader:{
+      load: ['ui/safe']
+    },
+  };
+</script>
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-docs">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>파이썬으로 배우는 백테스팅 입문</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter01/" class="">
+      Chapter 1: 백테스팅 시작하기</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter02/" class="">
+      Chapter 2: 금융 데이터 다운로드와 이해</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter03/" class="">
+      Chapter 3: 데이터 전처리와 수익률</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter04/" class="active">
+      Chapter 4: Backtrader 프레임워크 기초</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter05/" class="">
+      Chapter 5: 이동평균 전략</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter06/" class="">
+      Chapter 6: RSI 및 과매수/과매도 전략</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter07/" class="">
+      Chapter 7: Bollinger Bands 전략</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter08/" class="">
+      Chapter 8: 다중 지표 결합 전략</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter09/" class="">
+      Chapter 9: 포지션 크기 결정</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter10/" class="">
+      Chapter 10: 리스크 관리와 손절매</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter11/" class="">
+      Chapter 11: 포트폴리오 구성과 분산투자</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter12/" class="">
+      Chapter 12: 성과 지표와 리스크 측정</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter13/" class="">
+      Chapter 13: 백테스트 결과 분석과 시각화</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter14/" class="">
+      Chapter 14: 과최적화 방지와 검증</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter15/" class="">
+      Chapter 15: 머신러닝 기반 전략 (1)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter16/" class="">
+      Chapter 16: 머신러닝 기반 전략 (2)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter17/" class="">
+      Chapter 17: 실전 트레이딩 고려사항</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/chapter18/" class="">
+      Chapter 18: 완전한 전략 개발 프로세스</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>Chapter 4: Backtrader 프레임워크 기초</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#41-backtrader란">4.1 Backtrader란?</a>
+      <ul>
+        <li><a href="#backtrader-소개">Backtrader 소개</a></li>
+        <li><a href="#왜-backtrader인가">왜 Backtrader인가?</a></li>
+      </ul>
+    </li>
+    <li><a href="#42-backtrader-아키텍처">4.2 Backtrader 아키텍처</a>
+      <ul>
+        <li><a href="#핵심-구성-요소">핵심 구성 요소</a></li>
+      </ul>
+    </li>
+    <li><a href="#43-데이터-접근-방법">4.3 데이터 접근 방법</a>
+      <ul>
+        <li><a href="#인덱싱-규칙">인덱싱 규칙</a></li>
+        <li><a href="#lines-개념">Lines 개념</a></li>
+      </ul>
+    </li>
+    <li><a href="#44-주문-실행">4.4 주문 실행</a>
+      <ul>
+        <li><a href="#기본-주문-메서드">기본 주문 메서드</a></li>
+        <li><a href="#주문-추적">주문 추적</a></li>
+        <li><a href="#포지션-관리">포지션 관리</a></li>
+      </ul>
+    </li>
+    <li><a href="#45-첫-번째-전략-buy--hold">4.5 첫 번째 전략: Buy &amp; Hold</a>
+      <ul>
+        <li><a href="#buy--hold-전략이란">Buy &amp; Hold 전략이란?</a></li>
+        <li><a href="#전략-구현">전략 구현</a></li>
+      </ul>
+    </li>
+    <li><a href="#46-실습-buy--hold-백테스트">4.6 실습: Buy &amp; Hold 백테스트</a>
+      <ul>
+        <li><a href="#코드-실행">코드 실행</a></li>
+        <li><a href="#스크립트-개요">스크립트 개요</a></li>
+        <li><a href="#실행-결과-분석">실행 결과 분석</a></li>
+        <li><a href="#결과-해석">결과 해석</a></li>
+        <li><a href="#백테스팅의-가치">백테스팅의 가치</a></li>
+      </ul>
+    </li>
+    <li><a href="#47-analyzers를-사용한-성과-분석">4.7 Analyzers를 사용한 성과 분석</a>
+      <ul>
+        <li><a href="#주요-analyzers">주요 Analyzers</a></li>
+        <li><a href="#커스텀-analyzer">커스텀 Analyzer</a></li>
+      </ul>
+    </li>
+    <li><a href="#48-브로커-설정">4.8 브로커 설정</a>
+      <ul>
+        <li><a href="#초기-자본금">초기 자본금</a></li>
+        <li><a href="#수수료">수수료</a></li>
+        <li><a href="#슬리피지-slippage">슬리피지 (Slippage)</a></li>
+        <li><a href="#포지션-사이징">포지션 사이징</a></li>
+      </ul>
+    </li>
+    <li><a href="#49-다음-단계">4.9 다음 단계</a>
+      <ul>
+        <li><a href="#이-챕터에서-배운-것">이 챕터에서 배운 것</a></li>
+        <li><a href="#실습-과제">실습 과제</a></li>
+        <li><a href="#다음-챕터-미리보기">다음 챕터 미리보기</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="chapter-4-backtrader-프레임워크-기초">Chapter 4: Backtrader 프레임워크 기초<a class="anchor" href="#chapter-4-backtrader-%ed%94%84%eb%a0%88%ec%9e%84%ec%9b%8c%ed%81%ac-%ea%b8%b0%ec%b4%88">#</a></h1>
+<p>이 챕터에서는 Python의 대표적인 백테스팅 프레임워크인 <strong>Backtrader</strong>를 본격적으로 사용합니다. Backtrader의 아키텍처를 이해하고, 첫 번째 실전 전략인 Buy &amp; Hold를 구현하며, 기본적인 성과 분석 방법을 배웁니다.</p>
+<h2 id="41-backtrader란">4.1 Backtrader란?<a class="anchor" href="#41-backtrader%eb%9e%80">#</a></h2>
+<h3 id="backtrader-소개">Backtrader 소개<a class="anchor" href="#backtrader-%ec%86%8c%ea%b0%9c">#</a></h3>
+<p><strong>Backtrader</strong>는 Python으로 작성된 오픈소스 백테스팅 프레임워크입니다.</p>
+<p><strong>주요 특징</strong>:</p>
+<ul>
+<li>✅ 완전한 기능: Strategy, Indicators, Analyzers, Observers 등</li>
+<li>✅ 유연성: 다양한 전략과 지표를 쉽게 구현</li>
+<li>✅ 성능: 효율적인 데이터 처리</li>
+<li>✅ 시각화: 내장 플로팅 기능</li>
+<li>✅ 활발한 커뮤니티: 풍부한 문서와 예제</li>
+</ul>
+<p><strong>공식 사이트</strong>: <a href="https://www.backtrader.com/">https://www.backtrader.com/</a></p>
+<h3 id="왜-backtrader인가">왜 Backtrader인가?<a class="anchor" href="#%ec%99%9c-backtrader%ec%9d%b8%ea%b0%80">#</a></h3>
+<p>다른 백테스팅 라이브러리와 비교:</p>
+<table>
+  <thead>
+      <tr>
+          <th>라이브러리</th>
+          <th>장점</th>
+          <th>단점</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Backtrader</strong></td>
+          <td>완전한 기능, 유연성</td>
+          <td>학습 곡선</td>
+      </tr>
+      <tr>
+          <td>Zipline</td>
+          <td>Quantopian 출신, 강력</td>
+          <td>유지보수 중단</td>
+      </tr>
+      <tr>
+          <td>Backtesting.py</td>
+          <td>간단함, 빠름</td>
+          <td>제한적 기능</td>
+      </tr>
+      <tr>
+          <td>VectorBT</td>
+          <td>빠른 속도, 벡터화</td>
+          <td>복잡한 전략 어려움</td>
+      </tr>
+  </tbody>
+</table>
+<p>Backtrader는 <strong>기능의 완전성</strong>과 <strong>유연성</strong>에서 최고의 선택입니다.</p>
+<h2 id="42-backtrader-아키텍처">4.2 Backtrader 아키텍처<a class="anchor" href="#42-backtrader-%ec%95%84%ed%82%a4%ed%85%8d%ec%b2%98">#</a></h2>
+<h3 id="핵심-구성-요소">핵심 구성 요소<a class="anchor" href="#%ed%95%b5%ec%8b%ac-%ea%b5%ac%ec%84%b1-%ec%9a%94%ec%86%8c">#</a></h3>
+<p>Backtrader는 다음 4가지 핵심 요소로 구성됩니다:</p>
+<pre tabindex="0"><code>┌─────────────────────────────────────┐
+│           Cerebro (엔진)             │
+│  ┌───────────────────────────────┐  │
+│  │        Strategy (전략)         │  │
+│  │  - __init__: 초기화            │  │
+│  │  - next: 매 바마다 실행        │  │
+│  │  - notify_order: 주문 알림     │  │
+│  │  - notify_trade: 거래 알림     │  │
+│  └───────────────────────────────┘  │
+│  ┌───────────────────────────────┐  │
+│  │      Data Feeds (데이터)       │  │
+│  │  - CSV, Pandas, Yahoo, 등     │  │
+│  └───────────────────────────────┘  │
+│  ┌───────────────────────────────┐  │
+│  │     Analyzers (분석기)         │  │
+│  │  - Sharpe, Drawdown, Returns  │  │
+│  └───────────────────────────────┘  │
+└─────────────────────────────────────┘</code></pre><h4 id="1-cerebro-대뇌">1. Cerebro (대뇌)<a class="anchor" href="#1-cerebro-%eb%8c%80%eb%87%8c">#</a></h4>
+<p><strong>역할</strong>: 전체 백테스팅 엔진의 중앙 컨트롤러</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> backtrader <span style="color:#66d9ef">as</span> bt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cerebro <span style="color:#f92672">=</span> bt<span style="color:#f92672">.</span>Cerebro()  <span style="color:#75715e"># Cerebro 인스턴스 생성</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 설정</span>
+</span></span><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>addstrategy(MyStrategy)  <span style="color:#75715e"># 전략 추가</span>
+</span></span><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>adddata(data)             <span style="color:#75715e"># 데이터 추가</span>
+</span></span><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>broker<span style="color:#f92672">.</span>setcash(<span style="color:#ae81ff">10000</span>)     <span style="color:#75715e"># 초기 자본금</span>
+</span></span><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>broker<span style="color:#f92672">.</span>setcommission(<span style="color:#ae81ff">0.001</span>)  <span style="color:#75715e"># 수수료 0.1%</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 실행</span>
+</span></span><span style="display:flex;"><span>results <span style="color:#f92672">=</span> cerebro<span style="color:#f92672">.</span>run()</span></span></code></pre></div><h4 id="2-strategy-전략">2. Strategy (전략)<a class="anchor" href="#2-strategy-%ec%a0%84%eb%9e%b5">#</a></h4>
+<p><strong>역할</strong>: 트레이딩 로직을 정의하는 클래스</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyStrategy</span>(bt<span style="color:#f92672">.</span>Strategy):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;초기화: 지표 계산 등&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>sma <span style="color:#f92672">=</span> bt<span style="color:#f92672">.</span>indicators<span style="color:#f92672">.</span>SMA(self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>close, period<span style="color:#f92672">=</span><span style="color:#ae81ff">20</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">next</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;매 바(일)마다 실행되는 메인 로직&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>position:  <span style="color:#75715e"># 포지션이 없으면</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>close[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">&gt;</span> self<span style="color:#f92672">.</span>sma[<span style="color:#ae81ff">0</span>]:
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>buy()  <span style="color:#75715e"># 매수</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:  <span style="color:#75715e"># 포지션이 있으면</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>close[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">&lt;</span> self<span style="color:#f92672">.</span>sma[<span style="color:#ae81ff">0</span>]:
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>sell()  <span style="color:#75715e"># 매도</span></span></span></code></pre></div><p><strong>주요 메서드</strong>:</p>
+<ul>
+<li><code>__init__()</code>: 전략 초기화, 지표 생성</li>
+<li><code>next()</code>: 매 바마다 실행 (핵심 로직)</li>
+<li><code>notify_order()</code>: 주문 상태 변경 알림</li>
+<li><code>notify_trade()</code>: 거래 완료 알림</li>
+<li><code>stop()</code>: 백테스트 종료 시 호출</li>
+</ul>
+<h4 id="3-data-feeds-데이터-피드">3. Data Feeds (데이터 피드)<a class="anchor" href="#3-data-feeds-%eb%8d%b0%ec%9d%b4%ed%84%b0-%ed%94%bc%eb%93%9c">#</a></h4>
+<p><strong>역할</strong>: 전략에 시장 데이터 제공</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Pandas DataFrame에서 데이터 로드</span>
+</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> bt<span style="color:#f92672">.</span>feeds<span style="color:#f92672">.</span>PandasData(dataname<span style="color:#f92672">=</span>df)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># CSV 파일에서 데이터 로드</span>
+</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> bt<span style="color:#f92672">.</span>feeds<span style="color:#f92672">.</span>GenericCSVData(
+</span></span><span style="display:flex;"><span>    dataname<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;AAPL_5y.csv&#39;</span>,
+</span></span><span style="display:flex;"><span>    datetime<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>    open<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>    high<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>,
+</span></span><span style="display:flex;"><span>    low<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>,
+</span></span><span style="display:flex;"><span>    close<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span>,
+</span></span><span style="display:flex;"><span>    volume<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>adddata(data)</span></span></code></pre></div><h4 id="4-analyzers-분석기">4. Analyzers (분석기)<a class="anchor" href="#4-analyzers-%eb%b6%84%ec%84%9d%ea%b8%b0">#</a></h4>
+<p><strong>역할</strong>: 백테스트 성과 분석</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Analyzer 추가</span>
+</span></span><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>addanalyzer(bt<span style="color:#f92672">.</span>analyzers<span style="color:#f92672">.</span>SharpeRatio, _name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sharpe&#39;</span>)
+</span></span><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>addanalyzer(bt<span style="color:#f92672">.</span>analyzers<span style="color:#f92672">.</span>DrawDown, _name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;drawdown&#39;</span>)
+</span></span><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>addanalyzer(bt<span style="color:#f92672">.</span>analyzers<span style="color:#f92672">.</span>Returns, _name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;returns&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 실행 후 결과 확인</span>
+</span></span><span style="display:flex;"><span>results <span style="color:#f92672">=</span> cerebro<span style="color:#f92672">.</span>run()
+</span></span><span style="display:flex;"><span>strat <span style="color:#f92672">=</span> results[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Sharpe Ratio: </span><span style="color:#e6db74">{</span>strat<span style="color:#f92672">.</span>analyzers<span style="color:#f92672">.</span>sharpe<span style="color:#f92672">.</span>get_analysis()[<span style="color:#e6db74">&#39;sharperatio&#39;</span>]<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Max Drawdown: </span><span style="color:#e6db74">{</span>strat<span style="color:#f92672">.</span>analyzers<span style="color:#f92672">.</span>drawdown<span style="color:#f92672">.</span>get_analysis()[<span style="color:#e6db74">&#39;max&#39;</span>][<span style="color:#e6db74">&#39;drawdown&#39;</span>]<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">%&#34;</span>)</span></span></code></pre></div><h2 id="43-데이터-접근-방법">4.3 데이터 접근 방법<a class="anchor" href="#43-%eb%8d%b0%ec%9d%b4%ed%84%b0-%ec%a0%91%ea%b7%bc-%eb%b0%a9%eb%b2%95">#</a></h2>
+<h3 id="인덱싱-규칙">인덱싱 규칙<a class="anchor" href="#%ec%9d%b8%eb%8d%b1%ec%8b%b1-%ea%b7%9c%ec%b9%99">#</a></h3>
+<p>Backtrader는 <strong>0-based indexing</strong>을 사용하지만 <strong>역순</strong>입니다:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>close[<span style="color:#ae81ff">0</span>]   <span style="color:#75715e"># 현재 종가</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>close[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]  <span style="color:#75715e"># 이전 종가</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>close[<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>]  <span style="color:#75715e"># 2일 전 종가</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>high[<span style="color:#ae81ff">0</span>]    <span style="color:#75715e"># 현재 고가</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>low[<span style="color:#ae81ff">0</span>]     <span style="color:#75715e"># 현재 저가</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>volume[<span style="color:#ae81ff">0</span>]  <span style="color:#75715e"># 현재 거래량</span></span></span></code></pre></div><p><strong>주의</strong>: <code>[0]</code>이 <strong>현재</strong>, <code>[-1]</code>이 <strong>과거</strong>입니다!</p>
+<h3 id="lines-개념">Lines 개념<a class="anchor" href="#lines-%ea%b0%9c%eb%85%90">#</a></h3>
+<p>Backtrader는 <strong>Lines</strong> 개념을 사용합니다:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># OHLCV는 기본 Lines</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>close  <span style="color:#75715e"># Close line</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>open   <span style="color:#75715e"># Open line</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>high   <span style="color:#75715e"># High line</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>low    <span style="color:#75715e"># Low line</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>volume <span style="color:#75715e"># Volume line</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 지표도 Lines</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>sma <span style="color:#f92672">=</span> bt<span style="color:#f92672">.</span>indicators<span style="color:#f92672">.</span>SMA(period<span style="color:#f92672">=</span><span style="color:#ae81ff">20</span>)
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>sma[<span style="color:#ae81ff">0</span>]  <span style="color:#75715e"># 현재 SMA 값</span></span></span></code></pre></div><h2 id="44-주문-실행">4.4 주문 실행<a class="anchor" href="#44-%ec%a3%bc%eb%ac%b8-%ec%8b%a4%ed%96%89">#</a></h2>
+<h3 id="기본-주문-메서드">기본 주문 메서드<a class="anchor" href="#%ea%b8%b0%eb%b3%b8-%ec%a3%bc%eb%ac%b8-%eb%a9%94%ec%84%9c%eb%93%9c">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 매수</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>buy()                    <span style="color:#75715e"># 시장가 전량 매수</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>buy(size<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>)           <span style="color:#75715e"># 100주 매수</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>buy(price<span style="color:#f92672">=</span><span style="color:#ae81ff">150.0</span>)        <span style="color:#75715e"># 지정가 매수</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 매도</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>sell()                   <span style="color:#75715e"># 포지션 전량 매도</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>sell(size<span style="color:#f92672">=</span><span style="color:#ae81ff">50</span>)           <span style="color:#75715e"># 50주 매도</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>close()                  <span style="color:#75715e"># 포지션 청산 (매도와 동일)</span></span></span></code></pre></div><h3 id="주문-추적">주문 추적<a class="anchor" href="#%ec%a3%bc%eb%ac%b8-%ec%b6%94%ec%a0%81">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyStrategy</span>(bt<span style="color:#f92672">.</span>Strategy):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>order <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">next</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 대기 중인 주문이 있으면 건너뛰기</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>order:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>position:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>order <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>buy()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">notify_order</span>(self, order):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;주문 상태 변경 알림&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> order<span style="color:#f92672">.</span>status <span style="color:#f92672">in</span> [order<span style="color:#f92672">.</span>Completed]:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> order<span style="color:#f92672">.</span>isbuy():
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;매수 체결: </span><span style="color:#e6db74">{</span>order<span style="color:#f92672">.</span>executed<span style="color:#f92672">.</span>price<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">elif</span> order<span style="color:#f92672">.</span>issell():
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;매도 체결: </span><span style="color:#e6db74">{</span>order<span style="color:#f92672">.</span>executed<span style="color:#f92672">.</span>price<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>order <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>  <span style="color:#75715e"># 주문 완료, 초기화</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> order<span style="color:#f92672">.</span>status <span style="color:#f92672">in</span> [order<span style="color:#f92672">.</span>Canceled, order<span style="color:#f92672">.</span>Margin, order<span style="color:#f92672">.</span>Rejected]:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">&#39;주문 취소/거부&#39;</span>)
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>order <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span></span></span></code></pre></div><h3 id="포지션-관리">포지션 관리<a class="anchor" href="#%ed%8f%ac%ec%a7%80%ec%85%98-%ea%b4%80%eb%a6%ac">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 현재 포지션 확인</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>position:
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;보유 주식: </span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>position<span style="color:#f92672">.</span>size<span style="color:#e6db74">}</span><span style="color:#e6db74">주&#39;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;평균 매수가: </span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>position<span style="color:#f92672">.</span>price<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 포지션 여부</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>position:  <span style="color:#75715e"># 포지션 없음</span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>buy()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>position:      <span style="color:#75715e"># 포지션 있음</span>
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>sell()</span></span></code></pre></div><h2 id="45-첫-번째-전략-buy--hold">4.5 첫 번째 전략: Buy &amp; Hold<a class="anchor" href="#45-%ec%b2%ab-%eb%b2%88%ec%a7%b8-%ec%a0%84%eb%9e%b5-buy--hold">#</a></h2>
+<h3 id="buy--hold-전략이란">Buy &amp; Hold 전략이란?<a class="anchor" href="#buy--hold-%ec%a0%84%eb%9e%b5%ec%9d%b4%eb%9e%80">#</a></h3>
+<p>**Buy &amp; Hold (매수 후 보유)**는 가장 간단한 투자 전략입니다:</p>
+<ol>
+<li>백테스트 시작 시점에 매수</li>
+<li>끝까지 보유</li>
+<li>종료 시점에 매도</li>
+</ol>
+<p>이 전략은 <strong>벤치마크</strong>로 자주 사용됩니다.</p>
+<h3 id="전략-구현">전략 구현<a class="anchor" href="#%ec%a0%84%eb%9e%b5-%ea%b5%ac%ed%98%84">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BuyAndHoldStrategy</span>(bt<span style="color:#f92672">.</span>Strategy):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Buy &amp; Hold 전략
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    첫 거래일에 매수하고 끝까지 보유
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;초기화&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>order <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>buy_price <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>buy_comm <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">next</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;매 바마다 실행&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 이미 주문이 있으면 대기</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>order:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 포지션이 없으면 매수</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>position:
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 사용 가능한 모든 자금으로 매수</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>order <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>buy()
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>datetime<span style="color:#f92672">.</span>date(<span style="color:#ae81ff">0</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">: 매수 주문 실행&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">notify_order</span>(self, order):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;주문 상태 변경 알림&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> order<span style="color:#f92672">.</span>status <span style="color:#f92672">in</span> [order<span style="color:#f92672">.</span>Submitted, order<span style="color:#f92672">.</span>Accepted]:
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 주문 제출/접수 - 아무것도 하지 않음</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> order<span style="color:#f92672">.</span>status <span style="color:#f92672">in</span> [order<span style="color:#f92672">.</span>Completed]:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> order<span style="color:#f92672">.</span>isbuy():
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>buy_price <span style="color:#f92672">=</span> order<span style="color:#f92672">.</span>executed<span style="color:#f92672">.</span>price
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>buy_comm <span style="color:#f92672">=</span> order<span style="color:#f92672">.</span>executed<span style="color:#f92672">.</span>comm
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;매수 체결: 가격 $</span><span style="color:#e6db74">{</span>order<span style="color:#f92672">.</span>executed<span style="color:#f92672">.</span>price<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">, &#39;</span>
+</span></span><span style="display:flex;"><span>                      <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;수수료 $</span><span style="color:#e6db74">{</span>order<span style="color:#f92672">.</span>executed<span style="color:#f92672">.</span>comm<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>order <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">notify_trade</span>(self, trade):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;거래 완료 알림&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> trade<span style="color:#f92672">.</span>isclosed:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;거래 종료: 손익 $</span><span style="color:#e6db74">{</span>trade<span style="color:#f92672">.</span>pnl<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">stop</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;백테스트 종료 시 호출&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">최종 포트폴리오 가치: $</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>broker<span style="color:#f92672">.</span>getvalue()<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)</span></span></code></pre></div><h2 id="46-실습-buy--hold-백테스트">4.6 실습: Buy &amp; Hold 백테스트<a class="anchor" href="#46-%ec%8b%a4%ec%8a%b5-buy--hold-%eb%b0%b1%ed%85%8c%ec%8a%a4%ed%8a%b8">#</a></h2>
+<p>이제 실제로 Buy &amp; Hold 전략을 백테스트해봅시다.</p>
+<h3 id="코드-실행">코드 실행<a class="anchor" href="#%ec%bd%94%eb%93%9c-%ec%8b%a4%ed%96%89">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd codes
+</span></span><span style="display:flex;"><span>uv run chapter04/01_buy_and_hold.py</span></span></code></pre></div><h3 id="스크립트-개요">스크립트 개요<a class="anchor" href="#%ec%8a%a4%ed%81%ac%eb%a6%bd%ed%8a%b8-%ea%b0%9c%ec%9a%94">#</a></h3>
+<p>이 스크립트는 다음을 수행합니다:</p>
+<ol>
+<li><strong>데이터 로드</strong>: Chapter 2에서 저장한 AAPL 데이터</li>
+<li><strong>Cerebro 설정</strong>: 초기 자금, 수수료 설정</li>
+<li><strong>전략 실행</strong>: Buy &amp; Hold 전략 백테스트</li>
+<li><strong>성과 분석</strong>: Analyzers를 사용한 상세 분석</li>
+<li><strong>시각화</strong>: 포트폴리오 가치, 거래 기록 차트</li>
+</ol>
+<h3 id="실행-결과-분석">실행 결과 분석<a class="anchor" href="#%ec%8b%a4%ed%96%89-%ea%b2%b0%ea%b3%bc-%eb%b6%84%ec%84%9d">#</a></h3>
+<p>실제 스크립트를 실행한 결과입니다:</p>
+<pre tabindex="0"><code>==========================================
+Chapter 4: Backtrader 프레임워크 기초
+==========================================
+
+=== Buy &amp; Hold 전략 백테스트 ===
+
+초기 설정:
+- 초기 자금: $10,000.00
+- 수수료: 0.10%
+- 데이터: AAPL
+
+백테스트 실행 중...
+
+2021-02-08: 매수 주문 실행
+2021-02-09: 매수 체결: 가격 $133.19, 비용 $9479.88, 수수료 $9.48
+2026-02-04: 최종 포트폴리오 가치: $20189.72
+
+==========================================
+=== 성과 분석 ===
+==========================================
+
+기본 지표:
+- 초기 자금: $10,000.00
+- 최종 자금: $20,189.72
+- 총 수익률: +101.90%
+
+Sharpe Ratio: 0.603
+
+최대 낙폭:
+- Max Drawdown: 32.46%
+- DD Duration: 354 days
+
+수익률:
+- Total Return: +70.26%
+- Annualized Return: +15.16%
+
+거래 통계:
+- 총 거래: 1
+- 승: 0, 패: 0
+- 승률: 0.0%
+
+==========================================
+=== 벤치마크 비교 (vs SPY) ===
+==========================================
+AAPL Buy &amp; Hold: +101.90%
+SPY: +89.15%
+초과 수익: +12.74%
+
+차트 저장 완료: chapter04/images/buy_and_hold.png</code></pre><p><img src="/images/chapter04/buy_and_hold.png" alt="Buy &amp; Hold 백테스트 결과" /></p>
+<h3 id="결과-해석">결과 해석<a class="anchor" href="#%ea%b2%b0%ea%b3%bc-%ed%95%b4%ec%84%9d">#</a></h3>
+<h4 id="차트-분석">차트 분석<a class="anchor" href="#%ec%b0%a8%ed%8a%b8-%eb%b6%84%ec%84%9d">#</a></h4>
+<p><strong>상단 패널: AAPL 주가 차트</strong></p>
+<ul>
+<li><strong>녹색 삼각형 (▲)</strong>: 매수 시점 (2021-02-09, $133.19)</li>
+<li>5년간 주가는 $133 → $248로 약 86% 상승</li>
+<li>두 차례 큰 조정 구간:
+<ul>
+<li><strong>2022년 하반기</strong>: $170 → $123 (-27.6%)</li>
+<li><strong>2024년 말</strong>: $250 → $174 (-30.4%)</li>
+</ul>
+</li>
+<li>최종 주가: $248 (2026-02-04)</li>
+</ul>
+<p><strong>하단 패널: 포트폴리오 가치</strong></p>
+<ul>
+<li><strong>보라색 실선</strong>: 백테스트 포트폴리오 가치</li>
+<li><strong>점선</strong>: 초기 자금 $10,000</li>
+<li>주가 움직임과 정확히 일치하는 모습</li>
+<li>최종 가치: $20,189.72 (약 2배)</li>
+</ul>
+<h4 id="성과-지표-분석">성과 지표 분석<a class="anchor" href="#%ec%84%b1%ea%b3%bc-%ec%a7%80%ed%91%9c-%eb%b6%84%ec%84%9d">#</a></h4>
+<p><strong>1. 총 수익률: +101.90%</strong></p>
+<ul>
+<li>초기 $10,000 → 최종 $20,189.72</li>
+<li>5년간 약 2배 수익</li>
+<li>복리 효과를 포함한 실제 수익률</li>
+</ul>
+<p><strong>2. 연간 수익률: +15.16%</strong></p>
+<ul>
+<li>5년간 평균 연 15.16% 수익</li>
+<li>S&amp;P 500 장기 평균 (약 10%)보다 높은 수치</li>
+<li>계산: $(20189.72 / 10000)^{1/5} - 1 = 0.1516$</li>
+</ul>
+<p><strong>3. Sharpe Ratio: 0.603</strong></p>
+<ul>
+<li>위험 대비 수익률 측정</li>
+<li>일반적 해석:
+<ul>
+<li>&lt; 1.0: 보통</li>
+<li>1.0~2.0: 좋음</li>
+<li>
+<blockquote class='book-hint '>
+<p>2.0: 매우 좋음</p>
+</blockquote></li>
+</ul>
+</li>
+<li><strong>0.603은 보통 수준</strong>: 수익은 있지만 변동성도 상당함</li>
+</ul>
+<p><strong>4. Maximum Drawdown: -32.46%</strong></p>
+<ul>
+<li>고점 대비 최대 낙폭</li>
+<li>2024년 말 조정 시 발생 ($250 → $174)</li>
+<li><strong>의미</strong>: 최악의 경우 자산이 32% 하락할 수 있음</li>
+<li>투자자는 이 정도의 손실을 견딜 수 있어야 함</li>
+</ul>
+<p><strong>5. Drawdown Duration: 354일</strong></p>
+<ul>
+<li>고점 회복에 걸린 최장 기간</li>
+<li>약 1년간 손실 상태 지속</li>
+<li><strong>심리적 압박</strong>: 장기간 손실 상태는 투자자의 인내심을 시험</li>
+</ul>
+<h4 id="벤치마크-비교">벤치마크 비교<a class="anchor" href="#%eb%b2%a4%ec%b9%98%eb%a7%88%ed%81%ac-%eb%b9%84%ea%b5%90">#</a></h4>
+<p><strong>AAPL vs SPY</strong>:</p>
+<ul>
+<li>AAPL: +101.90%</li>
+<li>SPY: +89.15%</li>
+<li>초과 수익: +12.74%</li>
+</ul>
+<p><strong>해석</strong>:</p>
+<ul>
+<li>AAPL이 시장(SPY)을 13% 초과 달성</li>
+<li>하지만 개별 주식은 더 높은 리스크(변동성)를 동반</li>
+<li>Sharpe Ratio로 비교하면 리스크 조정 후 차이는 더 작을 것</li>
+</ul>
+<h4 id="거래-비용-영향">거래 비용 영향<a class="anchor" href="#%ea%b1%b0%eb%9e%98-%eb%b9%84%ec%9a%a9-%ec%98%81%ed%96%a5">#</a></h4>
+<p><strong>수수료 분석</strong>:</p>
+<ul>
+<li>매수 비용: $9,479.88</li>
+<li>수수료: $9.48 (0.1%)</li>
+<li>수수료 비율: 전체 수익의 약 0.05%</li>
+</ul>
+<p><strong>인사이트</strong>:</p>
+<ul>
+<li>Buy &amp; Hold는 거래가 1회뿐이므로 수수료 영향 최소</li>
+<li>빈번한 거래 전략은 수수료가 수익률에 큰 영향</li>
+<li>다음 챕터에서 다룰 이동평균 전략에서 이를 확인할 예정</li>
+</ul>
+<h4 id="실전-적용-고려사항">실전 적용 고려사항<a class="anchor" href="#%ec%8b%a4%ec%a0%84-%ec%a0%81%ec%9a%a9-%ea%b3%a0%eb%a0%a4%ec%82%ac%ed%95%ad">#</a></h4>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>✅ 간단한 전략 (매수 후 보유만)</li>
+<li>✅ 거래 비용 최소화</li>
+<li>✅ 장기적으로 시장 상승 추세 활용</li>
+<li>✅ 감정적 결정 배제</li>
+</ul>
+<p><strong>단점</strong>:</p>
+<ul>
+<li>❌ 큰 낙폭 (-32%) 견뎌야 함</li>
+<li>❌ 조정 구간에서 손실 축소 불가</li>
+<li>❌ 하락장에서 무력함</li>
+<li>❌ 타이밍의 중요성 (매수 시점)</li>
+</ul>
+<p><strong>누가 사용해야 하는가?</strong></p>
+<ul>
+<li>장기 투자자 (5년 이상)</li>
+<li>높은 변동성을 견딜 수 있는 투자자</li>
+<li>시장 타이밍을 잡기 어렵다고 생각하는 투자자</li>
+<li>적극적 관리 시간이 없는 투자자</li>
+</ul>
+<h3 id="백테스팅의-가치">백테스팅의 가치<a class="anchor" href="#%eb%b0%b1%ed%85%8c%ec%8a%a4%ed%8c%85%ec%9d%98-%ea%b0%80%ec%b9%98">#</a></h3>
+<p>이 간단한 Buy &amp; Hold 백테스트를 통해 우리는:</p>
+<ol>
+<li><strong>실제 성과 확인</strong>: 5년간 +101.9% 수익 (이론이 아닌 실제)</li>
+<li><strong>리스크 파악</strong>: 최대 -32% 하락 가능성 인지</li>
+<li><strong>심리적 준비</strong>: 1년간 손실 상태를 견뎌야 할 수도 있음</li>
+<li><strong>벤치마크 비교</strong>: SPY 대비 +13% 초과 수익 확인</li>
+<li><strong>전략 개선 방향</strong>: 조정 구간에서 손실을 줄일 방법 필요</li>
+</ol>
+<p>다음 챕터에서는 이동평균을 활용하여 조정 구간에서 현금으로 전환하는 전략을 배워봅시다!</p>
+<h2 id="47-analyzers를-사용한-성과-분석">4.7 Analyzers를 사용한 성과 분석<a class="anchor" href="#47-analyzers%eb%a5%bc-%ec%82%ac%ec%9a%a9%ed%95%9c-%ec%84%b1%ea%b3%bc-%eb%b6%84%ec%84%9d">#</a></h2>
+<h3 id="주요-analyzers">주요 Analyzers<a class="anchor" href="#%ec%a3%bc%ec%9a%94-analyzers">#</a></h3>
+<p>Backtrader는 다양한 내장 Analyzers를 제공합니다:</p>
+<p><strong>1. SharpeRatio (샤프 비율)</strong></p>
+<p>위험 대비 수익률:</p>
+$$\text{Sharpe Ratio} = \frac{E[R - R_f]}{\sigma}$$<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>addanalyzer(bt<span style="color:#f92672">.</span>analyzers<span style="color:#f92672">.</span>SharpeRatio, _name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sharpe&#39;</span>,
+</span></span><span style="display:flex;"><span>                    riskfreerate<span style="color:#f92672">=</span><span style="color:#ae81ff">0.01</span>)  <span style="color:#75715e"># 무위험 이자율 1%</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sharpe <span style="color:#f92672">=</span> results[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>analyzers<span style="color:#f92672">.</span>sharpe<span style="color:#f92672">.</span>get_analysis()
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Sharpe Ratio: </span><span style="color:#e6db74">{</span>sharpe[<span style="color:#e6db74">&#39;sharperatio&#39;</span>]<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)</span></span></code></pre></div><p><strong>2. DrawDown (낙폭)</strong></p>
+<p>최대 손실폭:</p>
+$$\text{MDD} = \max_{t}\left(\frac{Peak - Trough}{Peak}\right)$$<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>addanalyzer(bt<span style="color:#f92672">.</span>analyzers<span style="color:#f92672">.</span>DrawDown, _name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;drawdown&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>dd <span style="color:#f92672">=</span> results[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>analyzers<span style="color:#f92672">.</span>drawdown<span style="color:#f92672">.</span>get_analysis()
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Max Drawdown: </span><span style="color:#e6db74">{</span>dd[<span style="color:#e6db74">&#39;max&#39;</span>][<span style="color:#e6db74">&#39;drawdown&#39;</span>]<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">%&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;DD Duration: </span><span style="color:#e6db74">{</span>dd[<span style="color:#e6db74">&#39;max&#39;</span>][<span style="color:#e6db74">&#39;len&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74"> days&#34;</span>)</span></span></code></pre></div><p><strong>3. Returns (수익률)</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>addanalyzer(bt<span style="color:#f92672">.</span>analyzers<span style="color:#f92672">.</span>Returns, _name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;returns&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rets <span style="color:#f92672">=</span> results[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>analyzers<span style="color:#f92672">.</span>returns<span style="color:#f92672">.</span>get_analysis()
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Total Return: </span><span style="color:#e6db74">{</span>rets[<span style="color:#e6db74">&#39;rtot&#39;</span>]<span style="color:#e6db74">:</span><span style="color:#e6db74">.2%</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Average Return: </span><span style="color:#e6db74">{</span>rets[<span style="color:#e6db74">&#39;ravg&#39;</span>]<span style="color:#e6db74">:</span><span style="color:#e6db74">.2%</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)</span></span></code></pre></div><p><strong>4. TradeAnalyzer (거래 분석)</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>addanalyzer(bt<span style="color:#f92672">.</span>analyzers<span style="color:#f92672">.</span>TradeAnalyzer, _name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;trades&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>trades <span style="color:#f92672">=</span> results[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>analyzers<span style="color:#f92672">.</span>trades<span style="color:#f92672">.</span>get_analysis()
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Total Trades: </span><span style="color:#e6db74">{</span>trades[<span style="color:#e6db74">&#39;total&#39;</span>][<span style="color:#e6db74">&#39;total&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Won: </span><span style="color:#e6db74">{</span>trades[<span style="color:#e6db74">&#39;won&#39;</span>][<span style="color:#e6db74">&#39;total&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Lost: </span><span style="color:#e6db74">{</span>trades[<span style="color:#e6db74">&#39;lost&#39;</span>][<span style="color:#e6db74">&#39;total&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)</span></span></code></pre></div><h3 id="커스텀-analyzer">커스텀 Analyzer<a class="anchor" href="#%ec%bb%a4%ec%8a%a4%ed%85%80-analyzer">#</a></h3>
+<p>필요하면 직접 Analyzer를 만들 수 있습니다:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyAnalyzer</span>(bt<span style="color:#f92672">.</span>Analyzer):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>rets <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">notify_cashvalue</span>(self, cash, value):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;포트폴리오 가치 변경 시 호출&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>rets<span style="color:#f92672">.</span>append(value)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_analysis</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;분석 결과 반환&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;final_value&#39;</span>: self<span style="color:#f92672">.</span>rets[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>],
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;max_value&#39;</span>: max(self<span style="color:#f92672">.</span>rets),
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;min_value&#39;</span>: min(self<span style="color:#f92672">.</span>rets)
+</span></span><span style="display:flex;"><span>        }</span></span></code></pre></div><h2 id="48-브로커-설정">4.8 브로커 설정<a class="anchor" href="#48-%eb%b8%8c%eb%a1%9c%ec%bb%a4-%ec%84%a4%ec%a0%95">#</a></h2>
+<h3 id="초기-자본금">초기 자본금<a class="anchor" href="#%ec%b4%88%ea%b8%b0-%ec%9e%90%eb%b3%b8%ea%b8%88">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>broker<span style="color:#f92672">.</span>setcash(<span style="color:#ae81ff">100000</span>)  <span style="color:#75715e"># $100,000</span></span></span></code></pre></div><h3 id="수수료">수수료<a class="anchor" href="#%ec%88%98%ec%88%98%eb%a3%8c">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 비율 기반 (0.1%)</span>
+</span></span><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>broker<span style="color:#f92672">.</span>setcommission(commission<span style="color:#f92672">=</span><span style="color:#ae81ff">0.001</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 주당 고정 ($0.01/주)</span>
+</span></span><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>broker<span style="color:#f92672">.</span>setcommission(commission<span style="color:#f92672">=</span><span style="color:#ae81ff">0.01</span>, commtype<span style="color:#f92672">=</span>bt<span style="color:#f92672">.</span>CommInfoBase<span style="color:#f92672">.</span>COMM_FIXED)</span></span></code></pre></div><h3 id="슬리피지-slippage">슬리피지 (Slippage)<a class="anchor" href="#%ec%8a%ac%eb%a6%ac%ed%94%bc%ec%a7%80-slippage">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 고정 슬리피지</span>
+</span></span><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>broker<span style="color:#f92672">.</span>set_slippage_fixed(<span style="color:#ae81ff">0.05</span>, slip_open<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, slip_out<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 비율 슬리피지</span>
+</span></span><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>broker<span style="color:#f92672">.</span>set_slippage_perc(<span style="color:#ae81ff">0.001</span>)  <span style="color:#75715e"># 0.1%</span></span></span></code></pre></div><h3 id="포지션-사이징">포지션 사이징<a class="anchor" href="#%ed%8f%ac%ec%a7%80%ec%85%98-%ec%82%ac%ec%9d%b4%ec%a7%95">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 전략에서 크기 지정</span>
+</span></span><span style="display:flex;"><span>self<span style="color:#f92672">.</span>buy(size<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>)  <span style="color:#75715e"># 100주</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 브로커에서 기본 크기 설정</span>
+</span></span><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>addsizer(bt<span style="color:#f92672">.</span>sizers<span style="color:#f92672">.</span>FixedSize, stake<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 자금 비율 기반</span>
+</span></span><span style="display:flex;"><span>cerebro<span style="color:#f92672">.</span>addsizer(bt<span style="color:#f92672">.</span>sizers<span style="color:#f92672">.</span>PercentSizer, percents<span style="color:#f92672">=</span><span style="color:#ae81ff">95</span>)  <span style="color:#75715e"># 95% 투자</span></span></span></code></pre></div><h2 id="49-다음-단계">4.9 다음 단계<a class="anchor" href="#49-%eb%8b%a4%ec%9d%8c-%eb%8b%a8%ea%b3%84">#</a></h2>
+<h3 id="이-챕터에서-배운-것">이 챕터에서 배운 것<a class="anchor" href="#%ec%9d%b4-%ec%b1%95%ed%84%b0%ec%97%90%ec%84%9c-%eb%b0%b0%ec%9a%b4-%ea%b2%83">#</a></h3>
+<p>✅ <strong>Backtrader 아키텍처</strong>: Cerebro, Strategy, Data Feeds, Analyzers
+✅ <strong>전략 구현</strong>: <code>__init__()</code>, <code>next()</code>, <code>notify_order()</code> 메서드
+✅ <strong>주문 실행</strong>: <code>buy()</code>, <code>sell()</code>, <code>close()</code> 메서드
+✅ <strong>Buy &amp; Hold 전략</strong>: 가장 기본적인 벤치마크 전략
+✅ <strong>성과 분석</strong>: Analyzers를 사용한 상세 분석
+✅ <strong>브로커 설정</strong>: 자본금, 수수료, 슬리피지</p>
+<h3 id="실습-과제">실습 과제<a class="anchor" href="#%ec%8b%a4%ec%8a%b5-%ea%b3%bc%ec%a0%9c">#</a></h3>
+<ol>
+<li>
+<p><strong>다른 종목</strong>: Tesla (TSLA) 또는 Microsoft (MSFT)로 Buy &amp; Hold를 실행해보세요.</p>
+</li>
+<li>
+<p><strong>초기 자금 변경</strong>: $50,000, $100,000으로 변경하여 결과를 비교해보세요.</p>
+</li>
+<li>
+<p><strong>수수료 영향</strong>: 수수료를 0%, 0.05%, 0.2%로 변경하여 영향을 분석해보세요.</p>
+</li>
+<li>
+<p><strong>기간 변경</strong>: 1년, 3년, 10년 데이터로 백테스트해보세요.</p>
+</li>
+</ol>
+<h3 id="다음-챕터-미리보기">다음 챕터 미리보기<a class="anchor" href="#%eb%8b%a4%ec%9d%8c-%ec%b1%95%ed%84%b0-%eb%af%b8%eb%a6%ac%eb%b3%b4%ea%b8%b0">#</a></h3>
+<p>**Chapter 5: 이동평균 전략 (Part 2 시작!)**에서는:</p>
+<ul>
+<li>단순 이동평균 (SMA)과 지수 이동평균 (EMA)</li>
+<li>Golden Cross / Death Cross 크로스오버 전략</li>
+<li>파라미터 최적화</li>
+<li>실전 이동평균 전략 백테스팅</li>
+</ul>
+<hr>
+<p><strong>💡 핵심 메시지</strong></p>
+<p>Backtrader는 강력하고 유연한 백테스팅 프레임워크입니다. Cerebro, Strategy, Data Feeds, Analyzers의 4가지 핵심 요소를 이해하면, 어떤 복잡한 전략도 구현할 수 있습니다. Buy &amp; Hold는 가장 간단한 전략이지만, 모든 커스텀 전략의 벤치마크가 됩니다.</p>
+<p>다음 챕터부터는 Part 2로 진입하여 실전 기술적 분석 전략들을 하나씩 구현해봅시다!</p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/docs/chapter03/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>Chapter 3: 데이터 전처리와 수익률</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/docs/chapter05/" class="flex align-center">
+        <span>Chapter 5: 이동평균 전략</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#41-backtrader란">4.1 Backtrader란?</a>
+      <ul>
+        <li><a href="#backtrader-소개">Backtrader 소개</a></li>
+        <li><a href="#왜-backtrader인가">왜 Backtrader인가?</a></li>
+      </ul>
+    </li>
+    <li><a href="#42-backtrader-아키텍처">4.2 Backtrader 아키텍처</a>
+      <ul>
+        <li><a href="#핵심-구성-요소">핵심 구성 요소</a></li>
+      </ul>
+    </li>
+    <li><a href="#43-데이터-접근-방법">4.3 데이터 접근 방법</a>
+      <ul>
+        <li><a href="#인덱싱-규칙">인덱싱 규칙</a></li>
+        <li><a href="#lines-개념">Lines 개념</a></li>
+      </ul>
+    </li>
+    <li><a href="#44-주문-실행">4.4 주문 실행</a>
+      <ul>
+        <li><a href="#기본-주문-메서드">기본 주문 메서드</a></li>
+        <li><a href="#주문-추적">주문 추적</a></li>
+        <li><a href="#포지션-관리">포지션 관리</a></li>
+      </ul>
+    </li>
+    <li><a href="#45-첫-번째-전략-buy--hold">4.5 첫 번째 전략: Buy &amp; Hold</a>
+      <ul>
+        <li><a href="#buy--hold-전략이란">Buy &amp; Hold 전략이란?</a></li>
+        <li><a href="#전략-구현">전략 구현</a></li>
+      </ul>
+    </li>
+    <li><a href="#46-실습-buy--hold-백테스트">4.6 실습: Buy &amp; Hold 백테스트</a>
+      <ul>
+        <li><a href="#코드-실행">코드 실행</a></li>
+        <li><a href="#스크립트-개요">스크립트 개요</a></li>
+        <li><a href="#실행-결과-분석">실행 결과 분석</a></li>
+        <li><a href="#결과-해석">결과 해석</a></li>
+        <li><a href="#백테스팅의-가치">백테스팅의 가치</a></li>
+      </ul>
+    </li>
+    <li><a href="#47-analyzers를-사용한-성과-분석">4.7 Analyzers를 사용한 성과 분석</a>
+      <ul>
+        <li><a href="#주요-analyzers">주요 Analyzers</a></li>
+        <li><a href="#커스텀-analyzer">커스텀 Analyzer</a></li>
+      </ul>
+    </li>
+    <li><a href="#48-브로커-설정">4.8 브로커 설정</a>
+      <ul>
+        <li><a href="#초기-자본금">초기 자본금</a></li>
+        <li><a href="#수수료">수수료</a></li>
+        <li><a href="#슬리피지-slippage">슬리피지 (Slippage)</a></li>
+        <li><a href="#포지션-사이징">포지션 사이징</a></li>
+      </ul>
+    </li>
+    <li><a href="#49-다음-단계">4.9 다음 단계</a>
+      <ul>
+        <li><a href="#이-챕터에서-배운-것">이 챕터에서 배운 것</a></li>
+        <li><a href="#실습-과제">실습 과제</a></li>
+        <li><a href="#다음-챕터-미리보기">다음 챕터 미리보기</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,14 +1,14 @@
 {
   "name": "파이썬으로 배우는 백테스팅 입문",
   "short_name": "파이썬으로 배우는 백테스팅 입문",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "/intro-to-backtesting/",
+  "scope": "/intro-to-backtesting/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "/intro-to-backtesting/favicon.svg",
       "sizes": "512x512"
     }
   ]

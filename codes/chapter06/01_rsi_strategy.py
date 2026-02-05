@@ -17,7 +17,8 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 # 한글 폰트 설정
-plt.rcParams['font.family'] = 'DejaVu Sans'
+plt.rcParams['font.family'] = ['Nanum Gothic', 'Malgun Gothic', 'AppleGothic',
+                                'Arial Unicode MS', 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 
 

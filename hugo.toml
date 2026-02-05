@@ -1,4 +1,4 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://k2sebeom.github.io/intro-to-backtesting/'
 languageCode = 'en-us'
 title = '파이썬으로 배우는 백테스팅 입문'
 theme = 'hugo-book'

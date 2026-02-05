@@ -18,7 +18,7 @@ from datetime import datetime
 import backtrader as bt
 
 # 한글 폰트 설정
-plt.rcParams['font.family'] = 'DejaVu Sans'
+plt.rcParams['font.family'] = ['Nanum Gothic', 'Malgun Gothic', 'AppleGothic', 'Arial Unicode MS', 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 
 
@@ -195,8 +195,12 @@ class SMAStrategy(bt.Strategy):
         self.crossover = bt.indicators.CrossOver(self.fast_ma, self.slow_ma)
         self.trade_returns = []
         self.entry_price = None
+        self.portfolio_values = []  # Track daily portfolio values
 
     def next(self):
+        # Track portfolio value
+        self.portfolio_values.append(self.broker.getvalue())
+        
         if not self.position:
             if self.crossover > 0:
                 self.buy()
@@ -217,6 +221,10 @@ def run_backtest_with_metrics(symbol='NVDA', start_date='2020-01-01', end_date='
     # 데이터 다운로드
     print(f"\n{symbol} 데이터 다운로드 중...")
     data = yf.download(symbol, start=start_date, end=end_date, progress=False)
+    
+    # yfinance multi-level columns handling
+    if isinstance(data.columns, pd.MultiIndex):
+        data.columns = data.columns.get_level_values(0)
 
     if data.empty:
         print("데이터 다운로드 실패")
@@ -234,6 +242,7 @@ def run_backtest_with_metrics(symbol='NVDA', start_date='2020-01-01', end_date='
 
     # 초기 자본
     cerebro.broker.setcash(100000.0)
+    initial_cash = 100000.0
 
     # 수수료 설정
     cerebro.broker.setcommission(commission=0.001)
@@ -248,22 +257,20 @@ def run_backtest_with_metrics(symbol='NVDA', start_date='2020-01-01', end_date='
     print(f'최종 자본: ${final_value:,.2f}')
 
     # 성과 지표 계산을 위한 데이터 준비
-    # 일별 수익률 계산
-    portfolio_values = []
-
-    # Backtrader로 포트폴리오 값 추출
-    for i in range(len(data)):
-        cerebro.broker.setcash(100000.0)  # 초기화
-        temp_cerebro = bt.Cerebro()
-        temp_data = bt.feeds.PandasData(dataname=data.iloc[:i+1])
-        temp_cerebro.adddata(temp_data)
-        temp_cerebro.addstrategy(SMAStrategy)
-        temp_cerebro.broker.setcommission(commission=0.001)
-        temp_cerebro.run()
-        portfolio_values.append(temp_cerebro.broker.getvalue())
-
-    # 자산 곡선 생성
-    equity_curve = pd.Series(portfolio_values, index=data.index)
+    # 전략에서 기록한 포트폴리오 값 사용
+    strategy = strategies[0]
+    
+    # 자산 곡선 생성 (전략이 기록한 값 사용)
+    # Note: 초기 warm-up 기간 동안은 값이 없을 수 있음
+    portfolio_values = strategy.portfolio_values
+    
+    # 데이터 인덱스와 길이 맞추기
+    if len(portfolio_values) < len(data):
+        # Warm-up 기간 추가 (초기 자본으로 채움)
+        warmup_length = len(data) - len(portfolio_values)
+        portfolio_values = [initial_cash] * warmup_length + portfolio_values
+    
+    equity_curve = pd.Series(portfolio_values[:len(data)], index=data.index)
 
     # 일별 수익률
     returns = equity_curve.pct_change().dropna()

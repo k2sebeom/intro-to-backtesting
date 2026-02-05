@@ -15,7 +15,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from datetime import datetime
 
-plt.rcParams['font.family'] = 'DejaVu Sans'
+plt.rcParams['font.family'] = ['Nanum Gothic', 'Malgun Gothic', 'AppleGothic', 'Arial Unicode MS', 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 
 
@@ -117,6 +117,10 @@ def run_complete_backtest(symbol='NVDA', start_date='2019-01-01', end_date='2024
     print(f"\n1. 데이터 준비")
     print(f"   - {symbol} 데이터 다운로드 중...")
     data = yf.download(symbol, start=start_date, end=end_date, progress=False)
+    
+    # yfinance multi-level columns handling
+    if isinstance(data.columns, pd.MultiIndex):
+        data.columns = data.columns.get_level_values(0)
 
     if data.empty:
         print("   ✗ 데이터 다운로드 실패")

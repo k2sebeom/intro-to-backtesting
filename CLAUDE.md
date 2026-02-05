@@ -628,13 +628,32 @@ All chapters include:
 
 **Status**: Part 1 is **publication-ready**. See `PART1_ENHANCEMENT_SUMMARY.md` for details.
 
+**Part 2 (Chapters 5-7): Technical Analysis Strategies (Partial)** ✅ **COMPLETE - Level 2 Enhanced**
+
+Chapters 5-7 now include:
+- ✅ Chapter 5: 이동평균 전략 (Moving Average) - SMA/EMA crossover strategies
+  - Results: SMA(50/200): +11.07%, EMA(50/200): +5.22% vs Buy & Hold: +408.08%
+  - Key insight: Long-period MA too slow for strong uptrend markets
+- ✅ Chapter 6: RSI 및 과매수/과매도 전략 (RSI Overbought/Oversold)
+  - Results: RSI(30/70): +113.32%, Sharpe 1.230, 100% win rate (5 trades)
+  - Key insight: Excellent performance capturing extreme price movements
+- ✅ Chapter 7: Bollinger Bands 전략 (Bollinger Bands Strategies)
+  - Results: BB Breakout: +102.77%, Sharpe 1.232, Max DD 10.45% (best risk-adjusted!)
+  - Key insight: Volatility-based breakout strategy outperformed mean reversion
+
+**Performance Summary (AAPL 2019-2024)**:
+| Strategy | Return | Sharpe | Max DD | Trades | Best For |
+|----------|--------|--------|--------|--------|----------|
+| Buy & Hold | +408.08% | N/A | N/A | 1 | Strong trends |
+| RSI(30/70) | +113.32% | 1.230 | 23.52% | 5 | Volatile mean-reverting |
+| BB Breakout | +102.77% | 1.232 | 10.45% | 10 | Trend starts after squeeze |
+| BB Mean Reversion | +63.08% | 0.900 | 24.85% | 13 | Range-bound markets |
+| SMA(50/200) | +11.07% | 0.266 | 14.41% | 2 | Long-term trend following |
+
 ### Remaining Work
 
-**Part 2 (Chapters 5-8): Technical Analysis Strategies** 🔄 IN PROGRESS
-- Chapter 5: 이동평균 전략 (Moving Average)
-- Chapter 6: 모멘텀과 변동성 지표 (Momentum & Volatility)
-- Chapter 7: 추세 추종과 평균 회귀 (Trend Following & Mean Reversion)
-- Chapter 8: 다중 지표 결합 전략 (Multi-Indicator)
+**Part 2 (Chapters 8): Technical Analysis Strategies** 📋 REMAINING
+- Chapter 8: 다중 지표 결합 전략 (Multi-Indicator Combined Strategies)
 
 **Part 3 (Chapters 9-11): Risk & Portfolio Management** 📋 PLANNED
 **Part 4 (Chapters 12-13): Performance Analysis** 📋 PLANNED

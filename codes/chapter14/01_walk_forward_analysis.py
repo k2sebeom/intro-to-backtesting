@@ -13,7 +13,7 @@ import yfinance as yf
 import backtrader as bt
 from datetime import datetime, timedelta
 
-plt.rcParams['font.family'] = 'DejaVu Sans'
+plt.rcParams['font.family'] = ['Nanum Gothic', 'Malgun Gothic', 'AppleGothic', 'Arial Unicode MS', 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 
 
@@ -70,24 +70,30 @@ def optimize_parameters(data, fast_range, slow_range):
 
     return best_params, best_sharpe
 
-
 def backtest_with_params(data, fast, slow):
     """특정 파라미터로 백테스트"""
+    
+    # 데이터가 충분한지 확인
+    if len(data) < max(fast, slow):
+        return 0.0  # 데이터 부족 시 0 리턴
 
-    cerebro = bt.Cerebro()
-    data_feed = bt.feeds.PandasData(dataname=data)
-    cerebro.adddata(data_feed)
-    cerebro.addstrategy(OptimizableSMAStrategy, fast_period=fast, slow_period=slow)
-    cerebro.broker.setcash(100000.0)
-    cerebro.broker.setcommission(commission=0.001)
+    try:
+        cerebro = bt.Cerebro()
+        data_feed = bt.feeds.PandasData(dataname=data)
+        cerebro.adddata(data_feed)
+        cerebro.addstrategy(OptimizableSMAStrategy, fast_period=fast, slow_period=slow)
+        cerebro.broker.setcash(100000.0)
+        cerebro.broker.setcommission(commission=0.001)
 
-    initial = cerebro.broker.getvalue()
-    cerebro.run()
-    final = cerebro.broker.getvalue()
+        initial = cerebro.broker.getvalue()
+        cerebro.run()
+        final = cerebro.broker.getvalue()
 
-    return_pct = (final - initial) / initial
-
-    return return_pct
+        return_pct = (final - initial) / initial
+        return return_pct
+    except Exception as e:
+        print(f"백테스트 오류 (Fast={fast}, Slow={slow}): {e}")
+        return 0.0
 
 
 def rolling_walk_forward(symbol='NVDA', start_date='2018-01-01', end_date='2024-01-01',
@@ -99,6 +105,10 @@ def rolling_walk_forward(symbol='NVDA', start_date='2018-01-01', end_date='2024-
 
     # 데이터 다운로드
     data = yf.download(symbol, start=start_date, end=end_date, progress=False)
+    
+    # yfinance multi-level columns handling
+    if isinstance(data.columns, pd.MultiIndex):
+        data.columns = data.columns.get_level_values(0)
 
     if data.empty:
         print("데이터 다운로드 실패")
@@ -182,6 +192,10 @@ def anchored_walk_forward(symbol='NVDA', start_date='2018-01-01', end_date='2024
 
     # 데이터 다운로드
     data = yf.download(symbol, start=start_date, end=end_date, progress=False)
+    
+    # yfinance multi-level columns handling
+    if isinstance(data.columns, pd.MultiIndex):
+        data.columns = data.columns.get_level_values(0)
 
     if data.empty:
         print("데이터 다운로드 실패")

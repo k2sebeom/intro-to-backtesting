@@ -1,714 +1,102 @@
-<!DOCTYPE html>
-<html lang="en-us" dir="ltr">
-<head>
-  <!--
-Made with Book Theme
-https://github.com/alex-shpak/hugo-book
--->
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Chapter 2: 금융 데이터 다운로드와 이해# 이 챕터에서는 백테스팅의 필수 재료인 금융 데이터를 다루는 방법을 배웁니다. yfinance 라이브러리를 사용하여 실제 주식 데이터를 다운로드하고, OHLCV 데이터 구조를 이해하며, 배당금과 주식 분할을 처리하는 방법을 알아봅니다.
+<!doctype html><html lang=en-us dir=ltr><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Chapter 2: 금융 데이터 다운로드와 이해# 이 챕터에서는 백테스팅의 필수 재료인 금융 데이터를 다루는 방법을 배웁니다. yfinance 라이브러리를 사용하여 실제 주식 데이터를 다운로드하고, OHLCV 데이터 구조를 이해하며, 배당금과 주식 분할을 처리하는 방법을 알아봅니다.
 2.1 OHLCV 데이터 구조# OHLCV란?# 금융 시장 데이터의 표준 형식인 OHLCV는 다음 5가지 정보로 구성됩니다:
 Open (시가): 해당 기간의 첫 거래 가격 High (고가): 해당 기간의 최고 거래 가격 Low (저가): 해당 기간의 최저 거래 가격 Close (종가): 해당 기간의 마지막 거래 가격 Volume (거래량): 해당 기간의 총 거래된 주식 수 시간 프레임 (Timeframe)# OHLCV 데이터는 다양한 시간 단위로 제공됩니다:
-">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
-<meta name="color-scheme" content="light dark"><meta property="og:url" content="https://k2sebeom.github.io/intro-to-backtesting/docs/chapter02/">
-  <meta property="og:site_name" content="파이썬으로 배우는 백테스팅 입문">
-  <meta property="og:title" content="Chapter 2: 금융 데이터 다운로드와 이해">
-  <meta property="og:description" content="Chapter 2: 금융 데이터 다운로드와 이해# 이 챕터에서는 백테스팅의 필수 재료인 금융 데이터를 다루는 방법을 배웁니다. yfinance 라이브러리를 사용하여 실제 주식 데이터를 다운로드하고, OHLCV 데이터 구조를 이해하며, 배당금과 주식 분할을 처리하는 방법을 알아봅니다.
+"><meta name=theme-color media="(prefers-color-scheme: light)" content="#ffffff"><meta name=theme-color media="(prefers-color-scheme: dark)" content="#343a40"><meta name=color-scheme content="light dark"><meta property="og:url" content="https://k2sebeom.github.io/intro-to-backtesting/docs/chapter02/"><meta property="og:site_name" content="파이썬으로 배우는 백테스팅 입문"><meta property="og:title" content="Chapter 2: 금융 데이터 다운로드와 이해"><meta property="og:description" content="Chapter 2: 금융 데이터 다운로드와 이해# 이 챕터에서는 백테스팅의 필수 재료인 금융 데이터를 다루는 방법을 배웁니다. yfinance 라이브러리를 사용하여 실제 주식 데이터를 다운로드하고, OHLCV 데이터 구조를 이해하며, 배당금과 주식 분할을 처리하는 방법을 알아봅니다.
 2.1 OHLCV 데이터 구조# OHLCV란?# 금융 시장 데이터의 표준 형식인 OHLCV는 다음 5가지 정보로 구성됩니다:
-Open (시가): 해당 기간의 첫 거래 가격 High (고가): 해당 기간의 최고 거래 가격 Low (저가): 해당 기간의 최저 거래 가격 Close (종가): 해당 기간의 마지막 거래 가격 Volume (거래량): 해당 기간의 총 거래된 주식 수 시간 프레임 (Timeframe)# OHLCV 데이터는 다양한 시간 단위로 제공됩니다:">
-  <meta property="og:locale" content="en_us">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="docs">
-    <meta property="article:modified_time" content="2026-02-05T10:41:30+09:00">
-
-
-  <meta itemprop="name" content="Chapter 2: 금융 데이터 다운로드와 이해">
-  <meta itemprop="description" content="Chapter 2: 금융 데이터 다운로드와 이해# 이 챕터에서는 백테스팅의 필수 재료인 금융 데이터를 다루는 방법을 배웁니다. yfinance 라이브러리를 사용하여 실제 주식 데이터를 다운로드하고, OHLCV 데이터 구조를 이해하며, 배당금과 주식 분할을 처리하는 방법을 알아봅니다.
+Open (시가): 해당 기간의 첫 거래 가격 High (고가): 해당 기간의 최고 거래 가격 Low (저가): 해당 기간의 최저 거래 가격 Close (종가): 해당 기간의 마지막 거래 가격 Volume (거래량): 해당 기간의 총 거래된 주식 수 시간 프레임 (Timeframe)# OHLCV 데이터는 다양한 시간 단위로 제공됩니다:"><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="docs"><meta property="article:modified_time" content="2026-02-05T10:41:30+09:00"><meta itemprop=name content="Chapter 2: 금융 데이터 다운로드와 이해"><meta itemprop=description content="Chapter 2: 금융 데이터 다운로드와 이해# 이 챕터에서는 백테스팅의 필수 재료인 금융 데이터를 다루는 방법을 배웁니다. yfinance 라이브러리를 사용하여 실제 주식 데이터를 다운로드하고, OHLCV 데이터 구조를 이해하며, 배당금과 주식 분할을 처리하는 방법을 알아봅니다.
 2.1 OHLCV 데이터 구조# OHLCV란?# 금융 시장 데이터의 표준 형식인 OHLCV는 다음 5가지 정보로 구성됩니다:
-Open (시가): 해당 기간의 첫 거래 가격 High (고가): 해당 기간의 최고 거래 가격 Low (저가): 해당 기간의 최저 거래 가격 Close (종가): 해당 기간의 마지막 거래 가격 Volume (거래량): 해당 기간의 총 거래된 주식 수 시간 프레임 (Timeframe)# OHLCV 데이터는 다양한 시간 단위로 제공됩니다:">
-  <meta itemprop="dateModified" content="2026-02-05T10:41:30+09:00">
-  <meta itemprop="wordCount" content="1690">
-
-<title>Chapter 2: 금융 데이터 다운로드와 이해 | 파이썬으로 배우는 백테스팅 입문</title>
-<link rel="icon" href="/intro-to-backtesting/favicon.png" >
-<link rel="manifest" href="/intro-to-backtesting/manifest.json">
-<link rel="canonical" href="https://k2sebeom.github.io/intro-to-backtesting/docs/chapter02/">
-<link rel="stylesheet" href="/intro-to-backtesting/book.min.cc2c524ed250aac81b23d1f4af87344917b325208841feca0968fe450f570575.css" integrity="sha256-zCxSTtJQqsgbI9H0r4c0SRezJSCIQf7KCWj&#43;RQ9XBXU=" crossorigin="anonymous">
-
-
-  <script defer src="/intro-to-backtesting/fuse.min.js"></script>
-  <script defer src="/intro-to-backtesting/en.search.min.ef02b99ce746fbf98a874e87fb81648e571c79f9d79c52735100a0251d5ff1ba.js" integrity="sha256-7wK5nOdG&#43;/mKh06H&#43;4FkjlccefnXnFJzUQCgJR1f8bo=" crossorigin="anonymous"></script>
-
-
-
-  
-  
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
-
-<script>
-  MathJax = {
-    tex: {
-      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
-      inlineMath: [['\\(', '\\)'], ['$', '$']]                  
-    },
-    loader:{
-      load: ['ui/safe']
-    },
-  };
-</script>
-  
-</head>
-<body dir="ltr" class="book-kind-page book-type-docs">
-  <input type="checkbox" class="hidden toggle" id="menu-control" />
-  <input type="checkbox" class="hidden toggle" id="toc-control" />
-  <main class="container flex">
-    
-<aside class="book-menu">
-  <div class="book-menu-content">
-    
-  <nav>
-<h2 class="book-brand">
-  <a class="flex align-center" href="/intro-to-backtesting/"><span>파이썬으로 배우는 백테스팅 입문</span>
-  </a>
-</h2>
-
-
-<div class="book-search hidden">
-  <input id="book-search-input" type="text" 
-    placeholder="Search"
-    aria-label="Search"
-    maxlength="64" data-hotkeys="s/" />
-  <div class="book-search-spinner hidden"></div>
-  <ul id="book-search-results"></ul>
-</div>
-<script>document.querySelector(".book-search").classList.remove("hidden")</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  <ul>
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter01/" class="">
-      Chapter 1: 백테스팅 시작하기</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter02/" class="active">
-      Chapter 2: 금융 데이터 다운로드와 이해</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter03/" class="">
-      Chapter 3: 데이터 전처리와 수익률</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter04/" class="">
-      Chapter 4: Backtrader 프레임워크 기초</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter05/" class="">
-      Chapter 5: 이동평균 전략</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter06/" class="">
-      Chapter 6: RSI 및 과매수/과매도 전략</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter07/" class="">
-      Chapter 7: Bollinger Bands 전략</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter08/" class="">
-      Chapter 8: 다중 지표 결합 전략</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter09/" class="">
-      Chapter 9: 포지션 크기 결정</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter10/" class="">
-      Chapter 10: 리스크 관리와 손절매</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter11/" class="">
-      Chapter 11: 포트폴리오 구성과 분산투자</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter12/" class="">
-      Chapter 12: 성과 지표와 리스크 측정</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter13/" class="">
-      Chapter 13: 백테스트 결과 분석과 시각화</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter14/" class="">
-      Chapter 14: 과최적화 방지와 검증</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter15/" class="">
-      Chapter 15: 머신러닝 기반 전략 (1)</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter16/" class="">
-      Chapter 16: 머신러닝 기반 전략 (2)</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter17/" class="">
-      Chapter 17: 실전 트레이딩 고려사항</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/intro-to-backtesting/docs/chapter18/" class="">
-      Chapter 18: 완전한 전략 개발 프로세스</a>
-  
-
-        </li>
-      
-    
-  </ul>
-
-
-
-
-
-
-
-
-
-
-
-
-
-</nav>
-
-
-
-
-  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
-
-
-
-  </div>
-</aside>
- 
-
-    <div class="book-page">
-      <header class="book-header hidden">
-        
-  <div class="flex align-center justify-between">
-  <label for="menu-control">
-    <img src="/intro-to-backtesting/icons/menu.svg" class="book-icon" alt="Menu" />
-  </label>
-
-  <h3>Chapter 2: 금융 데이터 다운로드와 이해</h3>
-
-  <label for="toc-control">
-    
-    <img src="/intro-to-backtesting/icons/toc.svg" class="book-icon" alt="Table of Contents" />
-    
-  </label>
-</div>
-
-
-  
-  <aside class="hidden">
-    
-  
-<nav id="TableOfContents">
-  <ul>
-    <li><a href="#21-ohlcv-데이터-구조">2.1 OHLCV 데이터 구조</a>
-      <ul>
-        <li><a href="#ohlcv란">OHLCV란?</a></li>
-        <li><a href="#시간-프레임-timeframe">시간 프레임 (Timeframe)</a></li>
-        <li><a href="#캔들스틱-해석">캔들스틱 해석</a></li>
-        <li><a href="#캔들스틱의-수학적-특성">캔들스틱의 수학적 특성</a></li>
-      </ul>
-    </li>
-    <li><a href="#22-yfinance로-데이터-다운로드">2.2 yfinance로 데이터 다운로드</a>
-      <ul>
-        <li><a href="#yfinance란">yfinance란?</a></li>
-        <li><a href="#기본-사용법">기본 사용법</a></li>
-        <li><a href="#다양한-기간-옵션">다양한 기간 옵션</a></li>
-        <li><a href="#다양한-시간-프레임">다양한 시간 프레임</a></li>
-      </ul>
-    </li>
-    <li><a href="#23-배당금과-주식-분할-조정">2.3 배당금과 주식 분할 조정</a>
-      <ul>
-        <li><a href="#adjusted-close의-중요성">Adjusted Close의 중요성</a></li>
-        <li><a href="#adjusted-close란">Adjusted Close란?</a></li>
-        <li><a href="#조정-공식">조정 공식</a></li>
-        <li><a href="#yfinance의-자동-조정">yfinance의 자동 조정</a></li>
-      </ul>
-    </li>
-    <li><a href="#24-다중-종목-데이터-다운로드">2.4 다중 종목 데이터 다운로드</a>
-      <ul>
-        <li><a href="#여러-종목-동시-다운로드">여러 종목 동시 다운로드</a></li>
-        <li><a href="#개별-종목-추출">개별 종목 추출</a></li>
-      </ul>
-    </li>
-    <li><a href="#25-다중-타임프레임-분석">2.5 다중 타임프레임 분석</a>
-      <ul>
-        <li><a href="#왜-다중-타임프레임인가">왜 다중 타임프레임인가?</a></li>
-        <li><a href="#다중-타임프레임-데이터-수집">다중 타임프레임 데이터 수집</a></li>
-        <li><a href="#타임프레임-간-전환">타임프레임 간 전환</a></li>
-      </ul>
-    </li>
-    <li><a href="#26-종목-정보-조회">2.6 종목 정보 조회</a>
-      <ul>
-        <li><a href="#기본-정보">기본 정보</a></li>
-        <li><a href="#재무-데이터">재무 데이터</a></li>
-      </ul>
-    </li>
-    <li><a href="#27-실습-주식-데이터-탐색">2.7 실습: 주식 데이터 탐색</a>
-      <ul>
-        <li><a href="#코드-실행">코드 실행</a></li>
-        <li><a href="#스크립트-개요">스크립트 개요</a></li>
-        <li><a href="#실행-결과">실행 결과</a></li>
-        <li><a href="#결과-분석">결과 분석</a></li>
-        <li><a href="#데이터-품질-관찰">데이터 품질 관찰</a></li>
-      </ul>
-    </li>
-    <li><a href="#28-데이터-저장-및-관리">2.8 데이터 저장 및 관리</a>
-      <ul>
-        <li><a href="#csv로-저장">CSV로 저장</a></li>
-        <li><a href="#데이터-캐싱-전략">데이터 캐싱 전략</a></li>
-      </ul>
-    </li>
-    <li><a href="#29-데이터-품질-확인">2.9 데이터 품질 확인</a>
-      <ul>
-        <li><a href="#결측치-확인">결측치 확인</a></li>
-        <li><a href="#데이터-연속성-확인">데이터 연속성 확인</a></li>
-        <li><a href="#이상치-탐지">이상치 탐지</a></li>
-      </ul>
-    </li>
-    <li><a href="#210-다음-단계">2.10 다음 단계</a>
-      <ul>
-        <li><a href="#이-챕터에서-배운-것">이 챕터에서 배운 것</a></li>
-        <li><a href="#실습-과제">실습 과제</a></li>
-        <li><a href="#다음-챕터-미리보기">다음 챕터 미리보기</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-
-
-
-  </aside>
-  
- 
-      </header>
-
-      
-      
-  <article class="markdown book-article"><h1 id="chapter-2-금융-데이터-다운로드와-이해">Chapter 2: 금융 데이터 다운로드와 이해<a class="anchor" href="#chapter-2-%ea%b8%88%ec%9c%b5-%eb%8d%b0%ec%9d%b4%ed%84%b0-%eb%8b%a4%ec%9a%b4%eb%a1%9c%eb%93%9c%ec%99%80-%ec%9d%b4%ed%95%b4">#</a></h1>
-<p>이 챕터에서는 백테스팅의 필수 재료인 <strong>금융 데이터</strong>를 다루는 방법을 배웁니다. yfinance 라이브러리를 사용하여 실제 주식 데이터를 다운로드하고, OHLCV 데이터 구조를 이해하며, 배당금과 주식 분할을 처리하는 방법을 알아봅니다.</p>
-<h2 id="21-ohlcv-데이터-구조">2.1 OHLCV 데이터 구조<a class="anchor" href="#21-ohlcv-%eb%8d%b0%ec%9d%b4%ed%84%b0-%ea%b5%ac%ec%a1%b0">#</a></h2>
-<h3 id="ohlcv란">OHLCV란?<a class="anchor" href="#ohlcv%eb%9e%80">#</a></h3>
-<p>금융 시장 데이터의 표준 형식인 <strong>OHLCV</strong>는 다음 5가지 정보로 구성됩니다:</p>
-<ul>
-<li><strong>Open (시가)</strong>: 해당 기간의 첫 거래 가격</li>
-<li><strong>High (고가)</strong>: 해당 기간의 최고 거래 가격</li>
-<li><strong>Low (저가)</strong>: 해당 기간의 최저 거래 가격</li>
-<li><strong>Close (종가)</strong>: 해당 기간의 마지막 거래 가격</li>
-<li><strong>Volume (거래량)</strong>: 해당 기간의 총 거래된 주식 수</li>
-</ul>
-<h3 id="시간-프레임-timeframe">시간 프레임 (Timeframe)<a class="anchor" href="#%ec%8b%9c%ea%b0%84-%ed%94%84%eb%a0%88%ec%9e%84-timeframe">#</a></h3>
-<p>OHLCV 데이터는 다양한 시간 단위로 제공됩니다:</p>
-<ul>
-<li><strong>1분봉 (1-minute)</strong>: 매 1분마다의 OHLCV</li>
-<li><strong>1시간봉 (1-hour)</strong>: 매 1시간마다의 OHLCV</li>
-<li><strong>일봉 (Daily)</strong>: 매 거래일마다의 OHLCV</li>
-<li><strong>주봉 (Weekly)</strong>: 매 주마다의 OHLCV</li>
-<li><strong>월봉 (Monthly)</strong>: 매 월마다의 OHLCV</li>
-</ul>
-<h3 id="캔들스틱-해석">캔들스틱 해석<a class="anchor" href="#%ec%ba%94%eb%93%a4%ec%8a%a4%ed%8b%b1-%ed%95%b4%ec%84%9d">#</a></h3>
-<p>하나의 OHLCV 데이터는 **캔들스틱(Candlestick)**으로 시각화됩니다:</p>
-<pre tabindex="0"><code>High (고가)
+Open (시가): 해당 기간의 첫 거래 가격 High (고가): 해당 기간의 최고 거래 가격 Low (저가): 해당 기간의 최저 거래 가격 Close (종가): 해당 기간의 마지막 거래 가격 Volume (거래량): 해당 기간의 총 거래된 주식 수 시간 프레임 (Timeframe)# OHLCV 데이터는 다양한 시간 단위로 제공됩니다:"><meta itemprop=dateModified content="2026-02-05T10:41:30+09:00"><meta itemprop=wordCount content="1690"><title>Chapter 2: 금융 데이터 다운로드와 이해 | 파이썬으로 배우는 백테스팅 입문</title><link rel=icon href=/intro-to-backtesting/favicon.png><link rel=manifest href=/intro-to-backtesting/manifest.json><link rel=canonical href=https://k2sebeom.github.io/intro-to-backtesting/docs/chapter02/><link rel=stylesheet href=/intro-to-backtesting/book.min.cc2c524ed250aac81b23d1f4af87344917b325208841feca0968fe450f570575.css integrity="sha256-zCxSTtJQqsgbI9H0r4c0SRezJSCIQf7KCWj+RQ9XBXU=" crossorigin=anonymous><script defer src=/intro-to-backtesting/fuse.min.js></script><script defer src=/intro-to-backtesting/en.search.min.ef02b99ce746fbf98a874e87fb81648e571c79f9d79c52735100a0251d5ff1ba.js integrity="sha256-7wK5nOdG+/mKh06H+4FkjlccefnXnFJzUQCgJR1f8bo=" crossorigin=anonymous></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js></script><script>MathJax={tex:{displayMath:[["\\[","\\]"],["$$","$$"]],inlineMath:[["\\(","\\)"],["$","$"]]},loader:{load:["ui/safe"]}}</script></head><body dir=ltr class="book-kind-page book-type-docs"><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a class="flex align-center" href=/intro-to-backtesting/><span>파이썬으로 배우는 백테스팅 입문</span></a></h2><div class="book-search hidden"><input id=book-search-input type=text placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><script>document.querySelector(".book-search").classList.remove("hidden")</script><ul><li><a href=/intro-to-backtesting/docs/chapter01/>Chapter 1: 백테스팅 시작하기</a></li><li><a href=/intro-to-backtesting/docs/chapter02/ class=active>Chapter 2: 금융 데이터 다운로드와 이해</a></li><li><a href=/intro-to-backtesting/docs/chapter03/>Chapter 3: 데이터 전처리와 수익률</a></li><li><a href=/intro-to-backtesting/docs/chapter04/>Chapter 4: Backtrader 프레임워크 기초</a></li><li><a href=/intro-to-backtesting/docs/chapter05/>Chapter 5: 이동평균 전략</a></li><li><a href=/intro-to-backtesting/docs/chapter06/>Chapter 6: RSI 및 과매수/과매도 전략</a></li><li><a href=/intro-to-backtesting/docs/chapter07/>Chapter 7: Bollinger Bands 전략</a></li><li><a href=/intro-to-backtesting/docs/chapter08/>Chapter 8: 다중 지표 결합 전략</a></li><li><a href=/intro-to-backtesting/docs/chapter09/>Chapter 9: 포지션 크기 결정</a></li><li><a href=/intro-to-backtesting/docs/chapter10/>Chapter 10: 리스크 관리와 손절매</a></li><li><a href=/intro-to-backtesting/docs/chapter11/>Chapter 11: 포트폴리오 구성과 분산투자</a></li><li><a href=/intro-to-backtesting/docs/chapter12/>Chapter 12: 성과 지표와 리스크 측정</a></li><li><a href=/intro-to-backtesting/docs/chapter13/>Chapter 13: 백테스트 결과 분석과 시각화</a></li><li><a href=/intro-to-backtesting/docs/chapter14/>Chapter 14: 과최적화 방지와 검증</a></li><li><a href=/intro-to-backtesting/docs/chapter15/>Chapter 15: 머신러닝 기반 전략 (1)</a></li><li><a href=/intro-to-backtesting/docs/chapter16/>Chapter 16: 머신러닝 기반 전략 (2)</a></li><li><a href=/intro-to-backtesting/docs/chapter17/>Chapter 17: 실전 트레이딩 고려사항</a></li><li><a href=/intro-to-backtesting/docs/chapter18/>Chapter 18: 완전한 전략 개발 프로세스</a></li></ul></nav><script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class="book-header hidden"><div class="flex align-center justify-between"><label for=menu-control><img src=/intro-to-backtesting/icons/menu.svg class=book-icon alt=Menu></label><h3>Chapter 2: 금융 데이터 다운로드와 이해</h3><label for=toc-control><img src=/intro-to-backtesting/icons/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class=hidden><nav id=TableOfContents><ul><li><a href=#21-ohlcv-데이터-구조>2.1 OHLCV 데이터 구조</a><ul><li><a href=#ohlcv란>OHLCV란?</a></li><li><a href=#시간-프레임-timeframe>시간 프레임 (Timeframe)</a></li><li><a href=#캔들스틱-해석>캔들스틱 해석</a></li><li><a href=#캔들스틱의-수학적-특성>캔들스틱의 수학적 특성</a></li></ul></li><li><a href=#22-yfinance로-데이터-다운로드>2.2 yfinance로 데이터 다운로드</a><ul><li><a href=#yfinance란>yfinance란?</a></li><li><a href=#기본-사용법>기본 사용법</a></li><li><a href=#다양한-기간-옵션>다양한 기간 옵션</a></li><li><a href=#다양한-시간-프레임>다양한 시간 프레임</a></li></ul></li><li><a href=#23-배당금과-주식-분할-조정>2.3 배당금과 주식 분할 조정</a><ul><li><a href=#adjusted-close의-중요성>Adjusted Close의 중요성</a></li><li><a href=#adjusted-close란>Adjusted Close란?</a></li><li><a href=#조정-공식>조정 공식</a></li><li><a href=#yfinance의-자동-조정>yfinance의 자동 조정</a></li></ul></li><li><a href=#24-다중-종목-데이터-다운로드>2.4 다중 종목 데이터 다운로드</a><ul><li><a href=#여러-종목-동시-다운로드>여러 종목 동시 다운로드</a></li><li><a href=#개별-종목-추출>개별 종목 추출</a></li></ul></li><li><a href=#25-다중-타임프레임-분석>2.5 다중 타임프레임 분석</a><ul><li><a href=#왜-다중-타임프레임인가>왜 다중 타임프레임인가?</a></li><li><a href=#다중-타임프레임-데이터-수집>다중 타임프레임 데이터 수집</a></li><li><a href=#타임프레임-간-전환>타임프레임 간 전환</a></li></ul></li><li><a href=#26-종목-정보-조회>2.6 종목 정보 조회</a><ul><li><a href=#기본-정보>기본 정보</a></li><li><a href=#재무-데이터>재무 데이터</a></li></ul></li><li><a href=#27-실습-주식-데이터-탐색>2.7 실습: 주식 데이터 탐색</a><ul><li><a href=#코드-실행>코드 실행</a></li><li><a href=#스크립트-개요>스크립트 개요</a></li><li><a href=#실행-결과>실행 결과</a></li><li><a href=#결과-분석>결과 분석</a></li><li><a href=#데이터-품질-관찰>데이터 품질 관찰</a></li></ul></li><li><a href=#28-데이터-저장-및-관리>2.8 데이터 저장 및 관리</a><ul><li><a href=#csv로-저장>CSV로 저장</a></li><li><a href=#데이터-캐싱-전략>데이터 캐싱 전략</a></li></ul></li><li><a href=#29-데이터-품질-확인>2.9 데이터 품질 확인</a><ul><li><a href=#결측치-확인>결측치 확인</a></li><li><a href=#데이터-연속성-확인>데이터 연속성 확인</a></li><li><a href=#이상치-탐지>이상치 탐지</a></li></ul></li><li><a href=#210-다음-단계>2.10 다음 단계</a><ul><li><a href=#이-챕터에서-배운-것>이 챕터에서 배운 것</a></li><li><a href=#실습-과제>실습 과제</a></li><li><a href=#다음-챕터-미리보기>다음 챕터 미리보기</a></li></ul></li></ul></nav></aside></header><article class="markdown book-article"><h1 id=chapter-2-금융-데이터-다운로드와-이해>Chapter 2: 금융 데이터 다운로드와 이해<a class=anchor href=#chapter-2-%ea%b8%88%ec%9c%b5-%eb%8d%b0%ec%9d%b4%ed%84%b0-%eb%8b%a4%ec%9a%b4%eb%a1%9c%eb%93%9c%ec%99%80-%ec%9d%b4%ed%95%b4>#</a></h1><p>이 챕터에서는 백테스팅의 필수 재료인 <strong>금융 데이터</strong>를 다루는 방법을 배웁니다. yfinance 라이브러리를 사용하여 실제 주식 데이터를 다운로드하고, OHLCV 데이터 구조를 이해하며, 배당금과 주식 분할을 처리하는 방법을 알아봅니다.</p><h2 id=21-ohlcv-데이터-구조>2.1 OHLCV 데이터 구조<a class=anchor href=#21-ohlcv-%eb%8d%b0%ec%9d%b4%ed%84%b0-%ea%b5%ac%ec%a1%b0>#</a></h2><h3 id=ohlcv란>OHLCV란?<a class=anchor href=#ohlcv%eb%9e%80>#</a></h3><p>금융 시장 데이터의 표준 형식인 <strong>OHLCV</strong>는 다음 5가지 정보로 구성됩니다:</p><ul><li><strong>Open (시가)</strong>: 해당 기간의 첫 거래 가격</li><li><strong>High (고가)</strong>: 해당 기간의 최고 거래 가격</li><li><strong>Low (저가)</strong>: 해당 기간의 최저 거래 가격</li><li><strong>Close (종가)</strong>: 해당 기간의 마지막 거래 가격</li><li><strong>Volume (거래량)</strong>: 해당 기간의 총 거래된 주식 수</li></ul><h3 id=시간-프레임-timeframe>시간 프레임 (Timeframe)<a class=anchor href=#%ec%8b%9c%ea%b0%84-%ed%94%84%eb%a0%88%ec%9e%84-timeframe>#</a></h3><p>OHLCV 데이터는 다양한 시간 단위로 제공됩니다:</p><ul><li><strong>1분봉 (1-minute)</strong>: 매 1분마다의 OHLCV</li><li><strong>1시간봉 (1-hour)</strong>: 매 1시간마다의 OHLCV</li><li><strong>일봉 (Daily)</strong>: 매 거래일마다의 OHLCV</li><li><strong>주봉 (Weekly)</strong>: 매 주마다의 OHLCV</li><li><strong>월봉 (Monthly)</strong>: 매 월마다의 OHLCV</li></ul><h3 id=캔들스틱-해석>캔들스틱 해석<a class=anchor href=#%ec%ba%94%eb%93%a4%ec%8a%a4%ed%8b%b1-%ed%95%b4%ec%84%9d>#</a></h3><p>하나의 OHLCV 데이터는 **캔들스틱(Candlestick)**으로 시각화됩니다:</p><pre tabindex=0><code>High (고가)
    |
    |------- Close (종가가 시가보다 높으면 상승 캔들)
    |      |
    |      |
    |------- Open (시가)
    |
-Low (저가)</code></pre><p><strong>상승 캔들 (Bullish Candle)</strong>:</p>
-<ul>
-<li>Close &gt; Open (종가가 시가보다 높음)</li>
-<li>보통 녹색 또는 흰색으로 표시</li>
-<li>매수 압력이 강했음을 의미</li>
-</ul>
-<p><strong>하락 캔들 (Bearish Candle)</strong>:</p>
-<ul>
-<li>Close &lt; Open (종가가 시가보다 낮음)</li>
-<li>보통 빨간색 또는 검은색으로 표시</li>
-<li>매도 압력이 강했음을 의미</li>
-</ul>
-<h3 id="캔들스틱의-수학적-특성">캔들스틱의 수학적 특성<a class="anchor" href="#%ec%ba%94%eb%93%a4%ec%8a%a4%ed%8b%b1%ec%9d%98-%ec%88%98%ed%95%99%ec%a0%81-%ed%8a%b9%ec%84%b1">#</a></h3>
-<p>각 캔들스틱에서 계산할 수 있는 유용한 지표들:</p>
-<p><strong>1. 몸통 크기 (Body Size)</strong>:
-</p>
-$$\text{Body} = |Close - Open|$$<p>큰 몸통은 강한 추세를 의미합니다.</p>
-<p><strong>2. 위 꼬리 길이 (Upper Shadow)</strong>:
-</p>
-$$\text{Upper Shadow} = High - \max(Open, Close)$$<p>긴 위 꼬리는 상승 시도가 거부당했음을 의미합니다.</p>
-<p><strong>3. 아래 꼬리 길이 (Lower Shadow)</strong>:
-</p>
-$$\text{Lower Shadow} = \min(Open, Close) - Low$$<p>긴 아래 꼬리는 하락 시도가 거부당했음을 의미합니다.</p>
-<p><strong>4. True Range (진정한 변동폭)</strong>:
-</p>
-$$TR = \max(High - Low, |High - Close_{prev}|, |Low - Close_{prev}|)$$<p>True Range는 갭(Gap)을 고려한 실제 변동성을 측정합니다.</p>
-<h2 id="22-yfinance로-데이터-다운로드">2.2 yfinance로 데이터 다운로드<a class="anchor" href="#22-yfinance%eb%a1%9c-%eb%8d%b0%ec%9d%b4%ed%84%b0-%eb%8b%a4%ec%9a%b4%eb%a1%9c%eb%93%9c">#</a></h2>
-<h3 id="yfinance란">yfinance란?<a class="anchor" href="#yfinance%eb%9e%80">#</a></h3>
-<p><strong>yfinance</strong>는 Yahoo Finance에서 금융 데이터를 무료로 다운로드할 수 있는 Python 라이브러리입니다.</p>
-<p><strong>장점</strong>:</p>
-<ul>
-<li>✅ 완전 무료</li>
-<li>✅ 수천 개의 주식, ETF, 인덱스 지원</li>
-<li>✅ 과거 데이터 제공 (최대 수십 년)</li>
-<li>✅ 배당금 및 주식 분할 자동 조정</li>
-<li>✅ 간단한 API</li>
-</ul>
-<p><strong>단점</strong>:</p>
-<ul>
-<li>⚠️ 실시간 데이터 아님 (15-20분 지연)</li>
-<li>⚠️ 일부 소형주는 데이터가 없을 수 있음</li>
-<li>⚠️ API 변경 가능성 (Yahoo에서 공식 지원하지 않음)</li>
-</ul>
-<h3 id="기본-사용법">기본 사용법<a class="anchor" href="#%ea%b8%b0%eb%b3%b8-%ec%82%ac%ec%9a%a9%eb%b2%95">#</a></h3>
-<p>단일 종목 다운로드:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> yfinance <span style="color:#66d9ef">as</span> yf
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 애플 주식 데이터 다운로드</span>
-</span></span><span style="display:flex;"><span>ticker <span style="color:#f92672">=</span> yf<span style="color:#f92672">.</span>Ticker(<span style="color:#e6db74">&#34;AAPL&#34;</span>)
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>history(period<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1y&#34;</span>)  <span style="color:#75715e"># 최근 1년</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>print(data<span style="color:#f92672">.</span>head())</span></span></code></pre></div><p>결과:</p>
-<pre tabindex="0"><code>                 Open       High        Low      Close    Volume  Dividends  Stock Splits
+Low (저가)</code></pre><p><strong>상승 캔들 (Bullish Candle)</strong>:</p><ul><li>Close > Open (종가가 시가보다 높음)</li><li>보통 녹색 또는 흰색으로 표시</li><li>매수 압력이 강했음을 의미</li></ul><p><strong>하락 캔들 (Bearish Candle)</strong>:</p><ul><li>Close &lt; Open (종가가 시가보다 낮음)</li><li>보통 빨간색 또는 검은색으로 표시</li><li>매도 압력이 강했음을 의미</li></ul><h3 id=캔들스틱의-수학적-특성>캔들스틱의 수학적 특성<a class=anchor href=#%ec%ba%94%eb%93%a4%ec%8a%a4%ed%8b%b1%ec%9d%98-%ec%88%98%ed%95%99%ec%a0%81-%ed%8a%b9%ec%84%b1>#</a></h3><p>각 캔들스틱에서 계산할 수 있는 유용한 지표들:</p><p><strong>1. 몸통 크기 (Body Size)</strong>:</p>$$\text{Body} = |Close - Open|$$<p>큰 몸통은 강한 추세를 의미합니다.</p><p><strong>2. 위 꼬리 길이 (Upper Shadow)</strong>:</p>$$\text{Upper Shadow} = High - \max(Open, Close)$$<p>긴 위 꼬리는 상승 시도가 거부당했음을 의미합니다.</p><p><strong>3. 아래 꼬리 길이 (Lower Shadow)</strong>:</p>$$\text{Lower Shadow} = \min(Open, Close) - Low$$<p>긴 아래 꼬리는 하락 시도가 거부당했음을 의미합니다.</p><p><strong>4. True Range (진정한 변동폭)</strong>:</p>$$TR = \max(High - Low, |High - Close_{prev}|, |Low - Close_{prev}|)$$<p>True Range는 갭(Gap)을 고려한 실제 변동성을 측정합니다.</p><h2 id=22-yfinance로-데이터-다운로드>2.2 yfinance로 데이터 다운로드<a class=anchor href=#22-yfinance%eb%a1%9c-%eb%8d%b0%ec%9d%b4%ed%84%b0-%eb%8b%a4%ec%9a%b4%eb%a1%9c%eb%93%9c>#</a></h2><h3 id=yfinance란>yfinance란?<a class=anchor href=#yfinance%eb%9e%80>#</a></h3><p><strong>yfinance</strong>는 Yahoo Finance에서 금융 데이터를 무료로 다운로드할 수 있는 Python 라이브러리입니다.</p><p><strong>장점</strong>:</p><ul><li>✅ 완전 무료</li><li>✅ 수천 개의 주식, ETF, 인덱스 지원</li><li>✅ 과거 데이터 제공 (최대 수십 년)</li><li>✅ 배당금 및 주식 분할 자동 조정</li><li>✅ 간단한 API</li></ul><p><strong>단점</strong>:</p><ul><li>⚠️ 실시간 데이터 아님 (15-20분 지연)</li><li>⚠️ 일부 소형주는 데이터가 없을 수 있음</li><li>⚠️ API 변경 가능성 (Yahoo에서 공식 지원하지 않음)</li></ul><h3 id=기본-사용법>기본 사용법<a class=anchor href=#%ea%b8%b0%eb%b3%b8-%ec%82%ac%ec%9a%a9%eb%b2%95>#</a></h3><p>단일 종목 다운로드:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> yfinance <span style=color:#66d9ef>as</span> yf
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 애플 주식 데이터 다운로드</span>
+</span></span><span style=display:flex><span>ticker <span style=color:#f92672>=</span> yf<span style=color:#f92672>.</span>Ticker(<span style=color:#e6db74>&#34;AAPL&#34;</span>)
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>history(period<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1y&#34;</span>)  <span style=color:#75715e># 최근 1년</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(data<span style=color:#f92672>.</span>head())</span></span></code></pre></div><p>결과:</p><pre tabindex=0><code>                 Open       High        Low      Close    Volume  Dividends  Stock Splits
 Date
 2024-01-02  187.15  188.44  185.83  185.64  82488400       0.0          0.0
 2024-01-03  185.89  186.67  183.43  184.25  58414400       0.0          0.0
 2024-01-04  184.35  186.40  183.92  185.59  54480100       0.0          0.0
-...</code></pre><h3 id="다양한-기간-옵션">다양한 기간 옵션<a class="anchor" href="#%eb%8b%a4%ec%96%91%ed%95%9c-%ea%b8%b0%ea%b0%84-%ec%98%b5%ec%85%98">#</a></h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 방법 1: 기간(period) 지정</span>
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>history(period<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1mo&#34;</span>)   <span style="color:#75715e"># 최근 1개월</span>
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>history(period<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1y&#34;</span>)    <span style="color:#75715e"># 최근 1년</span>
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>history(period<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;5y&#34;</span>)    <span style="color:#75715e"># 최근 5년</span>
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>history(period<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;max&#34;</span>)   <span style="color:#75715e"># 모든 데이터</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 방법 2: 시작일과 종료일 지정</span>
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>history(start<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;2020-01-01&#34;</span>, end<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;2023-12-31&#34;</span>)</span></span></code></pre></div><h3 id="다양한-시간-프레임">다양한 시간 프레임<a class="anchor" href="#%eb%8b%a4%ec%96%91%ed%95%9c-%ec%8b%9c%ea%b0%84-%ed%94%84%eb%a0%88%ec%9e%84">#</a></h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 일봉 (기본값)</span>
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>history(period<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1y&#34;</span>, interval<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1d&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 주봉</span>
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>history(period<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;2y&#34;</span>, interval<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1wk&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 월봉</span>
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>history(period<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;5y&#34;</span>, interval<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1mo&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1시간봉 (최근 60일까지만 가능)</span>
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>history(period<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1mo&#34;</span>, interval<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1h&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1분봉 (최근 7일까지만 가능)</span>
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>history(period<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1d&#34;</span>, interval<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1m&#34;</span>)</span></span></code></pre></div><h2 id="23-배당금과-주식-분할-조정">2.3 배당금과 주식 분할 조정<a class="anchor" href="#23-%eb%b0%b0%eb%8b%b9%ea%b8%88%ea%b3%bc-%ec%a3%bc%ec%8b%9d-%eb%b6%84%ed%95%a0-%ec%a1%b0%ec%a0%95">#</a></h2>
-<h3 id="adjusted-close의-중요성">Adjusted Close의 중요성<a class="anchor" href="#adjusted-close%ec%9d%98-%ec%a4%91%ec%9a%94%ec%84%b1">#</a></h3>
-<p><strong>문제 상황</strong>:</p>
-<ul>
-<li>2020년 1월 1일: Apple 주가 $300</li>
-<li>2020년 8월 31일: 4:1 주식 분할 실행</li>
-<li>2020년 9월 1일: Apple 주가 $100 (분할 후)</li>
-</ul>
-<p>만약 조정하지 않으면, 8월 31일에서 9월 1일로 넘어갈 때 -66%의 손실이 발생한 것처럼 보입니다! 하지만 실제로는 가치가 변하지 않았습니다.</p>
-<h3 id="adjusted-close란">Adjusted Close란?<a class="anchor" href="#adjusted-close%eb%9e%80">#</a></h3>
-<p>**Adjusted Close (조정 종가)**는 다음을 고려하여 과거 가격을 조정한 값입니다:</p>
-<ol>
-<li><strong>배당금 (Dividends)</strong>: 배당금 지급으로 인한 가격 하락 반영</li>
-<li><strong>주식 분할 (Stock Splits)</strong>: 주식 분할로 인한 가격 변화 반영</li>
-</ol>
-<h3 id="조정-공식">조정 공식<a class="anchor" href="#%ec%a1%b0%ec%a0%95-%ea%b3%b5%ec%8b%9d">#</a></h3>
-<p><strong>주식 분할 조정</strong>:</p>
-<ul>
-<li>4:1 분할이 발생하면, 분할 이전의 모든 가격을 1/4로 조정</li>
-</ul>
-<p><strong>배당금 조정</strong>:
-</p>
-$$P_{adjusted} = P_{actual} \times \frac{Close_{today}}{Close_{today} + Dividend}$$<h3 id="yfinance의-자동-조정">yfinance의 자동 조정<a class="anchor" href="#yfinance%ec%9d%98-%ec%9e%90%eb%8f%99-%ec%a1%b0%ec%a0%95">#</a></h3>
-<p>yfinance는 기본적으로 조정된 가격을 제공합니다:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>data <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>history(period<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;5y&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Close: 조정된 종가 (Adjusted Close)</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 이미 배당금과 주식 분할이 반영되어 있음</span>
-</span></span><span style="display:flex;"><span>print(data[<span style="color:#e6db74">&#39;Close&#39;</span>])</span></span></code></pre></div><p><strong>중요</strong>: 백테스팅에서는 <strong>반드시 Adjusted Close를 사용</strong>해야 합니다. 그렇지 않으면 잘못된 수익률을 계산하게 됩니다.</p>
-<h2 id="24-다중-종목-데이터-다운로드">2.4 다중 종목 데이터 다운로드<a class="anchor" href="#24-%eb%8b%a4%ec%a4%91-%ec%a2%85%eb%aa%a9-%eb%8d%b0%ec%9d%b4%ed%84%b0-%eb%8b%a4%ec%9a%b4%eb%a1%9c%eb%93%9c">#</a></h2>
-<h3 id="여러-종목-동시-다운로드">여러 종목 동시 다운로드<a class="anchor" href="#%ec%97%ac%eb%9f%ac-%ec%a2%85%eb%aa%a9-%eb%8f%99%ec%8b%9c-%eb%8b%a4%ec%9a%b4%eb%a1%9c%eb%93%9c">#</a></h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> yfinance <span style="color:#66d9ef">as</span> yf
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 여러 종목을 한 번에 다운로드</span>
-</span></span><span style="display:flex;"><span>tickers <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;AAPL&#34;</span>, <span style="color:#e6db74">&#34;MSFT&#34;</span>, <span style="color:#e6db74">&#34;GOOGL&#34;</span>, <span style="color:#e6db74">&#34;TSLA&#34;</span>]
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> yf<span style="color:#f92672">.</span>download(tickers, start<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;2020-01-01&#34;</span>, end<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;2023-12-31&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 결과는 MultiIndex DataFrame</span>
-</span></span><span style="display:flex;"><span>print(data[<span style="color:#e6db74">&#39;Close&#39;</span>])  <span style="color:#75715e"># 모든 종목의 종가</span></span></span></code></pre></div><p>결과:</p>
-<pre tabindex="0"><code>Ticker         AAPL    MSFT   GOOGL    TSLA
+...</code></pre><h3 id=다양한-기간-옵션>다양한 기간 옵션<a class=anchor href=#%eb%8b%a4%ec%96%91%ed%95%9c-%ea%b8%b0%ea%b0%84-%ec%98%b5%ec%85%98>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 방법 1: 기간(period) 지정</span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>history(period<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1mo&#34;</span>)   <span style=color:#75715e># 최근 1개월</span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>history(period<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1y&#34;</span>)    <span style=color:#75715e># 최근 1년</span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>history(period<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;5y&#34;</span>)    <span style=color:#75715e># 최근 5년</span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>history(period<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;max&#34;</span>)   <span style=color:#75715e># 모든 데이터</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 방법 2: 시작일과 종료일 지정</span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>history(start<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;2020-01-01&#34;</span>, end<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;2023-12-31&#34;</span>)</span></span></code></pre></div><h3 id=다양한-시간-프레임>다양한 시간 프레임<a class=anchor href=#%eb%8b%a4%ec%96%91%ed%95%9c-%ec%8b%9c%ea%b0%84-%ed%94%84%eb%a0%88%ec%9e%84>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 일봉 (기본값)</span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>history(period<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1y&#34;</span>, interval<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1d&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 주봉</span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>history(period<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;2y&#34;</span>, interval<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1wk&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 월봉</span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>history(period<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;5y&#34;</span>, interval<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1mo&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 1시간봉 (최근 60일까지만 가능)</span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>history(period<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1mo&#34;</span>, interval<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1h&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 1분봉 (최근 7일까지만 가능)</span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>history(period<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1d&#34;</span>, interval<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1m&#34;</span>)</span></span></code></pre></div><h2 id=23-배당금과-주식-분할-조정>2.3 배당금과 주식 분할 조정<a class=anchor href=#23-%eb%b0%b0%eb%8b%b9%ea%b8%88%ea%b3%bc-%ec%a3%bc%ec%8b%9d-%eb%b6%84%ed%95%a0-%ec%a1%b0%ec%a0%95>#</a></h2><h3 id=adjusted-close의-중요성>Adjusted Close의 중요성<a class=anchor href=#adjusted-close%ec%9d%98-%ec%a4%91%ec%9a%94%ec%84%b1>#</a></h3><p><strong>문제 상황</strong>:</p><ul><li>2020년 1월 1일: Apple 주가 $300</li><li>2020년 8월 31일: 4:1 주식 분할 실행</li><li>2020년 9월 1일: Apple 주가 $100 (분할 후)</li></ul><p>만약 조정하지 않으면, 8월 31일에서 9월 1일로 넘어갈 때 -66%의 손실이 발생한 것처럼 보입니다! 하지만 실제로는 가치가 변하지 않았습니다.</p><h3 id=adjusted-close란>Adjusted Close란?<a class=anchor href=#adjusted-close%eb%9e%80>#</a></h3><p>**Adjusted Close (조정 종가)**는 다음을 고려하여 과거 가격을 조정한 값입니다:</p><ol><li><strong>배당금 (Dividends)</strong>: 배당금 지급으로 인한 가격 하락 반영</li><li><strong>주식 분할 (Stock Splits)</strong>: 주식 분할로 인한 가격 변화 반영</li></ol><h3 id=조정-공식>조정 공식<a class=anchor href=#%ec%a1%b0%ec%a0%95-%ea%b3%b5%ec%8b%9d>#</a></h3><p><strong>주식 분할 조정</strong>:</p><ul><li>4:1 분할이 발생하면, 분할 이전의 모든 가격을 1/4로 조정</li></ul><p><strong>배당금 조정</strong>:</p>$$P_{adjusted} = P_{actual} \times \frac{Close_{today}}{Close_{today} + Dividend}$$<h3 id=yfinance의-자동-조정>yfinance의 자동 조정<a class=anchor href=#yfinance%ec%9d%98-%ec%9e%90%eb%8f%99-%ec%a1%b0%ec%a0%95>#</a></h3><p>yfinance는 기본적으로 조정된 가격을 제공합니다:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>data <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>history(period<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;5y&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Close: 조정된 종가 (Adjusted Close)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 이미 배당금과 주식 분할이 반영되어 있음</span>
+</span></span><span style=display:flex><span>print(data[<span style=color:#e6db74>&#39;Close&#39;</span>])</span></span></code></pre></div><p><strong>중요</strong>: 백테스팅에서는 <strong>반드시 Adjusted Close를 사용</strong>해야 합니다. 그렇지 않으면 잘못된 수익률을 계산하게 됩니다.</p><h2 id=24-다중-종목-데이터-다운로드>2.4 다중 종목 데이터 다운로드<a class=anchor href=#24-%eb%8b%a4%ec%a4%91-%ec%a2%85%eb%aa%a9-%eb%8d%b0%ec%9d%b4%ed%84%b0-%eb%8b%a4%ec%9a%b4%eb%a1%9c%eb%93%9c>#</a></h2><h3 id=여러-종목-동시-다운로드>여러 종목 동시 다운로드<a class=anchor href=#%ec%97%ac%eb%9f%ac-%ec%a2%85%eb%aa%a9-%eb%8f%99%ec%8b%9c-%eb%8b%a4%ec%9a%b4%eb%a1%9c%eb%93%9c>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> yfinance <span style=color:#66d9ef>as</span> yf
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 여러 종목을 한 번에 다운로드</span>
+</span></span><span style=display:flex><span>tickers <span style=color:#f92672>=</span> [<span style=color:#e6db74>&#34;AAPL&#34;</span>, <span style=color:#e6db74>&#34;MSFT&#34;</span>, <span style=color:#e6db74>&#34;GOOGL&#34;</span>, <span style=color:#e6db74>&#34;TSLA&#34;</span>]
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> yf<span style=color:#f92672>.</span>download(tickers, start<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;2020-01-01&#34;</span>, end<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;2023-12-31&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 결과는 MultiIndex DataFrame</span>
+</span></span><span style=display:flex><span>print(data[<span style=color:#e6db74>&#39;Close&#39;</span>])  <span style=color:#75715e># 모든 종목의 종가</span></span></span></code></pre></div><p>결과:</p><pre tabindex=0><code>Ticker         AAPL    MSFT   GOOGL    TSLA
 Date
 2020-01-02   73.06   158.78   67.42   29.53
 2020-01-03   72.34   157.32   67.11   29.17
-...</code></pre><h3 id="개별-종목-추출">개별 종목 추출<a class="anchor" href="#%ea%b0%9c%eb%b3%84-%ec%a2%85%eb%aa%a9-%ec%b6%94%ec%b6%9c">#</a></h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 단일 종목 추출</span>
-</span></span><span style="display:flex;"><span>aapl_close <span style="color:#f92672">=</span> data[<span style="color:#e6db74">&#39;Close&#39;</span>][<span style="color:#e6db74">&#39;AAPL&#39;</span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 여러 종목 추출</span>
-</span></span><span style="display:flex;"><span>tech_stocks <span style="color:#f92672">=</span> data[<span style="color:#e6db74">&#39;Close&#39;</span>][[<span style="color:#e6db74">&#39;AAPL&#39;</span>, <span style="color:#e6db74">&#39;MSFT&#39;</span>, <span style="color:#e6db74">&#39;GOOGL&#39;</span>]]</span></span></code></pre></div><h2 id="25-다중-타임프레임-분석">2.5 다중 타임프레임 분석<a class="anchor" href="#25-%eb%8b%a4%ec%a4%91-%ed%83%80%ec%9e%84%ed%94%84%eb%a0%88%ec%9e%84-%eb%b6%84%ec%84%9d">#</a></h2>
-<h3 id="왜-다중-타임프레임인가">왜 다중 타임프레임인가?<a class="anchor" href="#%ec%99%9c-%eb%8b%a4%ec%a4%91-%ed%83%80%ec%9e%84%ed%94%84%eb%a0%88%ec%9e%84%ec%9d%b8%ea%b0%80">#</a></h3>
-<p><strong>큰 그림 파악</strong>: 일봉에서는 하락 추세지만, 주봉에서는 상승 추세일 수 있습니다.</p>
-<p><strong>트레이딩 전략 예시</strong>:</p>
-<ul>
-<li><strong>주봉</strong>: 전체 추세 파악 (상승 추세인가?)</li>
-<li><strong>일봉</strong>: 진입 시점 찾기 (언제 매수할까?)</li>
-<li><strong>1시간봉</strong>: 정확한 타이밍 (지금 바로 매수할까?)</li>
-</ul>
-<h3 id="다중-타임프레임-데이터-수집">다중 타임프레임 데이터 수집<a class="anchor" href="#%eb%8b%a4%ec%a4%91-%ed%83%80%ec%9e%84%ed%94%84%eb%a0%88%ec%9e%84-%eb%8d%b0%ec%9d%b4%ed%84%b0-%ec%88%98%ec%a7%91">#</a></h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>ticker <span style="color:#f92672">=</span> yf<span style="color:#f92672">.</span>Ticker(<span style="color:#e6db74">&#34;SPY&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 여러 타임프레임 데이터</span>
-</span></span><span style="display:flex;"><span>daily <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>history(period<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1y&#34;</span>, interval<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1d&#34;</span>)
-</span></span><span style="display:flex;"><span>weekly <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>history(period<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;2y&#34;</span>, interval<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1wk&#34;</span>)
-</span></span><span style="display:flex;"><span>monthly <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>history(period<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;5y&#34;</span>, interval<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1mo&#34;</span>)</span></span></code></pre></div><h3 id="타임프레임-간-전환">타임프레임 간 전환<a class="anchor" href="#%ed%83%80%ec%9e%84%ed%94%84%eb%a0%88%ec%9e%84-%ea%b0%84-%ec%a0%84%ed%99%98">#</a></h3>
-<p>pandas의 <code>resample()</code> 함수로 타임프레임 변환:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 일봉 → 주봉</span>
-</span></span><span style="display:flex;"><span>weekly_from_daily <span style="color:#f92672">=</span> daily<span style="color:#f92672">.</span>resample(<span style="color:#e6db74">&#39;W&#39;</span>)<span style="color:#f92672">.</span>agg({
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;Open&#39;</span>: <span style="color:#e6db74">&#39;first&#39;</span>,   <span style="color:#75715e"># 주의 첫 거래일 시가</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;High&#39;</span>: <span style="color:#e6db74">&#39;max&#39;</span>,     <span style="color:#75715e"># 주 중 최고가</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;Low&#39;</span>: <span style="color:#e6db74">&#39;min&#39;</span>,      <span style="color:#75715e"># 주 중 최저가</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;Close&#39;</span>: <span style="color:#e6db74">&#39;last&#39;</span>,   <span style="color:#75715e"># 주의 마지막 거래일 종가</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;Volume&#39;</span>: <span style="color:#e6db74">&#39;sum&#39;</span>    <span style="color:#75715e"># 주간 총 거래량</span>
-</span></span><span style="display:flex;"><span>})</span></span></code></pre></div><h2 id="26-종목-정보-조회">2.6 종목 정보 조회<a class="anchor" href="#26-%ec%a2%85%eb%aa%a9-%ec%a0%95%eb%b3%b4-%ec%a1%b0%ed%9a%8c">#</a></h2>
-<h3 id="기본-정보">기본 정보<a class="anchor" href="#%ea%b8%b0%eb%b3%b8-%ec%a0%95%eb%b3%b4">#</a></h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>ticker <span style="color:#f92672">=</span> yf<span style="color:#f92672">.</span>Ticker(<span style="color:#e6db74">&#34;AAPL&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 회사 정보</span>
-</span></span><span style="display:flex;"><span>info <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>info
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;회사명: </span><span style="color:#e6db74">{</span>info[<span style="color:#e6db74">&#39;longName&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;섹터: </span><span style="color:#e6db74">{</span>info[<span style="color:#e6db74">&#39;sector&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;산업: </span><span style="color:#e6db74">{</span>info[<span style="color:#e6db74">&#39;industry&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;시가총액: $</span><span style="color:#e6db74">{</span>info[<span style="color:#e6db74">&#39;marketCap&#39;</span>]<span style="color:#e6db74">:</span><span style="color:#e6db74">,</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;직원 수: </span><span style="color:#e6db74">{</span>info[<span style="color:#e6db74">&#39;fullTimeEmployees&#39;</span>]<span style="color:#e6db74">:</span><span style="color:#e6db74">,</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)</span></span></code></pre></div><h3 id="재무-데이터">재무 데이터<a class="anchor" href="#%ec%9e%ac%eb%ac%b4-%eb%8d%b0%ec%9d%b4%ed%84%b0">#</a></h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 재무제표</span>
-</span></span><span style="display:flex;"><span>income_stmt <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>income_stmt        <span style="color:#75715e"># 손익계산서</span>
-</span></span><span style="display:flex;"><span>balance_sheet <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>balance_sheet    <span style="color:#75715e"># 재무상태표</span>
-</span></span><span style="display:flex;"><span>cash_flow <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>cashflow             <span style="color:#75715e"># 현금흐름표</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 배당금 이력</span>
-</span></span><span style="display:flex;"><span>dividends <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>dividends
-</span></span><span style="display:flex;"><span>print(dividends<span style="color:#f92672">.</span>tail())
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 주식 분할 이력</span>
-</span></span><span style="display:flex;"><span>splits <span style="color:#f92672">=</span> ticker<span style="color:#f92672">.</span>splits
-</span></span><span style="display:flex;"><span>print(splits)</span></span></code></pre></div><h2 id="27-실습-주식-데이터-탐색">2.7 실습: 주식 데이터 탐색<a class="anchor" href="#27-%ec%8b%a4%ec%8a%b5-%ec%a3%bc%ec%8b%9d-%eb%8d%b0%ec%9d%b4%ed%84%b0-%ed%83%90%ec%83%89">#</a></h2>
-<p>이제 실제 코드를 실행해봅시다.</p>
-<h3 id="코드-실행">코드 실행<a class="anchor" href="#%ec%bd%94%eb%93%9c-%ec%8b%a4%ed%96%89">#</a></h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd codes
-</span></span><span style="display:flex;"><span>uv run chapter02/01_download_and_explore.py</span></span></code></pre></div><h3 id="스크립트-개요">스크립트 개요<a class="anchor" href="#%ec%8a%a4%ed%81%ac%eb%a6%bd%ed%8a%b8-%ea%b0%9c%ec%9a%94">#</a></h3>
-<p>이 스크립트는 다음을 수행합니다:</p>
-<ol>
-<li><strong>단일 종목 다운로드</strong>: Apple (AAPL) 주식 데이터</li>
-<li><strong>OHLCV 분석</strong>: 기본 통계 및 캔들스틱 패턴</li>
-<li><strong>다중 종목 비교</strong>: AAPL, MSFT, GOOGL, NVDA</li>
-<li><strong>타임프레임 비교</strong>: 일봉 vs. 주봉 vs. 월봉</li>
-<li><strong>시각화</strong>: 가격 차트, 거래량, 캔들스틱 차트</li>
-</ol>
-<h3 id="실행-결과">실행 결과<a class="anchor" href="#%ec%8b%a4%ed%96%89-%ea%b2%b0%ea%b3%bc">#</a></h3>
-<p>실제로 스크립트를 실행한 결과입니다:</p>
-<pre tabindex="0"><code>==========================================
+...</code></pre><h3 id=개별-종목-추출>개별 종목 추출<a class=anchor href=#%ea%b0%9c%eb%b3%84-%ec%a2%85%eb%aa%a9-%ec%b6%94%ec%b6%9c>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 단일 종목 추출</span>
+</span></span><span style=display:flex><span>aapl_close <span style=color:#f92672>=</span> data[<span style=color:#e6db74>&#39;Close&#39;</span>][<span style=color:#e6db74>&#39;AAPL&#39;</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 여러 종목 추출</span>
+</span></span><span style=display:flex><span>tech_stocks <span style=color:#f92672>=</span> data[<span style=color:#e6db74>&#39;Close&#39;</span>][[<span style=color:#e6db74>&#39;AAPL&#39;</span>, <span style=color:#e6db74>&#39;MSFT&#39;</span>, <span style=color:#e6db74>&#39;GOOGL&#39;</span>]]</span></span></code></pre></div><h2 id=25-다중-타임프레임-분석>2.5 다중 타임프레임 분석<a class=anchor href=#25-%eb%8b%a4%ec%a4%91-%ed%83%80%ec%9e%84%ed%94%84%eb%a0%88%ec%9e%84-%eb%b6%84%ec%84%9d>#</a></h2><h3 id=왜-다중-타임프레임인가>왜 다중 타임프레임인가?<a class=anchor href=#%ec%99%9c-%eb%8b%a4%ec%a4%91-%ed%83%80%ec%9e%84%ed%94%84%eb%a0%88%ec%9e%84%ec%9d%b8%ea%b0%80>#</a></h3><p><strong>큰 그림 파악</strong>: 일봉에서는 하락 추세지만, 주봉에서는 상승 추세일 수 있습니다.</p><p><strong>트레이딩 전략 예시</strong>:</p><ul><li><strong>주봉</strong>: 전체 추세 파악 (상승 추세인가?)</li><li><strong>일봉</strong>: 진입 시점 찾기 (언제 매수할까?)</li><li><strong>1시간봉</strong>: 정확한 타이밍 (지금 바로 매수할까?)</li></ul><h3 id=다중-타임프레임-데이터-수집>다중 타임프레임 데이터 수집<a class=anchor href=#%eb%8b%a4%ec%a4%91-%ed%83%80%ec%9e%84%ed%94%84%eb%a0%88%ec%9e%84-%eb%8d%b0%ec%9d%b4%ed%84%b0-%ec%88%98%ec%a7%91>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>ticker <span style=color:#f92672>=</span> yf<span style=color:#f92672>.</span>Ticker(<span style=color:#e6db74>&#34;SPY&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 여러 타임프레임 데이터</span>
+</span></span><span style=display:flex><span>daily <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>history(period<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1y&#34;</span>, interval<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1d&#34;</span>)
+</span></span><span style=display:flex><span>weekly <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>history(period<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;2y&#34;</span>, interval<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1wk&#34;</span>)
+</span></span><span style=display:flex><span>monthly <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>history(period<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;5y&#34;</span>, interval<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1mo&#34;</span>)</span></span></code></pre></div><h3 id=타임프레임-간-전환>타임프레임 간 전환<a class=anchor href=#%ed%83%80%ec%9e%84%ed%94%84%eb%a0%88%ec%9e%84-%ea%b0%84-%ec%a0%84%ed%99%98>#</a></h3><p>pandas의 <code>resample()</code> 함수로 타임프레임 변환:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 일봉 → 주봉</span>
+</span></span><span style=display:flex><span>weekly_from_daily <span style=color:#f92672>=</span> daily<span style=color:#f92672>.</span>resample(<span style=color:#e6db74>&#39;W&#39;</span>)<span style=color:#f92672>.</span>agg({
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;Open&#39;</span>: <span style=color:#e6db74>&#39;first&#39;</span>,   <span style=color:#75715e># 주의 첫 거래일 시가</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;High&#39;</span>: <span style=color:#e6db74>&#39;max&#39;</span>,     <span style=color:#75715e># 주 중 최고가</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;Low&#39;</span>: <span style=color:#e6db74>&#39;min&#39;</span>,      <span style=color:#75715e># 주 중 최저가</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;Close&#39;</span>: <span style=color:#e6db74>&#39;last&#39;</span>,   <span style=color:#75715e># 주의 마지막 거래일 종가</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;Volume&#39;</span>: <span style=color:#e6db74>&#39;sum&#39;</span>    <span style=color:#75715e># 주간 총 거래량</span>
+</span></span><span style=display:flex><span>})</span></span></code></pre></div><h2 id=26-종목-정보-조회>2.6 종목 정보 조회<a class=anchor href=#26-%ec%a2%85%eb%aa%a9-%ec%a0%95%eb%b3%b4-%ec%a1%b0%ed%9a%8c>#</a></h2><h3 id=기본-정보>기본 정보<a class=anchor href=#%ea%b8%b0%eb%b3%b8-%ec%a0%95%eb%b3%b4>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>ticker <span style=color:#f92672>=</span> yf<span style=color:#f92672>.</span>Ticker(<span style=color:#e6db74>&#34;AAPL&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 회사 정보</span>
+</span></span><span style=display:flex><span>info <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>info
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;회사명: </span><span style=color:#e6db74>{</span>info[<span style=color:#e6db74>&#39;longName&#39;</span>]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;섹터: </span><span style=color:#e6db74>{</span>info[<span style=color:#e6db74>&#39;sector&#39;</span>]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;산업: </span><span style=color:#e6db74>{</span>info[<span style=color:#e6db74>&#39;industry&#39;</span>]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;시가총액: $</span><span style=color:#e6db74>{</span>info[<span style=color:#e6db74>&#39;marketCap&#39;</span>]<span style=color:#e6db74>:</span><span style=color:#e6db74>,</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;직원 수: </span><span style=color:#e6db74>{</span>info[<span style=color:#e6db74>&#39;fullTimeEmployees&#39;</span>]<span style=color:#e6db74>:</span><span style=color:#e6db74>,</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)</span></span></code></pre></div><h3 id=재무-데이터>재무 데이터<a class=anchor href=#%ec%9e%ac%eb%ac%b4-%eb%8d%b0%ec%9d%b4%ed%84%b0>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 재무제표</span>
+</span></span><span style=display:flex><span>income_stmt <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>income_stmt        <span style=color:#75715e># 손익계산서</span>
+</span></span><span style=display:flex><span>balance_sheet <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>balance_sheet    <span style=color:#75715e># 재무상태표</span>
+</span></span><span style=display:flex><span>cash_flow <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>cashflow             <span style=color:#75715e># 현금흐름표</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 배당금 이력</span>
+</span></span><span style=display:flex><span>dividends <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>dividends
+</span></span><span style=display:flex><span>print(dividends<span style=color:#f92672>.</span>tail())
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 주식 분할 이력</span>
+</span></span><span style=display:flex><span>splits <span style=color:#f92672>=</span> ticker<span style=color:#f92672>.</span>splits
+</span></span><span style=display:flex><span>print(splits)</span></span></code></pre></div><h2 id=27-실습-주식-데이터-탐색>2.7 실습: 주식 데이터 탐색<a class=anchor href=#27-%ec%8b%a4%ec%8a%b5-%ec%a3%bc%ec%8b%9d-%eb%8d%b0%ec%9d%b4%ed%84%b0-%ed%83%90%ec%83%89>#</a></h2><p>이제 실제 코드를 실행해봅시다.</p><h3 id=코드-실행>코드 실행<a class=anchor href=#%ec%bd%94%eb%93%9c-%ec%8b%a4%ed%96%89>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>cd codes
+</span></span><span style=display:flex><span>uv run chapter02/01_download_and_explore.py</span></span></code></pre></div><h3 id=스크립트-개요>스크립트 개요<a class=anchor href=#%ec%8a%a4%ed%81%ac%eb%a6%bd%ed%8a%b8-%ea%b0%9c%ec%9a%94>#</a></h3><p>이 스크립트는 다음을 수행합니다:</p><ol><li><strong>단일 종목 다운로드</strong>: Apple (AAPL) 주식 데이터</li><li><strong>OHLCV 분석</strong>: 기본 통계 및 캔들스틱 패턴</li><li><strong>다중 종목 비교</strong>: AAPL, MSFT, GOOGL, NVDA</li><li><strong>타임프레임 비교</strong>: 일봉 vs. 주봉 vs. 월봉</li><li><strong>시각화</strong>: 가격 차트, 거래량, 캔들스틱 차트</li></ol><h3 id=실행-결과>실행 결과<a class=anchor href=#%ec%8b%a4%ed%96%89-%ea%b2%b0%ea%b3%bc>#</a></h3><p>실제로 스크립트를 실행한 결과입니다:</p><pre tabindex=0><code>==========================================
 Chapter 2: 금융 데이터 다운로드와 이해
 ==========================================
 
@@ -766,349 +154,82 @@ NVDA: +39.6%
   수익률: +85.5%
   변동성 (일일): 4.44%
 
-차트 저장 완료: chapter02/images/data_exploration.png</code></pre><h3 id="결과-분석">결과 분석<a class="anchor" href="#%ea%b2%b0%ea%b3%bc-%eb%b6%84%ec%84%9d">#</a></h3>
-<p><img src="/images/chapter02/data_exploration.png" alt="데이터 탐색 차트" /></p>
-<p>생성된 차트는 6개의 서브플롯으로 구성되어 있으며, 각각 다른 측면의 데이터를 보여줍니다:</p>
-<h4 id="1-aapl-가격-추세-좌상단">1. AAPL 가격 추세 (좌상단)<a class="anchor" href="#1-aapl-%ea%b0%80%ea%b2%a9-%ec%b6%94%ec%84%b8-%ec%a2%8c%ec%83%81%eb%8b%a8">#</a></h4>
-<ul>
-<li><strong>5년간 추세</strong>: $113 (2021년 최저점) → $288 (2025년 최고점)</li>
-<li><strong>주요 구간</strong>:
-<ul>
-<li>2021-2022: 완만한 상승 ($113 → $175)</li>
-<li>2023: 횡보 구간</li>
-<li>2024-2025: 급격한 상승 ($175 → $288)</li>
-<li>2026년 초: 소폭 조정</li>
-</ul>
-</li>
-<li><strong>거래량</strong>: 가격이 급변할 때 거래량도 함께 증가하는 패턴</li>
-</ul>
-<h4 id="2-캔들스틱-차트-60일-우상단">2. 캔들스틱 차트 60일 (우상단)<a class="anchor" href="#2-%ec%ba%94%eb%93%a4%ec%8a%a4%ed%8b%b1-%ec%b0%a8%ed%8a%b8-60%ec%9d%bc-%ec%9a%b0%ec%83%81%eb%8b%a8">#</a></h4>
-<ul>
-<li>최근 60일간의 상세 가격 변동</li>
-<li><strong>녹색 캔들</strong>: 상승일 (종가 &gt; 시가)</li>
-<li><strong>빨간색 캔들</strong>: 하락일 (종가 &lt; 시가)</li>
-<li>긴 위/아래 꼬리는 장중 변동성이 컸음을 의미</li>
-</ul>
-<h4 id="3-다중-종목-비교-좌하단">3. 다중 종목 비교 (좌하단)<a class="anchor" href="#3-%eb%8b%a4%ec%a4%91-%ec%a2%85%eb%aa%a9-%eb%b9%84%ea%b5%90-%ec%a2%8c%ed%95%98%eb%8b%a8">#</a></h4>
-<ul>
-<li><strong>정규화된 비교</strong> (시작점을 100으로 통일)</li>
-<li><strong>GOOGL이 가장 높은 성과</strong>: 초기 대비 180% 상승</li>
-<li><strong>NVDA도 강한 상승세</strong>: 약 140% 상승</li>
-<li><strong>AAPL과 MSFT</strong>: 상대적으로 안정적인 상승 (120% 수준)</li>
-<li><strong>핵심 인사이트</strong>: 같은 기술 섹터라도 종목별 성과는 크게 다릅니다</li>
-</ul>
-<h4 id="4-타임프레임-비교-우하단">4. 타임프레임 비교 (우하단)<a class="anchor" href="#4-%ed%83%80%ec%9e%84%ed%94%84%eb%a0%88%ec%9e%84-%eb%b9%84%ea%b5%90-%ec%9a%b0%ed%95%98%eb%8b%a8">#</a></h4>
-<ul>
-<li><strong>일봉 (파란색)</strong>: 노이즈가 많지만 단기 트렌드 파악 가능</li>
-<li><strong>주봉 (녹색)</strong>: 더 부드러운 추세선, 중기 추세 명확</li>
-<li><strong>월봉 (주황색)</strong>: 가장 부드러운 곡선, 장기 추세만 보임</li>
-<li><strong>전략 적용</strong>: 장기 투자자는 월봉, 단기 트레이더는 일봉 활용</li>
-</ul>
-<h3 id="데이터-품질-관찰">데이터 품질 관찰<a class="anchor" href="#%eb%8d%b0%ec%9d%b4%ed%84%b0-%ed%92%88%ec%a7%88-%ea%b4%80%ec%b0%b0">#</a></h3>
-<p><strong>캔들스틱 패턴 분석 결과</strong>:</p>
-<ul>
-<li>상승 캔들 비율 53.5%는 장기적으로 상승 추세임을 의미</li>
-<li>평균 몸통 크기 $1.86는 일일 평균 변동폭</li>
-<li>위/아래 꼬리가 비슷하다는 것은 매수/매도 압력이 균형적임을 의미</li>
-</ul>
-<p><strong>일일 변동폭</strong>:</p>
-<ul>
-<li>평균 2.09%는 AAPL이 안정적인 대형주임을 보여줍니다</li>
-<li>최대 변동폭 14.44%는 극단적 시장 상황(실적 발표, 시장 폭락 등)</li>
-<li>이러한 이상치는 리스크 관리에서 중요한 고려사항입니다</li>
-</ul>
-<h2 id="28-데이터-저장-및-관리">2.8 데이터 저장 및 관리<a class="anchor" href="#28-%eb%8d%b0%ec%9d%b4%ed%84%b0-%ec%a0%80%ec%9e%a5-%eb%b0%8f-%ea%b4%80%eb%a6%ac">#</a></h2>
-<h3 id="csv로-저장">CSV로 저장<a class="anchor" href="#csv%eb%a1%9c-%ec%a0%80%ec%9e%a5">#</a></h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 데이터 저장</span>
-</span></span><span style="display:flex;"><span>data<span style="color:#f92672">.</span>to_csv(<span style="color:#e6db74">&#39;data/AAPL_daily_2020_2023.csv&#39;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 데이터 불러오기</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">&#39;data/AAPL_daily_2020_2023.csv&#39;</span>,
-</span></span><span style="display:flex;"><span>                   index_col<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Date&#39;</span>,
-</span></span><span style="display:flex;"><span>                   parse_dates<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)</span></span></code></pre></div><h3 id="데이터-캐싱-전략">데이터 캐싱 전략<a class="anchor" href="#%eb%8d%b0%ec%9d%b4%ed%84%b0-%ec%ba%90%ec%8b%b1-%ec%a0%84%eb%9e%b5">#</a></h3>
-<p><strong>문제</strong>: yfinance로 매번 다운로드하면 시간이 걸립니다.</p>
-<p><strong>해결책</strong>: 로컬에 저장하고 재사용</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pathlib <span style="color:#f92672">import</span> Path
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> yfinance <span style="color:#66d9ef">as</span> yf
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_stock_data</span>(ticker, start, end, force_download<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>):
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    주식 데이터를 가져오는 함수 (캐싱 포함)
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Parameters:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    -----------
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    ticker : str
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        종목 심볼
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    start : str
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        시작일
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    end : str
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        종료일
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    force_download : bool
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        True면 항상 새로 다운로드
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Returns:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    --------
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    pd.DataFrame
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        OHLCV 데이터
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    cache_dir <span style="color:#f92672">=</span> Path(<span style="color:#e6db74">&#39;data&#39;</span>)
-</span></span><span style="display:flex;"><span>    cache_dir<span style="color:#f92672">.</span>mkdir(exist_ok<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    cache_file <span style="color:#f92672">=</span> cache_dir <span style="color:#f92672">/</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>ticker<span style="color:#e6db74">}</span><span style="color:#e6db74">_</span><span style="color:#e6db74">{</span>start<span style="color:#e6db74">}</span><span style="color:#e6db74">_</span><span style="color:#e6db74">{</span>end<span style="color:#e6db74">}</span><span style="color:#e6db74">.csv&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 캐시 파일이 있고, 강제 다운로드가 아니면 캐시 사용</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> cache_file<span style="color:#f92672">.</span>exists() <span style="color:#f92672">and</span> <span style="color:#f92672">not</span> force_download:
-</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;캐시에서 </span><span style="color:#e6db74">{</span>ticker<span style="color:#e6db74">}</span><span style="color:#e6db74"> 데이터 로드 중...&#34;</span>)
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> pd<span style="color:#f92672">.</span>read_csv(cache_file, index_col<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Date&#39;</span>, parse_dates<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 새로 다운로드</span>
-</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Yahoo Finance에서 </span><span style="color:#e6db74">{</span>ticker<span style="color:#e6db74">}</span><span style="color:#e6db74"> 다운로드 중...&#34;</span>)
-</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> yf<span style="color:#f92672">.</span>download(ticker, start<span style="color:#f92672">=</span>start, end<span style="color:#f92672">=</span>end, progress<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 캐시 저장</span>
-</span></span><span style="display:flex;"><span>    data<span style="color:#f92672">.</span>to_csv(cache_file)
-</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;캐시 저장 완료: </span><span style="color:#e6db74">{</span>cache_file<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> data</span></span></code></pre></div><p>사용 예:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 첫 실행: 다운로드 후 저장</span>
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> get_stock_data(<span style="color:#e6db74">&#34;AAPL&#34;</span>, <span style="color:#e6db74">&#34;2020-01-01&#34;</span>, <span style="color:#e6db74">&#34;2023-12-31&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 두 번째 실행: 캐시에서 즉시 로드</span>
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> get_stock_data(<span style="color:#e6db74">&#34;AAPL&#34;</span>, <span style="color:#e6db74">&#34;2020-01-01&#34;</span>, <span style="color:#e6db74">&#34;2023-12-31&#34;</span>)</span></span></code></pre></div><h2 id="29-데이터-품질-확인">2.9 데이터 품질 확인<a class="anchor" href="#29-%eb%8d%b0%ec%9d%b4%ed%84%b0-%ed%92%88%ec%a7%88-%ed%99%95%ec%9d%b8">#</a></h2>
-<h3 id="결측치-확인">결측치 확인<a class="anchor" href="#%ea%b2%b0%ec%b8%a1%ec%b9%98-%ed%99%95%ec%9d%b8">#</a></h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 결측치 확인</span>
-</span></span><span style="display:flex;"><span>print(data<span style="color:#f92672">.</span>isnull()<span style="color:#f92672">.</span>sum())
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 결측치 비율</span>
-</span></span><span style="display:flex;"><span>missing_pct <span style="color:#f92672">=</span> (data<span style="color:#f92672">.</span>isnull()<span style="color:#f92672">.</span>sum() <span style="color:#f92672">/</span> len(data)) <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span>
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;결측치 비율: </span><span style="color:#e6db74">{</span>missing_pct<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">%&#34;</span>)</span></span></code></pre></div><h3 id="데이터-연속성-확인">데이터 연속성 확인<a class="anchor" href="#%eb%8d%b0%ec%9d%b4%ed%84%b0-%ec%97%b0%ec%86%8d%ec%84%b1-%ed%99%95%ec%9d%b8">#</a></h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 거래일 간 간격 확인</span>
-</span></span><span style="display:flex;"><span>date_diff <span style="color:#f92672">=</span> data<span style="color:#f92672">.</span>index<span style="color:#f92672">.</span>to_series()<span style="color:#f92672">.</span>diff()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3일 이상 간격이 있는 경우 찾기 (주말 제외)</span>
-</span></span><span style="display:flex;"><span>gaps <span style="color:#f92672">=</span> date_diff[date_diff <span style="color:#f92672">&gt;</span> pd<span style="color:#f92672">.</span>Timedelta(days<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)]
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> len(gaps) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
-</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;데이터 간격 발견: </span><span style="color:#e6db74">{</span>len(gaps)<span style="color:#e6db74">}</span><span style="color:#e6db74">개&#34;</span>)
-</span></span><span style="display:flex;"><span>    print(gaps)</span></span></code></pre></div><h3 id="이상치-탐지">이상치 탐지<a class="anchor" href="#%ec%9d%b4%ec%83%81%ec%b9%98-%ed%83%90%ec%a7%80">#</a></h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 일일 수익률 계산</span>
-</span></span><span style="display:flex;"><span>returns <span style="color:#f92672">=</span> data[<span style="color:#e6db74">&#39;Close&#39;</span>]<span style="color:#f92672">.</span>pct_change()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 극단적 수익률 (±10% 이상)</span>
-</span></span><span style="display:flex;"><span>extreme_returns <span style="color:#f92672">=</span> returns[abs(returns) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0.10</span>]
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;극단적 변동: </span><span style="color:#e6db74">{</span>len(extreme_returns)<span style="color:#e6db74">}</span><span style="color:#e6db74">일&#34;</span>)
-</span></span><span style="display:flex;"><span>print(extreme_returns)</span></span></code></pre></div><h2 id="210-다음-단계">2.10 다음 단계<a class="anchor" href="#210-%eb%8b%a4%ec%9d%8c-%eb%8b%a8%ea%b3%84">#</a></h2>
-<h3 id="이-챕터에서-배운-것">이 챕터에서 배운 것<a class="anchor" href="#%ec%9d%b4-%ec%b1%95%ed%84%b0%ec%97%90%ec%84%9c-%eb%b0%b0%ec%9a%b4-%ea%b2%83">#</a></h3>
-<p>✅ <strong>OHLCV 데이터 구조</strong>: Open, High, Low, Close, Volume의 의미
+차트 저장 완료: chapter02/images/data_exploration.png</code></pre><h3 id=결과-분석>결과 분석<a class=anchor href=#%ea%b2%b0%ea%b3%bc-%eb%b6%84%ec%84%9d>#</a></h3><p><img src=/images/chapter02/data_exploration.png alt="데이터 탐색 차트"></p><p>생성된 차트는 6개의 서브플롯으로 구성되어 있으며, 각각 다른 측면의 데이터를 보여줍니다:</p><h4 id=1-aapl-가격-추세-좌상단>1. AAPL 가격 추세 (좌상단)<a class=anchor href=#1-aapl-%ea%b0%80%ea%b2%a9-%ec%b6%94%ec%84%b8-%ec%a2%8c%ec%83%81%eb%8b%a8>#</a></h4><ul><li><strong>5년간 추세</strong>: $113 (2021년 최저점) → $288 (2025년 최고점)</li><li><strong>주요 구간</strong>:<ul><li>2021-2022: 완만한 상승 ($113 → $175)</li><li>2023: 횡보 구간</li><li>2024-2025: 급격한 상승 ($175 → $288)</li><li>2026년 초: 소폭 조정</li></ul></li><li><strong>거래량</strong>: 가격이 급변할 때 거래량도 함께 증가하는 패턴</li></ul><h4 id=2-캔들스틱-차트-60일-우상단>2. 캔들스틱 차트 60일 (우상단)<a class=anchor href=#2-%ec%ba%94%eb%93%a4%ec%8a%a4%ed%8b%b1-%ec%b0%a8%ed%8a%b8-60%ec%9d%bc-%ec%9a%b0%ec%83%81%eb%8b%a8>#</a></h4><ul><li>최근 60일간의 상세 가격 변동</li><li><strong>녹색 캔들</strong>: 상승일 (종가 > 시가)</li><li><strong>빨간색 캔들</strong>: 하락일 (종가 &lt; 시가)</li><li>긴 위/아래 꼬리는 장중 변동성이 컸음을 의미</li></ul><h4 id=3-다중-종목-비교-좌하단>3. 다중 종목 비교 (좌하단)<a class=anchor href=#3-%eb%8b%a4%ec%a4%91-%ec%a2%85%eb%aa%a9-%eb%b9%84%ea%b5%90-%ec%a2%8c%ed%95%98%eb%8b%a8>#</a></h4><ul><li><strong>정규화된 비교</strong> (시작점을 100으로 통일)</li><li><strong>GOOGL이 가장 높은 성과</strong>: 초기 대비 180% 상승</li><li><strong>NVDA도 강한 상승세</strong>: 약 140% 상승</li><li><strong>AAPL과 MSFT</strong>: 상대적으로 안정적인 상승 (120% 수준)</li><li><strong>핵심 인사이트</strong>: 같은 기술 섹터라도 종목별 성과는 크게 다릅니다</li></ul><h4 id=4-타임프레임-비교-우하단>4. 타임프레임 비교 (우하단)<a class=anchor href=#4-%ed%83%80%ec%9e%84%ed%94%84%eb%a0%88%ec%9e%84-%eb%b9%84%ea%b5%90-%ec%9a%b0%ed%95%98%eb%8b%a8>#</a></h4><ul><li><strong>일봉 (파란색)</strong>: 노이즈가 많지만 단기 트렌드 파악 가능</li><li><strong>주봉 (녹색)</strong>: 더 부드러운 추세선, 중기 추세 명확</li><li><strong>월봉 (주황색)</strong>: 가장 부드러운 곡선, 장기 추세만 보임</li><li><strong>전략 적용</strong>: 장기 투자자는 월봉, 단기 트레이더는 일봉 활용</li></ul><h3 id=데이터-품질-관찰>데이터 품질 관찰<a class=anchor href=#%eb%8d%b0%ec%9d%b4%ed%84%b0-%ed%92%88%ec%a7%88-%ea%b4%80%ec%b0%b0>#</a></h3><p><strong>캔들스틱 패턴 분석 결과</strong>:</p><ul><li>상승 캔들 비율 53.5%는 장기적으로 상승 추세임을 의미</li><li>평균 몸통 크기 $1.86는 일일 평균 변동폭</li><li>위/아래 꼬리가 비슷하다는 것은 매수/매도 압력이 균형적임을 의미</li></ul><p><strong>일일 변동폭</strong>:</p><ul><li>평균 2.09%는 AAPL이 안정적인 대형주임을 보여줍니다</li><li>최대 변동폭 14.44%는 극단적 시장 상황(실적 발표, 시장 폭락 등)</li><li>이러한 이상치는 리스크 관리에서 중요한 고려사항입니다</li></ul><h2 id=28-데이터-저장-및-관리>2.8 데이터 저장 및 관리<a class=anchor href=#28-%eb%8d%b0%ec%9d%b4%ed%84%b0-%ec%a0%80%ec%9e%a5-%eb%b0%8f-%ea%b4%80%eb%a6%ac>#</a></h2><h3 id=csv로-저장>CSV로 저장<a class=anchor href=#csv%eb%a1%9c-%ec%a0%80%ec%9e%a5>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 데이터 저장</span>
+</span></span><span style=display:flex><span>data<span style=color:#f92672>.</span>to_csv(<span style=color:#e6db74>&#39;data/AAPL_daily_2020_2023.csv&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 데이터 불러오기</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> pandas <span style=color:#66d9ef>as</span> pd
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> pd<span style=color:#f92672>.</span>read_csv(<span style=color:#e6db74>&#39;data/AAPL_daily_2020_2023.csv&#39;</span>,
+</span></span><span style=display:flex><span>                   index_col<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;Date&#39;</span>,
+</span></span><span style=display:flex><span>                   parse_dates<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)</span></span></code></pre></div><h3 id=데이터-캐싱-전략>데이터 캐싱 전략<a class=anchor href=#%eb%8d%b0%ec%9d%b4%ed%84%b0-%ec%ba%90%ec%8b%b1-%ec%a0%84%eb%9e%b5>#</a></h3><p><strong>문제</strong>: yfinance로 매번 다운로드하면 시간이 걸립니다.</p><p><strong>해결책</strong>: 로컬에 저장하고 재사용</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> pathlib <span style=color:#f92672>import</span> Path
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> pandas <span style=color:#66d9ef>as</span> pd
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> yfinance <span style=color:#66d9ef>as</span> yf
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>get_stock_data</span>(ticker, start, end, force_download<span style=color:#f92672>=</span><span style=color:#66d9ef>False</span>):
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    주식 데이터를 가져오는 함수 (캐싱 포함)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    Parameters:
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    -----------
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    ticker : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        종목 심볼
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    start : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        시작일
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    end : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        종료일
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    force_download : bool
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        True면 항상 새로 다운로드
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    Returns:
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    --------
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    pd.DataFrame
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        OHLCV 데이터
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    cache_dir <span style=color:#f92672>=</span> Path(<span style=color:#e6db74>&#39;data&#39;</span>)
+</span></span><span style=display:flex><span>    cache_dir<span style=color:#f92672>.</span>mkdir(exist_ok<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    cache_file <span style=color:#f92672>=</span> cache_dir <span style=color:#f92672>/</span> <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>ticker<span style=color:#e6db74>}</span><span style=color:#e6db74>_</span><span style=color:#e6db74>{</span>start<span style=color:#e6db74>}</span><span style=color:#e6db74>_</span><span style=color:#e6db74>{</span>end<span style=color:#e6db74>}</span><span style=color:#e6db74>.csv&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 캐시 파일이 있고, 강제 다운로드가 아니면 캐시 사용</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> cache_file<span style=color:#f92672>.</span>exists() <span style=color:#f92672>and</span> <span style=color:#f92672>not</span> force_download:
+</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;캐시에서 </span><span style=color:#e6db74>{</span>ticker<span style=color:#e6db74>}</span><span style=color:#e6db74> 데이터 로드 중...&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> pd<span style=color:#f92672>.</span>read_csv(cache_file, index_col<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;Date&#39;</span>, parse_dates<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 새로 다운로드</span>
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Yahoo Finance에서 </span><span style=color:#e6db74>{</span>ticker<span style=color:#e6db74>}</span><span style=color:#e6db74> 다운로드 중...&#34;</span>)
+</span></span><span style=display:flex><span>    data <span style=color:#f92672>=</span> yf<span style=color:#f92672>.</span>download(ticker, start<span style=color:#f92672>=</span>start, end<span style=color:#f92672>=</span>end, progress<span style=color:#f92672>=</span><span style=color:#66d9ef>False</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 캐시 저장</span>
+</span></span><span style=display:flex><span>    data<span style=color:#f92672>.</span>to_csv(cache_file)
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;캐시 저장 완료: </span><span style=color:#e6db74>{</span>cache_file<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> data</span></span></code></pre></div><p>사용 예:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 첫 실행: 다운로드 후 저장</span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> get_stock_data(<span style=color:#e6db74>&#34;AAPL&#34;</span>, <span style=color:#e6db74>&#34;2020-01-01&#34;</span>, <span style=color:#e6db74>&#34;2023-12-31&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 두 번째 실행: 캐시에서 즉시 로드</span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> get_stock_data(<span style=color:#e6db74>&#34;AAPL&#34;</span>, <span style=color:#e6db74>&#34;2020-01-01&#34;</span>, <span style=color:#e6db74>&#34;2023-12-31&#34;</span>)</span></span></code></pre></div><h2 id=29-데이터-품질-확인>2.9 데이터 품질 확인<a class=anchor href=#29-%eb%8d%b0%ec%9d%b4%ed%84%b0-%ed%92%88%ec%a7%88-%ed%99%95%ec%9d%b8>#</a></h2><h3 id=결측치-확인>결측치 확인<a class=anchor href=#%ea%b2%b0%ec%b8%a1%ec%b9%98-%ed%99%95%ec%9d%b8>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 결측치 확인</span>
+</span></span><span style=display:flex><span>print(data<span style=color:#f92672>.</span>isnull()<span style=color:#f92672>.</span>sum())
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 결측치 비율</span>
+</span></span><span style=display:flex><span>missing_pct <span style=color:#f92672>=</span> (data<span style=color:#f92672>.</span>isnull()<span style=color:#f92672>.</span>sum() <span style=color:#f92672>/</span> len(data)) <span style=color:#f92672>*</span> <span style=color:#ae81ff>100</span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;결측치 비율: </span><span style=color:#e6db74>{</span>missing_pct<span style=color:#e6db74>:</span><span style=color:#e6db74>.2f</span><span style=color:#e6db74>}</span><span style=color:#e6db74>%&#34;</span>)</span></span></code></pre></div><h3 id=데이터-연속성-확인>데이터 연속성 확인<a class=anchor href=#%eb%8d%b0%ec%9d%b4%ed%84%b0-%ec%97%b0%ec%86%8d%ec%84%b1-%ed%99%95%ec%9d%b8>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 거래일 간 간격 확인</span>
+</span></span><span style=display:flex><span>date_diff <span style=color:#f92672>=</span> data<span style=color:#f92672>.</span>index<span style=color:#f92672>.</span>to_series()<span style=color:#f92672>.</span>diff()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 3일 이상 간격이 있는 경우 찾기 (주말 제외)</span>
+</span></span><span style=display:flex><span>gaps <span style=color:#f92672>=</span> date_diff[date_diff <span style=color:#f92672>&gt;</span> pd<span style=color:#f92672>.</span>Timedelta(days<span style=color:#f92672>=</span><span style=color:#ae81ff>3</span>)]
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> len(gaps) <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span>:
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;데이터 간격 발견: </span><span style=color:#e6db74>{</span>len(gaps)<span style=color:#e6db74>}</span><span style=color:#e6db74>개&#34;</span>)
+</span></span><span style=display:flex><span>    print(gaps)</span></span></code></pre></div><h3 id=이상치-탐지>이상치 탐지<a class=anchor href=#%ec%9d%b4%ec%83%81%ec%b9%98-%ed%83%90%ec%a7%80>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 일일 수익률 계산</span>
+</span></span><span style=display:flex><span>returns <span style=color:#f92672>=</span> data[<span style=color:#e6db74>&#39;Close&#39;</span>]<span style=color:#f92672>.</span>pct_change()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 극단적 수익률 (±10% 이상)</span>
+</span></span><span style=display:flex><span>extreme_returns <span style=color:#f92672>=</span> returns[abs(returns) <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0.10</span>]
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;극단적 변동: </span><span style=color:#e6db74>{</span>len(extreme_returns)<span style=color:#e6db74>}</span><span style=color:#e6db74>일&#34;</span>)
+</span></span><span style=display:flex><span>print(extreme_returns)</span></span></code></pre></div><h2 id=210-다음-단계>2.10 다음 단계<a class=anchor href=#210-%eb%8b%a4%ec%9d%8c-%eb%8b%a8%ea%b3%84>#</a></h2><h3 id=이-챕터에서-배운-것>이 챕터에서 배운 것<a class=anchor href=#%ec%9d%b4-%ec%b1%95%ed%84%b0%ec%97%90%ec%84%9c-%eb%b0%b0%ec%9a%b4-%ea%b2%83>#</a></h3><p>✅ <strong>OHLCV 데이터 구조</strong>: Open, High, Low, Close, Volume의 의미
 ✅ <strong>yfinance 사용법</strong>: 단일/다중 종목, 다양한 기간과 타임프레임
 ✅ <strong>Adjusted Close</strong>: 배당금과 주식 분할 조정의 중요성
 ✅ <strong>다중 타임프레임</strong>: 일봉, 주봉, 월봉 데이터 활용
-✅ <strong>데이터 관리</strong>: 저장, 캐싱, 품질 확인</p>
-<h3 id="실습-과제">실습 과제<a class="anchor" href="#%ec%8b%a4%ec%8a%b5-%ea%b3%bc%ec%a0%9c">#</a></h3>
-<ol>
-<li>
-<p><strong>다른 종목 탐색</strong>: Tesla (TSLA), Amazon (AMZN) 데이터를 다운로드하고 비교해보세요.</p>
-</li>
-<li>
-<p><strong>ETF 분석</strong>: S&amp;P 500 ETF (SPY)와 Nasdaq ETF (QQQ)의 최근 5년 성과를 비교해보세요.</p>
-</li>
-<li>
-<p><strong>타임프레임 비교</strong>: 같은 종목의 일봉과 월봉 차트를 그려보고, 어떤 차이가 있는지 관찰하세요.</p>
-</li>
-<li>
-<p><strong>주식 분할 탐색</strong>: Apple이나 Tesla의 주식 분할 이력을 조회하고, Adjusted vs. Unadjusted Close를 비교해보세요.</p>
-</li>
-</ol>
-<h3 id="다음-챕터-미리보기">다음 챕터 미리보기<a class="anchor" href="#%eb%8b%a4%ec%9d%8c-%ec%b1%95%ed%84%b0-%eb%af%b8%eb%a6%ac%eb%b3%b4%ea%b8%b0">#</a></h3>
-<p><strong>Chapter 3: 데이터 전처리와 수익률</strong>에서는:</p>
-<ul>
-<li>결측치 및 이상치 처리 방법</li>
-<li>데이터 정합성 검증 기법</li>
-<li>단순 수익률 vs. 로그 수익률 비교</li>
-<li>벤치마크 대비 초과 수익률 계산</li>
-<li>완전한 데이터 전처리 파이프라인 구축</li>
-</ul>
-<hr>
-<p><strong>💡 핵심 메시지</strong></p>
-<p>데이터는 백테스팅의 기초입니다. 양질의 데이터 없이는 신뢰할 수 있는 백테스트 결과를 얻을 수 없습니다. yfinance는 무료로 사용할 수 있는 훌륭한 도구지만, 항상 데이터의 품질을 확인하고, Adjusted Close를 사용하며, 적절한 캐싱 전략을 구현하는 것이 중요합니다.</p>
-<p>다음 챕터에서는 다운로드한 데이터를 정제하고 수익률을 계산하는 방법을 배워봅시다!</p>
-</article>
- 
-      
-
-      <footer class="book-footer">
-        
-  <div class="flex flex-wrap justify-between">
-
-<div>
-
-</div>
-
-<div>
-
-</div>
-
-</div>
-
-
-
-
-
-  
-  
-  
-  <div class="flex flex-wrap justify-between">
-    <span>
-    
-      <a href="/intro-to-backtesting/docs/chapter01/" class="flex align-center">
-        <img src="/intro-to-backtesting/icons/backward.svg" class="book-icon" alt="Backward" />
-        <span>Chapter 1: 백테스팅 시작하기</span>
-      </a>
-    
-    </span>
-    <span>
-    
-      <a href="/intro-to-backtesting/docs/chapter03/" class="flex align-center">
-        <span>Chapter 3: 데이터 전처리와 수익률</span>
-        <img src="/intro-to-backtesting/icons/forward.svg" class="book-icon" alt="Forward" />
-      </a>
-    
-    </span>
-  </div>
-  
-
-
- 
-        
-  
- 
-        
-        
-  
- 
-        
-  
-  
-    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
-  
-
-      </footer>
-
-      <label for="menu-control" class="hidden book-menu-overlay"></label>
-    </div>
-
-    
-  
-  <aside class="book-toc">
-    <div class="book-toc-content">
-      
-  
-<nav id="TableOfContents">
-  <ul>
-    <li><a href="#21-ohlcv-데이터-구조">2.1 OHLCV 데이터 구조</a>
-      <ul>
-        <li><a href="#ohlcv란">OHLCV란?</a></li>
-        <li><a href="#시간-프레임-timeframe">시간 프레임 (Timeframe)</a></li>
-        <li><a href="#캔들스틱-해석">캔들스틱 해석</a></li>
-        <li><a href="#캔들스틱의-수학적-특성">캔들스틱의 수학적 특성</a></li>
-      </ul>
-    </li>
-    <li><a href="#22-yfinance로-데이터-다운로드">2.2 yfinance로 데이터 다운로드</a>
-      <ul>
-        <li><a href="#yfinance란">yfinance란?</a></li>
-        <li><a href="#기본-사용법">기본 사용법</a></li>
-        <li><a href="#다양한-기간-옵션">다양한 기간 옵션</a></li>
-        <li><a href="#다양한-시간-프레임">다양한 시간 프레임</a></li>
-      </ul>
-    </li>
-    <li><a href="#23-배당금과-주식-분할-조정">2.3 배당금과 주식 분할 조정</a>
-      <ul>
-        <li><a href="#adjusted-close의-중요성">Adjusted Close의 중요성</a></li>
-        <li><a href="#adjusted-close란">Adjusted Close란?</a></li>
-        <li><a href="#조정-공식">조정 공식</a></li>
-        <li><a href="#yfinance의-자동-조정">yfinance의 자동 조정</a></li>
-      </ul>
-    </li>
-    <li><a href="#24-다중-종목-데이터-다운로드">2.4 다중 종목 데이터 다운로드</a>
-      <ul>
-        <li><a href="#여러-종목-동시-다운로드">여러 종목 동시 다운로드</a></li>
-        <li><a href="#개별-종목-추출">개별 종목 추출</a></li>
-      </ul>
-    </li>
-    <li><a href="#25-다중-타임프레임-분석">2.5 다중 타임프레임 분석</a>
-      <ul>
-        <li><a href="#왜-다중-타임프레임인가">왜 다중 타임프레임인가?</a></li>
-        <li><a href="#다중-타임프레임-데이터-수집">다중 타임프레임 데이터 수집</a></li>
-        <li><a href="#타임프레임-간-전환">타임프레임 간 전환</a></li>
-      </ul>
-    </li>
-    <li><a href="#26-종목-정보-조회">2.6 종목 정보 조회</a>
-      <ul>
-        <li><a href="#기본-정보">기본 정보</a></li>
-        <li><a href="#재무-데이터">재무 데이터</a></li>
-      </ul>
-    </li>
-    <li><a href="#27-실습-주식-데이터-탐색">2.7 실습: 주식 데이터 탐색</a>
-      <ul>
-        <li><a href="#코드-실행">코드 실행</a></li>
-        <li><a href="#스크립트-개요">스크립트 개요</a></li>
-        <li><a href="#실행-결과">실행 결과</a></li>
-        <li><a href="#결과-분석">결과 분석</a></li>
-        <li><a href="#데이터-품질-관찰">데이터 품질 관찰</a></li>
-      </ul>
-    </li>
-    <li><a href="#28-데이터-저장-및-관리">2.8 데이터 저장 및 관리</a>
-      <ul>
-        <li><a href="#csv로-저장">CSV로 저장</a></li>
-        <li><a href="#데이터-캐싱-전략">데이터 캐싱 전략</a></li>
-      </ul>
-    </li>
-    <li><a href="#29-데이터-품질-확인">2.9 데이터 품질 확인</a>
-      <ul>
-        <li><a href="#결측치-확인">결측치 확인</a></li>
-        <li><a href="#데이터-연속성-확인">데이터 연속성 확인</a></li>
-        <li><a href="#이상치-탐지">이상치 탐지</a></li>
-      </ul>
-    </li>
-    <li><a href="#210-다음-단계">2.10 다음 단계</a>
-      <ul>
-        <li><a href="#이-챕터에서-배운-것">이 챕터에서 배운 것</a></li>
-        <li><a href="#실습-과제">실습 과제</a></li>
-        <li><a href="#다음-챕터-미리보기">다음 챕터 미리보기</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-
-
-
-    </div>
-  </aside>
-  
- 
-  </main>
-
-  
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+✅ <strong>데이터 관리</strong>: 저장, 캐싱, 품질 확인</p><h3 id=실습-과제>실습 과제<a class=anchor href=#%ec%8b%a4%ec%8a%b5-%ea%b3%bc%ec%a0%9c>#</a></h3><ol><li><p><strong>다른 종목 탐색</strong>: Tesla (TSLA), Amazon (AMZN) 데이터를 다운로드하고 비교해보세요.</p></li><li><p><strong>ETF 분석</strong>: S&amp;P 500 ETF (SPY)와 Nasdaq ETF (QQQ)의 최근 5년 성과를 비교해보세요.</p></li><li><p><strong>타임프레임 비교</strong>: 같은 종목의 일봉과 월봉 차트를 그려보고, 어떤 차이가 있는지 관찰하세요.</p></li><li><p><strong>주식 분할 탐색</strong>: Apple이나 Tesla의 주식 분할 이력을 조회하고, Adjusted vs. Unadjusted Close를 비교해보세요.</p></li></ol><h3 id=다음-챕터-미리보기>다음 챕터 미리보기<a class=anchor href=#%eb%8b%a4%ec%9d%8c-%ec%b1%95%ed%84%b0-%eb%af%b8%eb%a6%ac%eb%b3%b4%ea%b8%b0>#</a></h3><p><strong>Chapter 3: 데이터 전처리와 수익률</strong>에서는:</p><ul><li>결측치 및 이상치 처리 방법</li><li>데이터 정합성 검증 기법</li><li>단순 수익률 vs. 로그 수익률 비교</li><li>벤치마크 대비 초과 수익률 계산</li><li>완전한 데이터 전처리 파이프라인 구축</li></ul><hr><p><strong>💡 핵심 메시지</strong></p><p>데이터는 백테스팅의 기초입니다. 양질의 데이터 없이는 신뢰할 수 있는 백테스트 결과를 얻을 수 없습니다. yfinance는 무료로 사용할 수 있는 훌륭한 도구지만, 항상 데이터의 품질을 확인하고, Adjusted Close를 사용하며, 적절한 캐싱 전략을 구현하는 것이 중요합니다.</p><p>다음 챕터에서는 다운로드한 데이터를 정제하고 수익률을 계산하는 방법을 배워봅시다!</p></article><footer class=book-footer><div class="flex flex-wrap justify-between"><div></div><div></div></div><div class="flex flex-wrap justify-between"><span><a href=/intro-to-backtesting/docs/chapter01/ class="flex align-center"><img src=/intro-to-backtesting/icons/backward.svg class=book-icon alt=Backward>
+<span>Chapter 1: 백테스팅 시작하기</span>
+</a></span><span><a href=/intro-to-backtesting/docs/chapter03/ class="flex align-center"><span>Chapter 3: 데이터 전처리와 수익률</span>
+<img src=/intro-to-backtesting/icons/forward.svg class=book-icon alt=Forward></a></span></div><script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script></footer><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#21-ohlcv-데이터-구조>2.1 OHLCV 데이터 구조</a><ul><li><a href=#ohlcv란>OHLCV란?</a></li><li><a href=#시간-프레임-timeframe>시간 프레임 (Timeframe)</a></li><li><a href=#캔들스틱-해석>캔들스틱 해석</a></li><li><a href=#캔들스틱의-수학적-특성>캔들스틱의 수학적 특성</a></li></ul></li><li><a href=#22-yfinance로-데이터-다운로드>2.2 yfinance로 데이터 다운로드</a><ul><li><a href=#yfinance란>yfinance란?</a></li><li><a href=#기본-사용법>기본 사용법</a></li><li><a href=#다양한-기간-옵션>다양한 기간 옵션</a></li><li><a href=#다양한-시간-프레임>다양한 시간 프레임</a></li></ul></li><li><a href=#23-배당금과-주식-분할-조정>2.3 배당금과 주식 분할 조정</a><ul><li><a href=#adjusted-close의-중요성>Adjusted Close의 중요성</a></li><li><a href=#adjusted-close란>Adjusted Close란?</a></li><li><a href=#조정-공식>조정 공식</a></li><li><a href=#yfinance의-자동-조정>yfinance의 자동 조정</a></li></ul></li><li><a href=#24-다중-종목-데이터-다운로드>2.4 다중 종목 데이터 다운로드</a><ul><li><a href=#여러-종목-동시-다운로드>여러 종목 동시 다운로드</a></li><li><a href=#개별-종목-추출>개별 종목 추출</a></li></ul></li><li><a href=#25-다중-타임프레임-분석>2.5 다중 타임프레임 분석</a><ul><li><a href=#왜-다중-타임프레임인가>왜 다중 타임프레임인가?</a></li><li><a href=#다중-타임프레임-데이터-수집>다중 타임프레임 데이터 수집</a></li><li><a href=#타임프레임-간-전환>타임프레임 간 전환</a></li></ul></li><li><a href=#26-종목-정보-조회>2.6 종목 정보 조회</a><ul><li><a href=#기본-정보>기본 정보</a></li><li><a href=#재무-데이터>재무 데이터</a></li></ul></li><li><a href=#27-실습-주식-데이터-탐색>2.7 실습: 주식 데이터 탐색</a><ul><li><a href=#코드-실행>코드 실행</a></li><li><a href=#스크립트-개요>스크립트 개요</a></li><li><a href=#실행-결과>실행 결과</a></li><li><a href=#결과-분석>결과 분석</a></li><li><a href=#데이터-품질-관찰>데이터 품질 관찰</a></li></ul></li><li><a href=#28-데이터-저장-및-관리>2.8 데이터 저장 및 관리</a><ul><li><a href=#csv로-저장>CSV로 저장</a></li><li><a href=#데이터-캐싱-전략>데이터 캐싱 전략</a></li></ul></li><li><a href=#29-데이터-품질-확인>2.9 데이터 품질 확인</a><ul><li><a href=#결측치-확인>결측치 확인</a></li><li><a href=#데이터-연속성-확인>데이터 연속성 확인</a></li><li><a href=#이상치-탐지>이상치 탐지</a></li></ul></li><li><a href=#210-다음-단계>2.10 다음 단계</a><ul><li><a href=#이-챕터에서-배운-것>이 챕터에서 배운 것</a></li><li><a href=#실습-과제>실습 과제</a></li><li><a href=#다음-챕터-미리보기>다음 챕터 미리보기</a></li></ul></li></ul></nav></div></aside></main></body></html>

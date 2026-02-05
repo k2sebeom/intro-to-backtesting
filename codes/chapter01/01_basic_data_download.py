@@ -12,6 +12,10 @@ import matplotlib.pyplot as plt
 import os
 from datetime import datetime, timedelta
 
+# 한글 폰트 설정
+plt.rcParams['font.family'] = ['Nanum Gothic', 'Malgun Gothic', 'AppleGothic', 'Arial Unicode MS', 'DejaVu Sans']
+plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
+
 def download_nvidia_data():
     """NVIDIA 주식 데이터 다운로드"""
     print("=== NVIDIA 주식 데이터 다운로드 ===")

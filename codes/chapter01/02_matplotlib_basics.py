@@ -13,7 +13,8 @@ import os
 from datetime import datetime
 
 # 한글 폰트 설정 (macOS)
-plt.rcParams['font.family'] = ['Arial Unicode MS', 'DejaVu Sans']
+plt.rcParams['font.family'] = ['Nanum Gothic', 'Malgun Gothic', 'AppleGothic', 'Arial Unicode MS', 'DejaVu Sans']
+plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
 plt.rcParams['axes.unicode_minus'] = False
 
 def load_data():
@@ -101,7 +102,7 @@ def create_bar_plots(data):
     axes[0, 1].legend()
     
     # 3. 월별 평균 거래량
-    monthly_volume = data.groupby(data.index.to_period('M'))['Volume'].mean()
+    monthly_volume = data.groupby(data.index.to_series('M'))['Volume'].mean()
     axes[1, 0].bar(range(len(monthly_volume)), monthly_volume.values, 
                    color='purple', alpha=0.7)
     axes[1, 0].set_title('월별 평균 거래량', fontsize=12, fontweight='bold')

@@ -12,6 +12,10 @@ import matplotlib.pyplot as plt
 import os
 from datetime import datetime
 
+# 한글 폰트 설정
+plt.rcParams['font.family'] = ['Nanum Gothic', 'Malgun Gothic', 'AppleGothic', 'Arial Unicode MS', 'DejaVu Sans']
+plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
+
 class BuyAndHoldStrategy(bt.Strategy):
     """
     매수 후 보유 전략 (Buy and Hold)

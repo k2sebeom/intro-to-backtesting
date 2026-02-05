@@ -188,7 +188,8 @@ def create_visualizations(data, multi_ticker_data, daily, weekly, monthly, ticke
     print("\n차트 생성 중...")
 
     # 한글 폰트 설정
-    plt.rcParams['font.family'] = 'DejaVu Sans'
+    plt.rcParams['font.family'] = ['Nanum Gothic', 'Malgun Gothic', 'AppleGothic', 'DejaVu Sans']
+    plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
     plt.rcParams['axes.unicode_minus'] = False
 
     # 그림 생성 (2x2 레이아웃)

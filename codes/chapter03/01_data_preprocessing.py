@@ -226,7 +226,8 @@ def create_visualizations(data, simple_returns, log_returns, spy_close):
     """종합 시각화"""
     print("차트 생성 중...")
 
-    plt.rcParams['font.family'] = 'DejaVu Sans'
+    plt.rcParams['font.family'] = ['Nanum Gothic', 'Malgun Gothic', 'AppleGothic', 'DejaVu Sans']
+    plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
     plt.rcParams['axes.unicode_minus'] = False
 
     fig = plt.figure(figsize=(16, 12))

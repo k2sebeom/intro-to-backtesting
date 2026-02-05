@@ -252,7 +252,8 @@ def create_visualization(df, start_value, end_value):
     """시각화 생성"""
     print("차트 생성 중...")
 
-    plt.rcParams['font.family'] = 'DejaVu Sans'
+    plt.rcParams['font.family'] = ['Nanum Gothic', 'Malgun Gothic', 'AppleGothic', 'DejaVu Sans']
+    plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
     plt.rcParams['axes.unicode_minus'] = False
 
     fig, axes = plt.subplots(2, 1, figsize=(14, 10))

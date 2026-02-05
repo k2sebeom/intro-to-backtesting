@@ -22,6 +22,8 @@ import matplotlib.pyplot as plt
 import yfinance as yf
 import backtrader as bt
 
+plt.rcParams['font.family'] = ['Nanum Gothic', 'Malgun Gothic', 'AppleGothic', 'DejaVu Sans']
+plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
 
 def print_header():
     """프로그램 헤더 출력"""
@@ -98,7 +100,7 @@ def calculate_statistics(returns):
 def create_visualization(prices, returns):
     """시각화 생성"""
     # 한글 폰트 설정 (matplotlib에서 한글 표시)
-    plt.rcParams['font.family'] = 'DejaVu Sans'
+    plt.rcParams['font.family'] = ['Nanum Gothic', 'Malgun Gothic', 'AppleGothic', 'DejaVu Sans']
     plt.rcParams['axes.unicode_minus'] = False
 
     # 누적 수익률 계산

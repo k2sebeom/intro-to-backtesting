@@ -13,7 +13,8 @@ import matplotlib.dates as mdates
 from pathlib import Path
 
 # 한글 폰트 설정
-plt.rcParams['font.family'] = ['DejaVu Sans', 'Arial Unicode MS', 'Malgun Gothic']
+plt.rcParams['font.family'] = ['Nanum Gothic', 'Malgun Gothic', 'AppleGothic', 'Arial Unicode MS', 'DejaVu Sans']
+plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
 plt.rcParams['axes.unicode_minus'] = False
 
 def load_nvidia_data():

@@ -13,7 +13,8 @@ from datetime import datetime
 import seaborn as sns
 
 # Set Korean font for matplotlib
-plt.rcParams['font.family'] = ['Arial Unicode MS', 'DejaVu Sans']
+plt.rcParams['font.family'] = ['Nanum Gothic', 'Malgun Gothic', 'AppleGothic', 'Arial Unicode MS', 'DejaVu Sans']
+plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
 plt.rcParams['axes.unicode_minus'] = False
 
 def validate_data_quality(df, timeframe_name):
